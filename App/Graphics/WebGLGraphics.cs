@@ -8,17 +8,16 @@ namespace GLSharp.Graphics {
 
 
     public class WebGLGraphics : IGraphics {
-        /// <summary>
-        /// Main canvas used for drawing.
-        /// </summary>
+
         private CanvasElementGl _canvas = null;
-        /// <summary>
-        /// WebGL context.
-        /// </summary>
         private WebGL _context = null;
 
         private Color _clearColor = null;
+        private ClearMode _clearMode = ClearMode.Color;
 
+        /// <summary>
+        /// The height of the drawing area.
+        /// </summary>
         public int Height {
             get {
                 if (this._canvas != null)
@@ -27,6 +26,9 @@ namespace GLSharp.Graphics {
             }
         }
 
+        /// <summary>
+        /// The width of the draing area.
+        /// </summary>
         public int Width {
             get {
                 if (this._canvas != null)
@@ -35,20 +37,31 @@ namespace GLSharp.Graphics {
             }
         }
 
+        /// <summary>
+        /// Gets or sets the color used for drawing.
+        /// </summary>
         public Color ClearColor {
             get {
-                return null;
+                return this._clearColor;
             }
             set {
-                
+                this._clearColor = value;
+                /*set the clear color for the context*/
+                if (this._context != null)
+                    this._context.clearColor(this._clearColor.Red, this._clearColor.Green,
+                        this._clearColor.Blue, this._clearColor.Alpha);
             }
         }
 
+        /// <summary>
+        /// Gets or sets the clear mode used when clearing the graphics.
+        /// </summary>
         public ClearMode ClearMode {
             get {
-                return ClearMode.Color;
+                return this._clearMode;
             }
             set {
+                this._clearMode = value;
             }
         }
 
@@ -57,18 +70,14 @@ namespace GLSharp.Graphics {
             this._context = canvas.GetContext("experimental-webgl");
 
             /*property initialisation*/
-            this._clearColor = new Color();
-
-            this._context.clearColor(1.0f, 0.0f, 0.0f, 1.0f);
-            this._context.clear((int)ClearMode.Color);
-            
-            
+            this.ClearColor = Color.Create(0.3f, 0.6f, 0.9f, 1.0f);            
         }
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
 		
         public void Clear() {
-            
+            /*no null checking*/
+            this._context.clear((int)this._clearMode);
         }
 
         //------------------------------------------------------------------------------------------

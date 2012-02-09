@@ -22,6 +22,7 @@ namespace App {
                 throw new Exception("No canvas element found!");
 
             this._graphics = new WebGLGraphics(canvasElem);
+            this._graphics.Clear();
         }
 
     }

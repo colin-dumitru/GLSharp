@@ -1,4 +1,0 @@
-D:\My Work\C#\GLSharp\Core\bin\Debug\Core.xml
-D:\My Work\C#\GLSharp\Core\obj\Debug\ResolveAssemblyReference.cache
-D:\My Work\C#\GLSharp\Core\obj\Debug\Core.dll
-D:\My Work\C#\GLSharp\Core\obj\Debug\Core.pdb

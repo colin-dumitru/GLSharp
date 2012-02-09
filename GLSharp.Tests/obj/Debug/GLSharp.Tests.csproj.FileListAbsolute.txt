@@ -1,8 +1,0 @@
-D:\My Work\C#\GLSharp\GLSharp.Tests\bin\Debug\GLSharp.Tests.dll.config
-D:\My Work\C#\GLSharp\GLSharp.Tests\bin\Debug\GLSharp.Tests.dll
-D:\My Work\C#\GLSharp\GLSharp.Tests\bin\Debug\GLSharp.Tests.pdb
-D:\My Work\C#\GLSharp\GLSharp.Tests\bin\Debug\GLSharp.dll
-D:\My Work\C#\GLSharp\GLSharp.Tests\bin\Debug\GLSharp.pdb
-D:\My Work\C#\GLSharp\GLSharp.Tests\obj\Debug\ResolveAssemblyReference.cache
-D:\My Work\C#\GLSharp\GLSharp.Tests\obj\Debug\GLSharp.Tests.dll
-D:\My Work\C#\GLSharp\GLSharp.Tests\obj\Debug\GLSharp.Tests.pdb

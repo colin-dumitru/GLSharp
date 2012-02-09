@@ -15,7 +15,37 @@ namespace GLSharp.Core {
         /// Creates an ampty float 32 array
         /// </summary>
         /// <returns></returns>
-        float[] CreateFloat64Array(ulong size);
+        double[] CreateFloat64Array(ulong size);
+        /// <summary>
+        /// Creates an ampty float 32 array
+        /// </summary>
+        /// <returns></returns>
+        byte[] CreateInt8Array(ulong size);
+        /// <summary>
+        /// Creates an ampty float 32 array
+        /// </summary>
+        /// <returns></returns>
+        char[] CreateUInt8Array(ulong size);
+        /// <summary>
+        /// Creates an ampty float 32 array
+        /// </summary>
+        /// <returns></returns>
+        short[] CreateInt16Array(ulong size);
+        /// <summary>
+        /// Creates an ampty float 32 array
+        /// </summary>
+        /// <returns></returns>
+        ushort[] CreateUInt16Array(ulong size);
+        /// <summary>
+        /// Creates an ampty float 32 array
+        /// </summary>
+        /// <returns></returns>
+        int[] CreateInt32Array(ulong size);
+        /// <summary>
+        /// Creates an ampty float 32 array
+        /// </summary>
+        /// <returns></returns>
+        uint[] CreateUInt32Array(ulong size);
 
         /// <summary>
         /// Initialises an objects properties.

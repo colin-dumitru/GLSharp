@@ -1,5 +1,0 @@
-D:\My Work\C#\GLSharp\GLSharp\bin\GLSharp.dll
-D:\My Work\C#\GLSharp\GLSharp\bin\GLSharp.pdb
-D:\My Work\C#\GLSharp\GLSharp\obj\Debug\ResolveAssemblyReference.cache
-D:\My Work\C#\GLSharp\GLSharp\obj\Debug\GLSharp.dll
-D:\My Work\C#\GLSharp\GLSharp\obj\Debug\GLSharp.pdb

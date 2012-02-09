@@ -61,7 +61,6 @@
     <Compile Include="Html\CanvasElementGl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="App.cs" />
-    <Content Include="Scripts\Environment.js" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">

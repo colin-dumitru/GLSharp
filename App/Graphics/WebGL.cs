@@ -579,57 +579,57 @@ namespace GLSharp.Graphics {
 
     public abstract void uniform1f(UniformLocation location, float x);
 
-    public abstract void uniform1f(UniformLocation location/*, NativeArray<Float> v*/);
+    public abstract void uniform1f(UniformLocation location, float[] v);
 
     public abstract void uniform1i(UniformLocation location, int x);
 
-    public abstract void uniform1i(UniformLocation location/*, NativeArray<Integer> v*/);
+    public abstract void uniform1i(UniformLocation location, int[] v);
 
     public abstract void uniform2f(UniformLocation location, float x, float y);
 
-    public abstract void uniform2f(UniformLocation location/*, NativeArray<Float> v*/);
+    public abstract void uniform2f(UniformLocation location, float[] v);
 
     public abstract void uniform2i(UniformLocation location, int x, int y);
 
-    public abstract void uniform2i(UniformLocation location/*, NativeArray<Integer> v*/);
+    public abstract void uniform2i(UniformLocation location, int[] v);
 
     public abstract void uniform3f(UniformLocation location, float x, float y, float z);
 
-    public abstract void uniform3f(UniformLocation location/*, NativeArray<Float> v*/);
+    public abstract void uniform3f(UniformLocation location, float[] v);
 
     public abstract void uniform3i(UniformLocation location, int x, int y, int z);
 
-    public abstract void uniform3i(UniformLocation location/*, NativeArray<Integer> v*/);
+    public abstract void uniform3i(UniformLocation location, int[] v);
 
     public abstract void uniform4f(UniformLocation location, float x, float y, float z, float w);
 
-    public abstract void uniform4f(UniformLocation location /*NativeArray<Float> v*/);
+    public abstract void uniform4f(UniformLocation location, float[] v);
 
     public abstract void uniform4i(UniformLocation location, int x, int y, int z, int w);
 
-    public abstract void uniform4i(UniformLocation location /*NativeArray<Integer> v*/);
+    public abstract void uniform4i(UniformLocation location, int[] v);
 
-    public abstract void uniformMatrix2f(UniformLocation location, bool transpose /*NativeArray<Float> value*/);
+    public abstract void uniformMatrix2f(UniformLocation location, bool transpose, float[] value);
 
-    public abstract void uniformMatrix3f(UniformLocation location, bool transpose /*NativeArray<Float> value*/);
+    public abstract void uniformMatrix3f(UniformLocation location, bool transpose, float[] value);
 
-    public abstract void uniformMatrix4f(UniformLocation location, bool transpose /*NativeArray<Float> value*/);
+    public abstract void uniformMatrix4f(UniformLocation location, bool transpose, float[] value);
 
     public abstract void vertexAttribute1f(int index, float x);
 
-    public abstract void vertexAttribute1f(int index /*NativeArray<Float> values*/);
+    public abstract void vertexAttribute1f(int index, float[] values);
 
     public abstract void vertexAttribute2f(int index, float x, float y);
 
-    public abstract void vertexAttribute2f(int index /*NativeArray<Float> values*/);
+    public abstract void vertexAttribute2f(int index, float[] values);
 
     public abstract void vertexAttribute3f(int index, float x, float y, float z);
 
-    public abstract void vertexAttribute3f(int index /*NativeArray<Float> values*/);
+    public abstract void vertexAttribute3f(int index, float[] values);
 
     public abstract void vertexAttribute4f(int index, float x, float y, float z, float w);
 
-    public abstract void vertexAttribute4f(int index /*NativeArray<Float> values*/);
+    public abstract void vertexAttribute4f(int index, float[] values);
 
     public abstract void vertexAttributePointer(int index, int size, int type, bool normalized, int stride, int offset);
 
@@ -638,9 +638,9 @@ namespace GLSharp.Graphics {
 
     public abstract void bindBuffer(int target, Buffer buffer);
 
-    public abstract void bufferData(int target/*, NativeArray<?> data*/, int usage);
+    public abstract void bufferData(int target, Array data, int usage);
 
-    public abstract void bufferSubData(int target, int offset/*, NativeArray<?> data*/);
+    public abstract void bufferSubData(int target, int offset,Array data);
 
     public abstract Buffer createBuffer();
 
@@ -666,7 +666,7 @@ namespace GLSharp.Graphics {
 
     public abstract bool isFrameBuffer(FrameBuffer frameBuffer);
 
-    public abstract void readPixels(int x, int y, int width, int height, int format, int type/*, NativeArray<?> pixels*/);
+    public abstract void readPixels(int x, int y, int width, int height, int format, int type, Array pixels);
 
     /* -----------------------------------------Render Buffer-----------------------------------------------------------*/
 

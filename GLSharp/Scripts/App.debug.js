@@ -61,18 +61,17 @@ GLSharp.Graphics.WebGLGraphics = function GLSharp_Graphics_WebGLGraphics(canvas)
     /// <param name="canvas" type="Object" domElement="true">
     /// </param>
     /// <field name="_canvas" type="Object" domElement="true">
-    /// Main canvas used for drawing.
     /// </field>
     /// <field name="_context" type="GLSharp.Graphics.WebGL">
-    /// WebGL context.
     /// </field>
     /// <field name="_clearColor" type="GLSharp.Graphics.Color">
     /// </field>
+    /// <field name="_clearMode" type="GLSharp.Graphics.ClearMode">
+    /// </field>
+    this._clearMode = GLSharp.Graphics.ClearMode.color;
     this._canvas = canvas;
     this._context = canvas.getContext('experimental-webgl');
-    this._clearColor = new GLSharp.Graphics.Color();
-    this._context.clearColor(1, 0, 0, 1);
-    this._context.clear(GLSharp.Graphics.ClearMode.color);
+    this.set_clearColor(GLSharp.Graphics.Color.create(0.3, 0.6, 0.9, 1));
 }
 GLSharp.Graphics.WebGLGraphics.prototype = {
     _canvas: null,
@@ -80,6 +79,9 @@ GLSharp.Graphics.WebGLGraphics.prototype = {
     _clearColor: null,
     
     get_height: function GLSharp_Graphics_WebGLGraphics$get_height() {
+        /// <summary>
+        /// The height of the drawing area.
+        /// </summary>
         /// <value type="Number" integer="true"></value>
         if (this._canvas != null) {
             return this._canvas.height;
@@ -88,6 +90,9 @@ GLSharp.Graphics.WebGLGraphics.prototype = {
     },
     
     get_width: function GLSharp_Graphics_WebGLGraphics$get_width() {
+        /// <summary>
+        /// The width of the draing area.
+        /// </summary>
         /// <value type="Number" integer="true"></value>
         if (this._canvas != null) {
             return this._canvas.width;
@@ -96,24 +101,42 @@ GLSharp.Graphics.WebGLGraphics.prototype = {
     },
     
     get_clearColor: function GLSharp_Graphics_WebGLGraphics$get_clearColor() {
+        /// <summary>
+        /// Gets or sets the color used for drawing.
+        /// </summary>
         /// <value type="GLSharp.Graphics.Color"></value>
-        return null;
+        return this._clearColor;
     },
     set_clearColor: function GLSharp_Graphics_WebGLGraphics$set_clearColor(value) {
+        /// <summary>
+        /// Gets or sets the color used for drawing.
+        /// </summary>
         /// <value type="GLSharp.Graphics.Color"></value>
+        this._clearColor = value;
+        if (this._context != null) {
+            this._context.clearColor(this._clearColor.get_red(), this._clearColor.get_green(), this._clearColor.get_blue(), this._clearColor.get_alpha());
+        }
         return value;
     },
     
     get_clearMode: function GLSharp_Graphics_WebGLGraphics$get_clearMode() {
+        /// <summary>
+        /// Gets or sets the clear mode used when clearing the graphics.
+        /// </summary>
         /// <value type="GLSharp.Graphics.ClearMode"></value>
-        return GLSharp.Graphics.ClearMode.color;
+        return this._clearMode;
     },
     set_clearMode: function GLSharp_Graphics_WebGLGraphics$set_clearMode(value) {
+        /// <summary>
+        /// Gets or sets the clear mode used when clearing the graphics.
+        /// </summary>
         /// <value type="GLSharp.Graphics.ClearMode"></value>
+        this._clearMode = value;
         return value;
     },
     
     clear: function GLSharp_Graphics_WebGLGraphics$clear() {
+        this._context.clear(this._clearMode);
     }
 }
 
@@ -137,8 +160,7 @@ App.App.prototype = {
             throw new Error('No canvas element found!');
         }
         this._graphics = new GLSharp.Graphics.WebGLGraphics(canvasElem);
-        var tmp = GLSharp.Core.Core.get_environment().createFloat32Array(10);
-        tmp[0] = 5;
+        this._graphics.clear();
     }
 }
 
