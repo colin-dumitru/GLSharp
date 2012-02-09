@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Core</name>
+    </assembly>
+    <members>
+        <member name="M:GLSharp.Core.IEnvironment.CreateFloat32Array(System.UInt64)">
+            <summary>
+            Creates an ampty float 32 array
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:GLSharp.Core.IEnvironment.Init(System.Object,System.Object[])">
+            <summary>
+            Initialises an objects properties.
+            </summary>
+            <param name="obj">The object to initialize.</param>
+            <param name="args">The properties for initialisation. The count
+                                moust be a multiple of 2.</param>
+            <returns>The same object passed as an argument.</returns>
+        </member>
+    </members>
+</doc>

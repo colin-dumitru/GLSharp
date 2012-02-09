@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>App</name>
+    </assembly>
+    <members>
+        <member name="F:GLSharp.Graphics.WebGLGraphics._canvas">
+            <summary>
+            Main canvas used for drawing.
+            </summary>
+        </member>
+        <member name="F:GLSharp.Graphics.WebGLGraphics._context">
+            <summary>
+            WebGL context.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,4 @@
+D:\My Work\C#\GLSharp\Graphics\bin\Debug\Graphics.xml
+D:\My Work\C#\GLSharp\Graphics\obj\Debug\ResolveAssemblyReference.cache
+D:\My Work\C#\GLSharp\Graphics\obj\Debug\Graphics.dll
+D:\My Work\C#\GLSharp\Graphics\obj\Debug\Graphics.pdb
