@@ -81,9 +81,9 @@
     <Content Include="Scripts\App.js" />
     <Content Include="Scripts\Core.debug.js" />
     <Content Include="Scripts\Core.js" />
+    <Content Include="Scripts\Engine.debug.js" />
+    <Content Include="Scripts\Engine.js" />
     <Content Include="Scripts\Environment.js" />
-    <Content Include="Scripts\Graphics.debug.js" />
-    <Content Include="Scripts\Graphics.js" />
     <Content Include="Scripts\mscorlib.debug.js" />
     <Content Include="Scripts\mscorlib.js" />
     <Content Include="Web.config" />

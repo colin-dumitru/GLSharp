@@ -6,7 +6,7 @@
 
     <script src="/Scripts/Environment.js" type="text/javascript"></script>
     <script src="/Scripts/Core.debug.js" type="text/javascript"></script>
-    <script src="/Scripts/Graphics.debug.js" type="text/javascript"></script>
+    <script src="/Scripts/Engine.debug.js" type="text/javascript"></script>
     <script src="/Scripts/App.debug.js" type="text/javascript"></script>
 
     <script type="text/javascript"">

@@ -1,4 +1,4 @@
-// Graphics.js
+// Engine.js
 (function(){
 Type.registerNamespace('GLSharp.Graphics');GLSharp.Graphics.ClearMode=function(){};GLSharp.Graphics.ClearMode.prototype = {depth:256,stencil:1024,color:16384}
 GLSharp.Graphics.ClearMode.registerEnum('GLSharp.Graphics.ClearMode',false);GLSharp.Graphics.IGraphics=function(){};GLSharp.Graphics.IGraphics.registerInterface('GLSharp.Graphics.IGraphics');GLSharp.Graphics.Color=function(){}
