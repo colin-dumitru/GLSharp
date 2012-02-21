@@ -48,6 +48,8 @@
     <Content Include="Properties\App.ruleset" />
     <Content Include="Properties\App.script" />
     <Compile Include="Core\Environment.cs" />
+    <Compile Include="Data\Image.cs" />
+    <Compile Include="Data\ResourceManager.cs" />
     <Compile Include="Graphics\ActiveInfo.cs" />
     <Compile Include="Graphics\Buffer.cs" />
     <Compile Include="Graphics\FrameBuffer.cs" />

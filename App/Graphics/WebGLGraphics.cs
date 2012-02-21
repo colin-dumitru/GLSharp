@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Html;
 using System.Html.Media.Graphics;
 using GLSharp.Html;
+using GLSharp.Universe;
 
 namespace GLSharp.Graphics {
 
@@ -14,6 +15,8 @@ namespace GLSharp.Graphics {
 
         private Color _clearColor = null;
         private ClearMode _clearMode = ClearMode.Color;
+
+        private World _world = null;
 
         /// <summary>
         /// The height of the drawing area.
@@ -65,6 +68,22 @@ namespace GLSharp.Graphics {
             }
         }
 
+        /// <summary>
+        /// Gets and sets the world used for drawing.
+        /// </summary>
+        public Universe.World World {
+            get {
+                return this._world;                
+            }
+            set {
+                this._world = value;
+                this.BindWorld(this._world);
+            }
+        }
+
+        //------------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------------
+
         public WebGLGraphics(CanvasElementGl canvas) {
             this._canvas = canvas;
             this._context = canvas.GetContext("experimental-webgl");
@@ -82,18 +101,37 @@ namespace GLSharp.Graphics {
 
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
-        
+        private void BindWorld(World world) {
+            world.NodeAdded += new WorldHandler(world_NodeAdded);
+            world.NodeRemoved += new WorldHandler(world_NodeRemoved);
+        }
+        //------------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------------				
+        void world_NodeRemoved(World sender, object args) {
+            Node node = args as Node;
+
+            node.ComponentAdded += new NodeHandler(node_ComponentAdded);
+            node.ComponentRemoved += new NodeHandler(node_ComponentRemoved);
+        }
+        //------------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------------				
+        void world_NodeAdded(World sender, object args) {
+            
+        }
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
+        void node_ComponentRemoved(Node sender, object args) {
+            
+        }
+        //------------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------------
+        void node_ComponentAdded(Node sender, object args) {
+            
+        }
 
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
 
-        //------------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------------
 
-
-
-        
     }
 }

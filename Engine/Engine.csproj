@@ -49,6 +49,9 @@
     <Content Include="Properties\Graphics.script" />
     <Compile Include="Graphics\Color.cs" />
     <Compile Include="Graphics\IGraphics.cs" />
+    <Compile Include="Universe\Component.cs" />
+    <Compile Include="Universe\Node.cs" />
+    <Compile Include="Universe\World.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

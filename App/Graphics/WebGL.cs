@@ -4,6 +4,7 @@ using System.Linq;
 using System.Html.Media.Graphics;
 using System.Runtime.CompilerServices;
 using System.Html;
+using GLSharp.Data;
 
 namespace GLSharp.Graphics {
     [Imported]
@@ -504,7 +505,7 @@ namespace GLSharp.Graphics {
 
     public abstract void texImage2D(int target, int level, int internalFormat, int format, int type, ImageData image);
 
-    public abstract void texImage2D(int target, int level, int internalFormat, int format, int type, ImageElement image);
+    public abstract void texImage2D(int target, int level, int internalFormat, int format, int type, IImageResource image);
 
     public abstract void texParameter(int target, int pName, float param);
 
@@ -512,7 +513,7 @@ namespace GLSharp.Graphics {
 
     public abstract void texImage2D(int target, int level, int xOffset, int yOffset, int format, int type, ImageData image);
 
-    public abstract void texImage2D(int target, int level, int xOffset, int yOffset, int format, int type, ImageElement image);
+    public abstract void texImage2D(int target, int level, int xOffset, int yOffset, int format, int type, IImageResource image);
 
 
     /* --------------------------------------------Shaders---------------------------------------------------*/

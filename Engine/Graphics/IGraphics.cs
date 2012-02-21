@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GLSharp.Universe;
 
 namespace GLSharp.Graphics {
     public enum ClearMode {
@@ -26,6 +27,11 @@ namespace GLSharp.Graphics {
         /// Gets or sets the clear mode.
         /// </summary>
         ClearMode ClearMode { get; set; }
+
+        /// <summary>
+        /// Gets and sets the World used for rendering / updating.
+        /// </summary>
+        World World { get; set; }
 
         /// <summary>
         /// Clears the drawing area using the clear mode set.
