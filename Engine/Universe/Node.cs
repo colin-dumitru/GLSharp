@@ -18,7 +18,7 @@ namespace GLSharp.Universe {
         public event NodeHandler ComponentRemoved;
 
         private String _name = "Undefined";
-        private readonly List<Component> _components = new List<Component>();
+        private readonly Dictionary<String, Component> _components = new Dictionary<string, Component>();
 
         /// <summary>
         /// The name of the node.
@@ -32,14 +32,14 @@ namespace GLSharp.Universe {
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
         public void AddComponent(Component component) {
-            this._components.Add(component);
+            this._components[component.Type] = component;
             if (this.ComponentAdded != null)
                 this.ComponentAdded(this, component);
         }
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
         public void RemoveComponent(Component component) {
-            this._components.Remove(component);
+            this._components.Remove(component.Type);
             if (this.ComponentRemoved != null)
                 this.ComponentRemoved(this, component);
         }

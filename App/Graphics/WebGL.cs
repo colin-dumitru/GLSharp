@@ -7,680 +7,685 @@ using System.Html;
 using GLSharp.Data;
 
 namespace GLSharp.Graphics {
+    public class WebGLE {
+        /* What buffer to clear. Can use a combination of each one.*/
+        public const int DepthBufferBit = 0x00000100;
+        public const int StencilBufferBit = 0x00000400;
+        public const int ColorBufferBit = 0x00004000;
+
+        /* BeginMode */
+        public const int Points = 0x0000;
+        public const int Lines = 0x0001;
+        public const int LineLoop = 0x0002;
+        public const int LineStrip = 0x0003;
+        public const int Triangles = 0x0004;
+        public const int TriangleStrip = 0x0005;
+        public const int TriangleFan = 0x0006;
+
+        /* BlendingFactorDest */
+        public const int Zero = 0;
+        public const int One = 1;
+        public const int SrcColor = 0x0300;
+        public const int OneMinusSrcColor = 0x0301;
+        public const int SrcAlpha = 0x0302;
+        public const int OneMinusSrcAlpha = 0x0303;
+        public const int DstAlpha = 0x0304;
+        public const int OneMinusDstAlpha = 0x0305;
+
+        /* BlendingFactorSrc */
+        /*      ZERO */
+        /*      ONE */
+        public const int DstColor = 0x0306;
+        public const int OneMinusDstColor = 0x0307;
+        public const int SrcAlphaSaturate = 0x0308;
+        /*      SRC_ALPHA */
+        /*      ONE_MINUS_SRC_ALPHA */
+        /*      DST_ALPHA */
+        /*      ONE_MINUS_DST_ALPHA */
+
+        /* BlendEquationSeparate */
+        public const int FuncAdd = 0x8006;
+        public const int BlendEquationRgb = 0x8009;   /* same as BLEND_EQUATION */
+        public const int BlendEquationAlpha = 0x883D;
+
+        /* BlendSubtract */
+        public const int FuncSubtract = 0x800A;
+        public const int FuncReverseSubtract = 0x800B;
+
+        /* Separate Blend Functions */
+        public const int BlendDstRgb = 0x80C8;
+        public const int BlendSrcRgb = 0x80C9;
+        public const int BlendDstAlpha = 0x80CA;
+        public const int BlendSrcAlpha = 0x80CB;
+        public const int ConstantantColor = 0x8001;
+        public const int OneMinusConstantColor = 0x8002;
+        public const int ConstantAlpha = 0x8003;
+        public const int OneMinusConstantAlpha = 0x8004;
+        public const int BlendColor = 0x8005;
+
+        /* Buffer Objects */
+        public const int ArrayBuffer = 0x8892;
+        public const int ElementArrayBuffer = 0x8893;
+        public const int ArrayBufferBinding = 0x8894;
+        public const int ElementArrayBufferBinding = 0x8895;
+
+        public const int StreamDraw = 0x88E0;
+        public const int StaticDraw = 0x88E4;
+        public const int DynamicDraw = 0x88E8;
+
+        public const int BufferSize = 0x8764;
+        public const int BufferUsage = 0x8765;
+
+        public const int CurrentVertexAttribute = 0x8626;
+
+        /* CullFaceMode */
+        public const int Front = 0x0404;
+        public const int Back = 0x0405;
+        public const int FrontAndBack = 0x0408;
+
+        /* TEXTURE_2D */
+        public const int CullFace = 0x0B44;
+        public const int Blend = 0x0BE2;
+        public const int Dither = 0x0BD0;
+        public const int StencilTest = 0x0B90;
+        public const int DepthTest = 0x0B71;
+        public const int ScissorTest = 0x0C11;
+        public const int PolygonOffsetFill = 0x8037;
+        public const int SampleAlphaToCoverage = 0x809E;
+        public const int SampleCoverage = 0x80A0;
+
+        /* ErrorCode */
+        public const int NoError = 0;
+        public const int InvalidEnum = 0x0500;
+        public const int InvalidValue = 0x0501;
+        public const int InvalidOperation = 0x0502;
+        public const int OutOfMemory = 0x0505;
+
+        /* FrontFaceDirection */
+        public const int Cw = 0x0900;
+        public const int Ccw = 0x0901;
+
+        /* GetPName */
+        public const int LineWidth = 0x0B21;
+        public const int AliasedPointSizeRange = 0x846D;
+        public const int AliasedLineWidthRange = 0x846E;
+        public const int CullFaceMode = 0x0B45;
+        public const int FrontFace = 0x0B46;
+        public const int DepthRange = 0x0B70;
+        public const int DepthWritemask = 0x0B72;
+        public const int DepthClearValue = 0x0B73;
+        public const int DepthFunc = 0x0B74;
+        public const int StencilClearValue = 0x0B91;
+        public const int StencilFunc = 0x0B92;
+        public const int StencilFail = 0x0B94;
+        public const int StencilPassDepthFail = 0x0B95;
+        public const int StencilPassDepthPass = 0x0B96;
+        public const int StencilReff = 0x0B97;
+        public const int StencilValueMask = 0x0B93;
+        public const int StencilWritemask = 0x0B98;
+        public const int StencilBackFunc = 0x8800;
+        public const int StencilBackFail = 0x8801;
+        public const int StencilBackPassDepthFail = 0x8802;
+        public const int StencilBackPassDepthPass = 0x8803;
+        public const int StencilBackReff = 0x8CA3;
+        public const int StencilBackValueMask = 0x8CA4;
+        public const int StencilBackWritemask = 0x8CA5;
+        public const int Viewport = 0x0BA2;
+        public const int ScissorBox = 0x0C10;
+
+        /*      SCISSOR_TEST */
+        public const int ColorClearValue = 0x0C22;
+        public const int ColorWritemask = 0x0C23;
+        public const int UnpackAlignment = 0x0CF5;
+        public const int PackAlignment = 0x0D05;
+        public const int MaxTextureSize = 0x0D33;
+        public const int MaxViewportDims = 0x0D3A;
+        public const int SubpixelBits = 0x0D50;
+        public const int RedBits = 0x0D52;
+        public const int GreenBits = 0x0D53;
+        public const int BlueBits = 0x0D54;
+        public const int AlphaBits = 0x0D55;
+        public const int DepthBits = 0x0D56;
+        public const int StencilBits = 0x0D57;
+        public const int PolygonOffsetUnits = 0x2A00;
+
+        /*      POLYGON_OFFSET_FILL */
+        public const int PolygonOffsetFactor = 0x8038;
+        public const int TextureBinding_2D = 0x8069;
+        public const int SampleBuffers = 0x80A8;
+        public const int Samples = 0x80A9;
+        public const int SampleCoverageValue = 0x80AA;
+        public const int SampleCoverageInvert = 0x80AB;
+
+
+        public const int NumCompressedTextureFormats = 0x86A2;
+        public const int CompressedTextureFormats = 0x86A3;
+
+        /* HintMode */
+        public const int DontCare = 0x1100;
+        public const int Fastest = 0x1101;
+        public const int Nicest = 0x1102;
+
+        /* HintTarget */
+        public const int GenerateMipmapHint = 0x8192;
+
+        /* DataType */
+        public const int ByteT = 0x1400;
+        public const int UnsignedByteT = 0x1401;
+        public const int ShortT = 0x1402;
+        public const int UnsignedShortT = 0x1403;
+        public const int IntT = 0x1404;
+        public const int UnsignedIntT = 0x1405;
+        public const int FloatT = 0x1406;
+
+        /* PixelFormat */
+        public const int DepthComponent = 0x1902;
+        public const int Alpha = 0x1906;
+        public const int Rgb = 0x1907;
+        public const int Rgba = 0x1908;
+        public const int Luminance = 0x1909;
+        public const int LuminanceAlpha = 0x190A;
+
+        /* PixelType */
+        /*      UNSIGNED_BYTE */
+        public const int UnsignedShort4444 = 0x8033;
+        public const int UnsignedShort5551 = 0x8034;
+        public const int UnsignedShort565 = 0x8363;
+
+        /* Shaders */
+        public const int FragmentShader = 0x8B30;
+        public const int VertexShader = 0x8B31;
+        public const int MaxVertexAttribs = 0x8869;
+        public const int MaxVertexUniformVectors = 0x8DFB;
+        public const int MaxVaryingVectors = 0x8DFC;
+        public const int MaxCombinedTextureImageUnits = 0x8B4D;
+        public const int MaxVertexTextureImageUnits = 0x8B4C;
+        public const int MaxTextureImageUnits = 0x8872;
+        public const int MaxFragmentUniformVectors = 0x8DFD;
+        public const int ShaderType = 0x8B4F;
+        public const int DeleteStatus = 0x8B80;
+        public const int LinkStatus = 0x8B82;
+        public const int ValidateStatus = 0x8B83;
+        public const int AttachedShaders = 0x8B85;
+        public const int ActiveUniforms = 0x8B86;
+        public const int ActiveAttributes = 0x8B89;
+        public const int ShadingLanguageVersion = 0x8B8C;
+        public const int CurrentProgram = 0x8B8D;
+
+        /* StencilFunction */
+        public const int Never = 0x0200;
+        public const int Less = 0x0201;
+        public const int Equal = 0x0202;
+        public const int Lequal = 0x0203;
+        public const int Greater = 0x0204;
+        public const int Notequal = 0x0205;
+        public const int Gequal = 0x0206;
+        public const int Always = 0x0207;
+
+        /* StencilOp */
+        /*      ZERO */
+        public const int Keep = 0x1E00;
+        public const int Replace = 0x1E01;
+        public const int Incr = 0x1E02;
+        public const int Decr = 0x1E03;
+        public const int Invert = 0x150A;
+        public const int IncrWrap = 0x8507;
+        public const int DecrWrap = 0x8508;
+
+        /* StringName */
+        public const int Vendor = 0x1F00;
+        public const int Renderer = 0x1F01;
+        public const int Version = 0x1F02;
+
+        /* TextureMagFilter */
+        public const int Nearest = 0x2600;
+        public const int Linear = 0x2601;
+
+        /* TextureMinFilter */
+        /*      NEAREST */
+        /*      LINEAR */
+        public const int NearestMipmapNearest = 0x2700;
+        public const int LinearMipmapNearest = 0x2701;
+        public const int NearestMipmapLinear = 0x2702;
+        public const int LinearMipmapLinear = 0x2703;
+
+        /* TextureParameterName */
+        public const int TextureMagFilter = 0x2800;
+        public const int TextureMinFilter = 0x2801;
+        public const int TextureWrapS = 0x2802;
+        public const int TextureWrapT = 0x2803;
+
+        /* TextureTarget */
+        public const int Texture_2D = 0x0DE1;
+        public const int Texture = 0x1702;
+
+        public const int TextureCubeMap = 0x8513;
+        public const int TextureBindingCubeMap = 0x8514;
+        public const int TextureCubeMapPositiveX = 0x8515;
+        public const int TextureCubeMapNegativeX = 0x8516;
+        public const int TextureCubeMapPositiveY = 0x8517;
+        public const int TextureCubeMapNegativeY = 0x8518;
+        public const int TextureCubeMapPositiveZ = 0x8519;
+        public const int TextureCubeMapNegativeZ = 0x851A;
+        public const int MaxCubeMapTextureSize = 0x851C;
+
+        /* TextureUnit */
+        public const int Texture0 = 0x84C0;
+        public const int Texture1 = 0x84C1;
+        public const int Texture2 = 0x84C2;
+        public const int Texture3 = 0x84C3;
+        public const int Texture4 = 0x84C4;
+        public const int Texture5 = 0x84C5;
+        public const int Texture6 = 0x84C6;
+        public const int Texture7 = 0x84C7;
+        public const int Texture8 = 0x84C8;
+        public const int Texture9 = 0x84C9;
+        public const int Texture10 = 0x84CA;
+        public const int Texture11 = 0x84CB;
+        public const int Texture12 = 0x84CC;
+        public const int Texture13 = 0x84CD;
+        public const int Texture14 = 0x84CE;
+        public const int Texture15 = 0x84CF;
+        public const int Texture16 = 0x84D0;
+        public const int Texture17 = 0x84D1;
+        public const int Texture18 = 0x84D2;
+        public const int Texture19 = 0x84D3;
+        public const int Texture20 = 0x84D4;
+        public const int Texture21 = 0x84D5;
+        public const int Texture22 = 0x84D6;
+        public const int Texture23 = 0x84D7;
+        public const int Texture24 = 0x84D8;
+        public const int Texture25 = 0x84D9;
+        public const int Texture26 = 0x84DA;
+        public const int Texture27 = 0x84DB;
+        public const int Texture28 = 0x84DC;
+        public const int Texture29 = 0x84DD;
+        public const int Texture30 = 0x84DE;
+        public const int Texture31 = 0x84DF;
+        public const int ActiveTexture = 0x84E0;
+
+        /* TextureWrapMode */
+        public const int Repeat = 0x2901;
+        public const int ClampToEdge = 0x812F;
+        public const int MirroredRepeat = 0x8370;
+
+        /* Uniform Types */
+        public const int FloatVec2 = 0x8B50;
+        public const int FloatVec3 = 0x8B51;
+        public const int FloatVec4 = 0x8B52;
+        public const int IntVec2 = 0x8B53;
+        public const int IntVec3 = 0x8B54;
+        public const int IntVec4 = 0x8B55;
+        public const int Bool = 0x8B56;
+        public const int BoolVec2 = 0x8B57;
+        public const int BoolVec3 = 0x8B58;
+        public const int BoolVec4 = 0x8B59;
+        public const int FloatMat2 = 0x8B5A;
+        public const int FloatMat3 = 0x8B5B;
+        public const int FloatMat4 = 0x8B5C;
+        public const int Sampler_2D = 0x8B5E;
+        public const int SamplerCube = 0x8B60;
+
+        /* Vertex Arrays */
+        public const int VertexAttribArrayEnabled = 0x8622;
+        public const int VertexAttribArraySize = 0x8623;
+        public const int VertexAttribArrayStride = 0x8624;
+        public const int VertexAttribArrayType = 0x8625;
+        public const int VertexAttribArrayNormalized = 0x886A;
+        public const int VertexAttribArrayPointer = 0x8645;
+        public const int VertexAttribArrayBufferBinding = 0x889F;
+
+        /* Shader Source */
+        public const int CompileStatus = 0x8B81;
+
+        /* Shader Precision-Specified Types */
+        public const int LowFloat = 0x8DF0;
+        public const int MediumFloat = 0x8DF1;
+        public const int HighFloat = 0x8DF2;
+        public const int LowInt = 0x8DF3;
+        public const int MediumInt = 0x8DF4;
+        public const int HighInt = 0x8DF5;
+
+        /* Framebuffer Object. */
+        public const int FrameBuffer = 0x8D40;
+        public const int Renderbuffer = 0x8D41;
+
+        public const int Rgba4 = 0x8056;
+        public const int Rgb5A1 = 0x8057;
+        public const int Rgb565 = 0x8D62;
+        public const int DepthComponent16 = 0x81A5;
+        public const int StencilIndex = 0x1901;
+        public const int StencilIndex8 = 0x8D48;
+        public const int DepthStencil = 0x84F9;
+
+        public const int RenderbufferWidth = 0x8D42;
+        public const int RenderbufferHeight = 0x8D43;
+        public const int RenderbufferInternalFormat = 0x8D44;
+        public const int RenderbufferRedSize = 0x8D50;
+        public const int RenderbufferGreenSize = 0x8D51;
+        public const int RenderbufferBlueSize = 0x8D52;
+        public const int RenderbufferAlphaSize = 0x8D53;
+        public const int RenderbufferDepthSize = 0x8D54;
+        public const int RenderbufferStencilSize = 0x8D55;
+
+        public const int FramebufferAttachmentObjectType = 0x8CD0;
+        public const int FramebufferAttachmentObjectName = 0x8CD1;
+        public const int FramebufferAttachmentTextureLevel = 0x8CD2;
+        public const int FramebufferAttachmentTextureCubeMapFace = 0x8CD3;
+
+        public const int ColorAttachment0 = 0x8CE0;
+        public const int DepthAttachment = 0x8D00;
+        public const int StencilAttachment = 0x8D20;
+        public const int DepthStencilAttachment = 0x821A;
+
+        public const int None = 0;
+
+        public const int FramebufferComplete = 0x8CD5;
+        public const int FramebufferIncompleteAttachment = 0x8CD6;
+        public const int FramebufferIncompleteMissingAttachment = 0x8CD7;
+        public const int FramebufferIncompleteDimensions = 0x8CD9;
+        public const int FramebufferUnsupported = 0x8CDD;
+
+        public const int FramebufferBinding = 0x8CA6;
+        public const int RenderbufferBinding = 0x8CA7;
+        public const int MaxRenderbufferSize = 0x84E8;
+
+        public const int InvalidFramebufferOperation = 0x0506;
+
+        /* Type of texture unpacking. */
+        public const int UnpackFlipY = 0x9240;
+        public const int UnpackPremultiplyAlpha = 0x9241;
+        public const int ContextLost = 0x9242;
+        public const int UnpackColorspaceConversion = 0x9243;
+        
+    }
+
+
     [Imported]
     public abstract class WebGL{
 
-        /* What buffer to clear. Can use a combination of each one.*/
-    const int DEPTH_BUFFER_BIT = 0x00000100;
-    const int STENCIL_BUFFER_BIT = 0x00000400;
-    const int COLOR_BUFFER_BIT = 0x00004000;
-
-    /* BeginMode */
-    const int POINTS = 0x0000;
-    const int LINES = 0x0001;
-    const int LINE_LOOP = 0x0002;
-    const int LINE_STRIP = 0x0003;
-    const int TRIANGLES = 0x0004;
-    const int TRIANGLE_STRIP = 0x0005;
-    const int TRIANGLE_FAN = 0x0006;
-
-    /* BlendingFactorDest */
-    const int ZERO = 0;
-    const int ONE = 1;
-    const int SRC_COLOR = 0x0300;
-    const int ONE_MINUS_SRC_COLOR = 0x0301;
-    const int SRC_ALPHA = 0x0302;
-    const int ONE_MINUS_SRC_ALPHA = 0x0303;
-    const int DST_ALPHA = 0x0304;
-    const int ONE_MINUS_DST_ALPHA = 0x0305;
-
-    /* BlendingFactorSrc */
-    /*      ZERO */
-    /*      ONE */
-    const int DST_COLOR = 0x0306;
-    const int ONE_MINUS_DST_COLOR = 0x0307;
-    const int SRC_ALPHA_SATURATE = 0x0308;
-    /*      SRC_ALPHA */
-    /*      ONE_MINUS_SRC_ALPHA */
-    /*      DST_ALPHA */
-    /*      ONE_MINUS_DST_ALPHA */
-
-    /* BlendEquationSeparate */
-    const int FUNC_ADD = 0x8006;
-    const int BLEND_EQUATION = 0x8009;
-    const int BLEND_EQUATION_RGB = 0x8009;   /* same as BLEND_EQUATION */
-    const int BLEND_EQUATION_ALPHA = 0x883D;
-
-    /* BlendSubtract */
-    const int FUNC_SUBTRACT = 0x800A;
-    const int FUNC_REVERSE_SUBTRACT = 0x800B;
-
-    /* Separate Blend Functions */
-    const int BLEND_DST_RGB = 0x80C8;
-    const int BLEND_SRC_RGB = 0x80C9;
-    const int BLEND_DST_ALPHA = 0x80CA;
-    const int BLEND_SRC_ALPHA = 0x80CB;
-    const int CONSTANT_COLOR = 0x8001;
-    const int ONE_MINUS_CONSTANT_COLOR = 0x8002;
-    const int CONSTANT_ALPHA = 0x8003;
-    const int ONE_MINUS_CONSTANT_ALPHA = 0x8004;
-    const int BLEND_COLOR = 0x8005;
-
-    /* Buffer Objects */
-    const int ARRAY_BUFFER = 0x8892;
-    const int ELEMENT_ARRAY_BUFFER = 0x8893;
-    const int ARRAY_BUFFER_BINDING = 0x8894;
-    const int ELEMENT_ARRAY_BUFFER_BINDING = 0x8895;
-
-    const int STREAM_DRAW = 0x88E0;
-    const int STATIC_DRAW = 0x88E4;
-    const int DYNAMIC_DRAW = 0x88E8;
-
-    const int BUFFER_SIZE = 0x8764;
-    const int BUFFER_USAGE = 0x8765;
-
-    const int CURRENT_VERTEX_ATTRIBUTE = 0x8626;
-
-    /* CullFaceMode */
-    const int FRONT = 0x0404;
-    const int BACK = 0x0405;
-    const int FRONT_AND_BACK = 0x0408;
-
-    /* TEXTURE_2D */
-    const int CULL_FACE = 0x0B44;
-    const int BLEND = 0x0BE2;
-    const int DITHER = 0x0BD0;
-    const int STENCIL_TEST = 0x0B90;
-    const int DEPTH_TEST = 0x0B71;
-    const int SCISSOR_TEST = 0x0C11;
-    const int POLYGON_OFFSET_FILL = 0x8037;
-    const int SAMPLE_ALPHA_TO_COVERAGE = 0x809E;
-    const int SAMPLE_COVERAGE = 0x80A0;
-
-    /* ErrorCode */
-    const int NO_ERROR = 0;
-    const int INVALID_ENUM = 0x0500;
-    const int INVALID_VALUE = 0x0501;
-    const int INVALID_OPERATION = 0x0502;
-    const int OUT_OF_MEMORY = 0x0505;
-
-    /* FrontFaceDirection */
-    const int CW = 0x0900;
-    const int CCW = 0x0901;
-
-    /* GetPName */
-    const int LINE_WIDTH = 0x0B21;
-    const int ALIASED_POINT_SIZE_RANGE = 0x846D;
-    const int ALIASED_LINE_WIDTH_RANGE = 0x846E;
-    const int CULL_FACE_MODE = 0x0B45;
-    const int FRONT_FACE = 0x0B46;
-    const int DEPTH_RANGE = 0x0B70;
-    const int DEPTH_WRITEMASK = 0x0B72;
-    const int DEPTH_CLEAR_VALUE = 0x0B73;
-    const int DEPTH_FUNC = 0x0B74;
-    const int STENCIL_CLEAR_VALUE = 0x0B91;
-    const int STENCIL_FUNC = 0x0B92;
-    const int STENCIL_FAIL = 0x0B94;
-    const int STENCIL_PASS_DEPTH_FAIL = 0x0B95;
-    const int STENCIL_PASS_DEPTH_PASS = 0x0B96;
-    const int STENCIL_reff = 0x0B97;
-    const int STENCIL_VALUE_MASK = 0x0B93;
-    const int STENCIL_WRITEMASK = 0x0B98;
-    const int STENCIL_BACK_FUNC = 0x8800;
-    const int STENCIL_BACK_FAIL = 0x8801;
-    const int STENCIL_BACK_PASS_DEPTH_FAIL = 0x8802;
-    const int STENCIL_BACK_PASS_DEPTH_PASS = 0x8803;
-    const int STENCIL_BACK_reff = 0x8CA3;
-    const int STENCIL_BACK_VALUE_MASK = 0x8CA4;
-    const int STENCIL_BACK_WRITEMASK = 0x8CA5;
-    const int VIEWPORT = 0x0BA2;
-    const int SCISSOR_BOX = 0x0C10;
-
-    /*      SCISSOR_TEST */
-    const int COLOR_CLEAR_VALUE = 0x0C22;
-    const int COLOR_WRITEMASK = 0x0C23;
-    const int UNPACK_ALIGNMENT = 0x0CF5;
-    const int PACK_ALIGNMENT = 0x0D05;
-    const int MAX_TEXTURE_SIZE = 0x0D33;
-    const int MAX_VIEWPORT_DIMS = 0x0D3A;
-    const int SUBPIXEL_BITS = 0x0D50;
-    const int RED_BITS = 0x0D52;
-    const int GREEN_BITS = 0x0D53;
-    const int BLUE_BITS = 0x0D54;
-    const int ALPHA_BITS = 0x0D55;
-    const int DEPTH_BITS = 0x0D56;
-    const int STENCIL_BITS = 0x0D57;
-    const int POLYGON_OFFSET_UNITS = 0x2A00;
-
-    /*      POLYGON_OFFSET_FILL */
-    const int POLYGON_OFFSET_FACTOR = 0x8038;
-    const int TEXTURE_BINDING_2D = 0x8069;
-    const int SAMPLE_BUFFERS = 0x80A8;
-    const int SAMPLES = 0x80A9;
-    const int SAMPLE_COVERAGE_VALUE = 0x80AA;
-    const int SAMPLE_COVERAGE_INVERT = 0x80AB;
-
-
-    const int NUM_COMPRESSED_TEXTURE_FORMATS = 0x86A2;
-    const int COMPRESSED_TEXTURE_FORMATS = 0x86A3;
-
-    /* HintMode */
-    const int DONT_CARE = 0x1100;
-    const int FASTEST = 0x1101;
-    const int NICEST = 0x1102;
-
-    /* HintTarget */
-    const int GENERATE_MIPMAP_HINT = 0x8192;
-
-    /* DataType */
-    const int BYTE = 0x1400;
-    const int UNSIGNED_BYTE = 0x1401;
-    const int SHORT = 0x1402;
-    const int UNSIGNED_SHORT = 0x1403;
-    const int INT = 0x1404;
-    const int UNSIGNED_INT = 0x1405;
-    const int FLOAT = 0x1406;
-
-    /* PixelFormat */
-    const int DEPTH_COMPONENT = 0x1902;
-    const int ALPHA = 0x1906;
-    const int RGB = 0x1907;
-    const int RGBA = 0x1908;
-    const int LUMINANCE = 0x1909;
-    const int LUMINANCE_ALPHA = 0x190A;
-
-    /* PixelType */
-    /*      UNSIGNED_BYTE */
-    const int UNSIGNED_SHORT_4_4_4_4 = 0x8033;
-    const int UNSIGNED_SHORT_5_5_5_1 = 0x8034;
-    const int UNSIGNED_SHORT_5_6_5 = 0x8363;
-
-    /* Shaders */
-    const int FRAGMENT_SHADER = 0x8B30;
-    const int VERTEX_SHADER = 0x8B31;
-    const int MAX_VERTEX_ATTRIBS = 0x8869;
-    const int MAX_VERTEX_UNIFORM_VECTORS = 0x8DFB;
-    const int MAX_VARYING_VECTORS = 0x8DFC;
-    const int MAX_COMBINED_TEXTURE_IMAGE_UNITS = 0x8B4D;
-    const int MAX_VERTEX_TEXTURE_IMAGE_UNITS = 0x8B4C;
-    const int MAX_TEXTURE_IMAGE_UNITS = 0x8872;
-    const int MAX_FRAGMENT_UNIFORM_VECTORS = 0x8DFD;
-    const int SHADER_TYPE = 0x8B4F;
-    const int DELETE_STATUS = 0x8B80;
-    const int LINK_STATUS = 0x8B82;
-    const int VALIDATE_STATUS = 0x8B83;
-    const int ATTACHED_SHADERS = 0x8B85;
-    const int ACTIVE_UNIFORMS = 0x8B86;
-    const int ACTIVE_ATTRIBUTES = 0x8B89;
-    const int SHADING_LANGUAGE_VERSION = 0x8B8C;
-    const int CURRENT_PROGRAM = 0x8B8D;
-
-    /* StencilFunction */
-    const int NEVER = 0x0200;
-    const int LESS = 0x0201;
-    const int EQUAL = 0x0202;
-    const int LEQUAL = 0x0203;
-    const int GREATER = 0x0204;
-    const int NOTEQUAL = 0x0205;
-    const int GEQUAL = 0x0206;
-    const int ALWAYS = 0x0207;
-
-    /* StencilOp */
-    /*      ZERO */
-    const int KEEP = 0x1E00;
-    const int REPLACE = 0x1E01;
-    const int INCR = 0x1E02;
-    const int DECR = 0x1E03;
-    const int INVERT = 0x150A;
-    const int INCR_WRAP = 0x8507;
-    const int DECR_WRAP = 0x8508;
-
-    /* StringName */
-    const int VENDOR = 0x1F00;
-    const int RENDERER = 0x1F01;
-    const int VERSION = 0x1F02;
-
-    /* TextureMagFilter */
-    const int NEAREST = 0x2600;
-    const int LINEAR = 0x2601;
-
-    /* TextureMinFilter */
-    /*      NEAREST */
-    /*      LINEAR */
-    const int NEAREST_MIPMAP_NEAREST = 0x2700;
-    const int LINEAR_MIPMAP_NEAREST = 0x2701;
-    const int NEAREST_MIPMAP_LINEAR = 0x2702;
-    const int LINEAR_MIPMAP_LINEAR = 0x2703;
-
-    /* TextureParameterName */
-    const int TEXTURE_MAG_FILTER = 0x2800;
-    const int TEXTURE_MIN_FILTER = 0x2801;
-    const int TEXTURE_WRAP_S = 0x2802;
-    const int TEXTURE_WRAP_T = 0x2803;
-
-    /* TextureTarget */
-    const int TEXTURE_2D = 0x0DE1;
-    const int TEXTURE = 0x1702;
-
-    const int TEXTURE_CUBE_MAP = 0x8513;
-    const int TEXTURE_BINDING_CUBE_MAP = 0x8514;
-    const int TEXTURE_CUBE_MAP_POSITIVE_X = 0x8515;
-    const int TEXTURE_CUBE_MAP_NEGATIVE_X = 0x8516;
-    const int TEXTURE_CUBE_MAP_POSITIVE_Y = 0x8517;
-    const int TEXTURE_CUBE_MAP_NEGATIVE_Y = 0x8518;
-    const int TEXTURE_CUBE_MAP_POSITIVE_Z = 0x8519;
-    const int TEXTURE_CUBE_MAP_NEGATIVE_Z = 0x851A;
-    const int MAX_CUBE_MAP_TEXTURE_SIZE = 0x851C;
-
-    /* TextureUnit */
-    const int TEXTURE0 = 0x84C0;
-    const int TEXTURE1 = 0x84C1;
-    const int TEXTURE2 = 0x84C2;
-    const int TEXTURE3 = 0x84C3;
-    const int TEXTURE4 = 0x84C4;
-    const int TEXTURE5 = 0x84C5;
-    const int TEXTURE6 = 0x84C6;
-    const int TEXTURE7 = 0x84C7;
-    const int TEXTURE8 = 0x84C8;
-    const int TEXTURE9 = 0x84C9;
-    const int TEXTURE10 = 0x84CA;
-    const int TEXTURE11 = 0x84CB;
-    const int TEXTURE12 = 0x84CC;
-    const int TEXTURE13 = 0x84CD;
-    const int TEXTURE14 = 0x84CE;
-    const int TEXTURE15 = 0x84CF;
-    const int TEXTURE16 = 0x84D0;
-    const int TEXTURE17 = 0x84D1;
-    const int TEXTURE18 = 0x84D2;
-    const int TEXTURE19 = 0x84D3;
-    const int TEXTURE20 = 0x84D4;
-    const int TEXTURE21 = 0x84D5;
-    const int TEXTURE22 = 0x84D6;
-    const int TEXTURE23 = 0x84D7;
-    const int TEXTURE24 = 0x84D8;
-    const int TEXTURE25 = 0x84D9;
-    const int TEXTURE26 = 0x84DA;
-    const int TEXTURE27 = 0x84DB;
-    const int TEXTURE28 = 0x84DC;
-    const int TEXTURE29 = 0x84DD;
-    const int TEXTURE30 = 0x84DE;
-    const int TEXTURE31 = 0x84DF;
-    const int ACTIVE_TEXTURE = 0x84E0;
-
-    /* TextureWrapMode */
-    const int REPEAT = 0x2901;
-    const int CLAMP_TO_EDGE = 0x812F;
-    const int MIRRORED_REPEAT = 0x8370;
-
-    /* Uniform Types */
-    const int FLOAT_VEC2 = 0x8B50;
-    const int FLOAT_VEC3 = 0x8B51;
-    const int FLOAT_VEC4 = 0x8B52;
-    const int INT_VEC2 = 0x8B53;
-    const int INT_VEC3 = 0x8B54;
-    const int INT_VEC4 = 0x8B55;
-    const int BOOL = 0x8B56;
-    const int BOOL_VEC2 = 0x8B57;
-    const int BOOL_VEC3 = 0x8B58;
-    const int BOOL_VEC4 = 0x8B59;
-    const int FLOAT_MAT2 = 0x8B5A;
-    const int FLOAT_MAT3 = 0x8B5B;
-    const int FLOAT_MAT4 = 0x8B5C;
-    const int SAMPLER_2D = 0x8B5E;
-    const int SAMPLER_CUBE = 0x8B60;
-
-    /* Vertex Arrays */
-    const int VERTEX_ATTRIB_ARRAY_ENABLED = 0x8622;
-    const int VERTEX_ATTRIB_ARRAY_SIZE = 0x8623;
-    const int VERTEX_ATTRIB_ARRAY_STRIDE = 0x8624;
-    const int VERTEX_ATTRIB_ARRAY_TYPE = 0x8625;
-    const int VERTEX_ATTRIB_ARRAY_NORMALIZED = 0x886A;
-    const int VERTEX_ATTRIB_ARRAY_POINTER = 0x8645;
-    const int VERTEX_ATTRIB_ARRAY_BUFFER_BINDING = 0x889F;
-
-    /* Shader Source */
-    const int COMPILE_STATUS = 0x8B81;
-
-    /* Shader Precision-Specified Types */
-    const int LOW_FLOAT = 0x8DF0;
-    const int MEDIUM_FLOAT = 0x8DF1;
-    const int HIGH_FLOAT = 0x8DF2;
-    const int LOW_INT = 0x8DF3;
-    const int MEDIUM_INT = 0x8DF4;
-    const int HIGH_INT = 0x8DF5;
-
-    /* Framebuffer Object. */
-    const int FRAMEBUFFER = 0x8D40;
-    const int RENDERBUFFER = 0x8D41;
-
-    const int RGBA4 = 0x8056;
-    const int RGB5_A1 = 0x8057;
-    const int RGB565 = 0x8D62;
-    const int DEPTH_COMPONENT16 = 0x81A5;
-    const int STENCIL_INDEX = 0x1901;
-    const int STENCIL_INDEX8 = 0x8D48;
-    const int DEPTH_STENCIL = 0x84F9;
-
-    const int RENDERBUFFER_WIDTH = 0x8D42;
-    const int RENDERBUFFER_HEIGHT = 0x8D43;
-    const int RENDERBUFFER_INTERNAL_FORMAT = 0x8D44;
-    const int RENDERBUFFER_RED_SIZE = 0x8D50;
-    const int RENDERBUFFER_GREEN_SIZE = 0x8D51;
-    const int RENDERBUFFER_BLUE_SIZE = 0x8D52;
-    const int RENDERBUFFER_ALPHA_SIZE = 0x8D53;
-    const int RENDERBUFFER_DEPTH_SIZE = 0x8D54;
-    const int RENDERBUFFER_STENCIL_SIZE = 0x8D55;
-
-    const int FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE = 0x8CD0;
-    const int FRAMEBUFFER_ATTACHMENT_OBJECT_NAME = 0x8CD1;
-    const int FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL = 0x8CD2;
-    const int FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE = 0x8CD3;
-
-    const int COLOR_ATTACHMENT0 = 0x8CE0;
-    const int DEPTH_ATTACHMENT = 0x8D00;
-    const int STENCIL_ATTACHMENT = 0x8D20;
-    const int DEPTH_STENCIL_ATTACHMENT = 0x821A;
-
-    const int NONE = 0;
-
-    const int FRAMEBUFFER_COMPLETE = 0x8CD5;
-    const int FRAMEBUFFER_INCOMPLETE_ATTACHMENT = 0x8CD6;
-    const int FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT = 0x8CD7;
-    const int FRAMEBUFFER_INCOMPLETE_DIMENSIONS = 0x8CD9;
-    const int FRAMEBUFFER_UNSUPPORTED = 0x8CDD;
-
-    const int FRAMEBUFFER_BINDING = 0x8CA6;
-    const int RENDERBUFFER_BINDING = 0x8CA7;
-    const int MAX_RENDERBUFFER_SIZE = 0x84E8;
-
-    const int INVALID_FRAMEBUFFER_OPERATION = 0x0506;
-
-    /* Type of texture unpacking. */
-    const int UNPACK_FLIP_Y = 0x9240;
-    const int UNPACK_PREMULTIPLY_ALPHA = 0x9241;
-    const int CONTEXT_LOST = 0x9242;
-    const int UNPACK_COLORSPACE_CONVERSION = 0x9243;
+   
 
     /* ---------------------------------------Core Functions-----------------------------------------------------------*/
 
-    public abstract int getScreenWidth();
+    public abstract int GetScreenWidth();
 
-    public abstract int getScreenHeight();
+    public abstract int GetScreenHeight();
 
-    public abstract void blendColor(Color color);
+    public abstract void BlendColor(Color color);
 
-    public abstract void blendEquation(int mode);
+    public abstract void BlendEquation(int mode);
 
-    public abstract void blendEquationSeparate(int modeRGB, int modeAlpha);
+    public abstract void BlendEquationSeparate(int modeRgb, int modeAlpha);
 
-    public abstract void blendFunction(int sourceFactor, int destinationFactor);
+    public abstract void BlendFunction(int sourceFactor, int destinationFactor);
 
-    public abstract void blendFunctionSeparate(int sourceRGB, int destinationRGB, int sourceAlpha, int destinationAlpha);
+    public abstract void BlendFunctionSeparate(int sourceRgb, int destinationRgb, int sourceAlpha, int destinationAlpha);
 
-    public abstract void clear(int mask);
+    public abstract void Clear(int mask);
 
-    public abstract void clearColor(float red, float green, float blue, float alpha);
+    public abstract void ClearColor(float red, float green, float blue, float alpha);
 
-    public abstract void clearDepth(float depth);
+    public abstract void ClearDepth(float depth);
 
-    public abstract void clearStencil(int s);
+    public abstract void ClearStencil(int s);
 
-    public abstract void colorMask(bool red, bool green, bool blue, bool alpha);
+    public abstract void ColorMask(bool red, bool green, bool blue, bool alpha);
 
-    public abstract void cullFace(int mode);
+    public abstract void CullFace(int mode);
 
-    public abstract void depthFunc(int func);
+    public abstract void DepthFunc(int func);
 
-    public abstract void depthMask(bool flag);
+    public abstract void DepthMask(bool flag);
 
-    public abstract void depthRange(float zNear, float zFar);
+    public abstract void DepthRange(float zNear, float zFar);
 
-    public abstract void disable(int component);
+    public abstract void Disable(int component);
 
-    public abstract void enable(int component);
+    public abstract void Enable(int component);
 
-    public abstract void finish();
+    public abstract void Finish();
 
-    public abstract void flush();
+    public abstract void Flush();
 
-    public abstract int getError();
+    public abstract int GetError();
 
-    public abstract void hint(int target, int mode);
+    public abstract void Hint(int target, int mode);
 
-    public abstract bool isEnabled(int cap);
+    public abstract bool IsEnabled(int cap);
 
-    public abstract void pixelStore(int pName, int param);
+    public abstract void PixelStore(int pName, int param);
 
-    public abstract void polygonOffset(float factor, float offset);
+    public abstract void PolygonOffset(float factor, float offset);
 
-    public abstract void sampleCoverage(float value, bool invert);
+    public abstract void SampleCoverage(float value, bool invert);
 
-    public abstract void scissor(int x, int y, int width, int height);
+    public abstract void Scissor(int x, int y, int width, int height);
 
-    public abstract void stencilFunction(int func, int reff, int mask);
+    public abstract void StencilFunction(int func, int reff, int mask);
 
-    public abstract void stencilFuncSeparate(int face, int func, int reff, int mask);
+    public abstract void StencilFuncSeparate(int face, int func, int reff, int mask);
 
-    public abstract void stencilMask(int mask);
+    public abstract void StencilMask(int mask);
 
-    public abstract void stencilMaskSeparate(int face, int mask);
+    public abstract void StencilMaskSeparate(int face, int mask);
 
-    public abstract void stencilOp(int fail, int zFail, int zPass);
+    public abstract void StencilOp(int fail, int zFail, int zPass);
 
-    public abstract void stencilOpSeparate(int face, int fail, int zFail, int zPass);
+    public abstract void StencilOpSeparate(int face, int fail, int zFail, int zPass);
 
-    public abstract void viewport(int x, int y, int width, int height);
+    public abstract void Viewport(int x, int y, int width, int height);
 
     /* ------------------------------------------Drawing------------------------------------------------------*/
 
-    public abstract void drawArrays(int mode, int first, int count);
+    public abstract void DrawArrays(int mode, int first, int count);
 
-    public abstract void drawElements(int mode, int count, int type, int offset);
+    public abstract void DrawElements(int mode, int count, int type, int offset);
 
-    public abstract void frontFace(int mode);
+    public abstract void FrontFace(int mode);
 
-    public abstract void lineWidth(float width);
+    public abstract void LineWidth(float width);
 
     /* ------------------------------------------Textures------------------------------------------------------*/
 
-    public abstract void activateTexture(int texture);
+    public abstract void ActivateTexture(int texture);
 
-    public abstract void bindTexture(int target, Texture texture);
+    public abstract void BindTexture(int target, Texture texture);
 
-    public abstract void copyTexImage2D(int target, int level, int internalFormat, int x, int y, int width, int height,
+    public abstract void CopyTexImage2D(int target, int level, int internalFormat, int x, int y, int width, int height,
                                int border);
 
-    public abstract void copyTexSubImage2D(int target, int level, int xOffset, int yOffset,
+    public abstract void CopyTexSubImage2D(int target, int level, int xOffset, int yOffset,
                                   int x, int y, int width, int height);
 
-    public abstract Texture createTexture();
+    public abstract Texture CreateTexture();
 
-    public abstract void deleteTexture(Texture texture);
+    public abstract void DeleteTexture(Texture texture);
 
-    public abstract void generateMipmap(int target);
+    public abstract void GenerateMipmap(int target);
 
-    public abstract float getTextureParameter(int target, int pName);
+    public abstract float GetTextureParameter(int target, int pName);
 
-    public abstract bool isTexture(Texture texture);
+    public abstract bool IsTexture(Texture texture);
 
-    public abstract void texImage2D(int target, int level, int internalFormat, int format, int type, ImageData image);
+    public abstract void TexImage2D(int target, int level, int internalFormat, int format, int type, ImageData image);
 
-    public abstract void texImage2D(int target, int level, int internalFormat, int format, int type, IImageResource image);
+    public abstract void TexImage2D(int target, int level, int internalFormat, int format, int type, IImageResource image);
 
-    public abstract void texParameter(int target, int pName, float param);
+    public abstract void TexParameter(int target, int pName, float param);
 
-    public abstract void texParameter(int target, int pName, int param);
+    public abstract void TexParameter(int target, int pName, int param);
 
-    public abstract void texImage2D(int target, int level, int xOffset, int yOffset, int format, int type, ImageData image);
+    public abstract void TexImage2D(int target, int level, int xOffset, int yOffset, int format, int type, ImageData image);
 
-    public abstract void texImage2D(int target, int level, int xOffset, int yOffset, int format, int type, IImageResource image);
+    public abstract void TexImage2D(int target, int level, int xOffset, int yOffset, int format, int type, IImageResource image);
 
 
     /* --------------------------------------------Shaders---------------------------------------------------*/
 
-    public abstract void attachShader(ShaderProgram program, Shader shader);
+    public abstract void AttachShader(IShaderProgram program, IShader shader);
 
-    public abstract void compileShader(Shader shader);
+    public abstract void CompileShader(IShader shader);
 
-    public abstract ShaderProgram createShaderProgram();
+    public abstract IShaderProgram CreateProgram();
 
-    public abstract Shader createShader(int type);
+    public abstract IShader CreateShader(int type);
 
-    public abstract void deleteShaderProgram(Shader program);
+    public abstract void DeleteShaderProgram(IShader program);
 
-    public abstract void deleteShader(Shader shader);
+    public abstract void DeleteShader(IShader shader);
 
-    public abstract void detachShader(ShaderProgram program, Shader shader);
+    public abstract void DetachShader(IShaderProgram program, IShader shader);
 
-    public abstract List<Shader> getAttachedShaders(ShaderProgram program);
+    public abstract List<IShader> GetAttachedShaders(IShaderProgram program);
 
-    public abstract Object getProgramParameter(ShaderProgram program, int pName);
+    public abstract Object GetProgramParameter(IShaderProgram program, int pName);
 
-    public abstract String getProgramInfoLog(ShaderProgram program);
+    public abstract String GetProgramInfoLog(IShaderProgram program);
 
-    public abstract Object getShaderParameter(ShaderProgram shader, int pName);
+    public abstract Object GetShaderParameter(IShader shader, int pName);
 
-    public abstract String getShaderInfoLog(Shader shader);
+    public abstract String GetShaderInfoLog(IShader shader);
 
-    public abstract String getShaderSource(Shader shader);
+    public abstract String GetShaderSource(IShader shader);
 
-    public abstract bool isShaderProgram(ShaderProgram shaderProgram);
+    public abstract bool IsShaderProgram(IShaderProgram shaderProgram);
 
-    public abstract bool isShader(Shader shader);
+    public abstract bool IsShader(IShader shader);
 
-    public abstract void linkProgram(ShaderProgram program);
+    public abstract void LinkProgram(IShaderProgram program);
 
-    public abstract void shaderSource(Shader shader, String source);
+    public abstract void ShaderSource(IShader shader, String source);
 
-    public abstract void useProgram(ShaderProgram program);
+    public abstract void UseProgram(IShaderProgram program);
 
-    public abstract void validateProgram(ShaderProgram program);
+    public abstract void ValidateProgram(IShaderProgram program);
 
     /* --------------------------------------Attributes and Uniforms---------------------------------------------------*/
 
-    public abstract void bindAttributeLocation(ShaderProgram program, int index, String name);
+    public abstract void BindAttributeLocation(ShaderProgram program, int index, String name);
 
-    public abstract void disableVertexAttributeArray(int index);
+    public abstract void DisableVertexAttributeArray(int index);
 
-    public abstract void enableVertexAttributeArray(int index);
+    public abstract void EnableVertexAttributeArray(int index);
 
-    public abstract ActiveInfo getActiveAttribute(ShaderProgram program, int index);
+    public abstract ActiveInfo GetActiveAttribute(ShaderProgram program, int index);
 
-    public abstract ActiveInfo getActiveUniform(ShaderProgram program, int index);
+    public abstract ActiveInfo GetActiveUniform(ShaderProgram program, int index);
 
-    public abstract int getAttributeLocation(ShaderProgram program, String name);
+    public abstract int GetAttributeLocation(ShaderProgram program, String name);
 
-    public abstract List<float> getUniform(ShaderProgram program, UniformLocation location);
+    public abstract List<float> GetUniform(ShaderProgram program, UniformLocation location);
 
-    public abstract UniformLocation getUniformLocation(ShaderProgram program, String name);
+    public abstract UniformLocation GetUniformLocation(ShaderProgram program, String name);
 
-    public abstract Object getVertexAttribute(int index, int pName);
+    public abstract Object GetVertexAttribute(int index, int pName);
 
-    public abstract int getVertexAttributeOffset(int index, int pName);
+    public abstract int GetVertexAttributeOffset(int index, int pName);
 
-    public abstract void uniform1f(UniformLocation location, float x);
+    public abstract void Uniform1F(UniformLocation location, float x);
 
-    public abstract void uniform1f(UniformLocation location, float[] v);
+    public abstract void Uniform1F(UniformLocation location, float[] v);
 
-    public abstract void uniform1i(UniformLocation location, int x);
+    public abstract void Uniform1I(UniformLocation location, int x);
 
-    public abstract void uniform1i(UniformLocation location, int[] v);
+    public abstract void Uniform1I(UniformLocation location, int[] v);
 
-    public abstract void uniform2f(UniformLocation location, float x, float y);
+    public abstract void Uniform2F(UniformLocation location, float x, float y);
 
-    public abstract void uniform2f(UniformLocation location, float[] v);
+    public abstract void Uniform2F(UniformLocation location, float[] v);
 
-    public abstract void uniform2i(UniformLocation location, int x, int y);
+    public abstract void Uniform2I(UniformLocation location, int x, int y);
 
-    public abstract void uniform2i(UniformLocation location, int[] v);
+    public abstract void Uniform2I(UniformLocation location, int[] v);
 
-    public abstract void uniform3f(UniformLocation location, float x, float y, float z);
+    public abstract void Uniform3F(UniformLocation location, float x, float y, float z);
 
-    public abstract void uniform3f(UniformLocation location, float[] v);
+    public abstract void Uniform3F(UniformLocation location, float[] v);
 
-    public abstract void uniform3i(UniformLocation location, int x, int y, int z);
+    public abstract void Uniform3I(UniformLocation location, int x, int y, int z);
 
-    public abstract void uniform3i(UniformLocation location, int[] v);
+    public abstract void Uniform3I(UniformLocation location, int[] v);
 
-    public abstract void uniform4f(UniformLocation location, float x, float y, float z, float w);
+    public abstract void Uniform4F(UniformLocation location, float x, float y, float z, float w);
 
-    public abstract void uniform4f(UniformLocation location, float[] v);
+    public abstract void Uniform4F(UniformLocation location, float[] v);
 
-    public abstract void uniform4i(UniformLocation location, int x, int y, int z, int w);
+    public abstract void Uniform4I(UniformLocation location, int x, int y, int z, int w);
 
-    public abstract void uniform4i(UniformLocation location, int[] v);
+    public abstract void Uniform4I(UniformLocation location, int[] v);
 
-    public abstract void uniformMatrix2f(UniformLocation location, bool transpose, float[] value);
+    public abstract void UniformMatrix2F(UniformLocation location, bool transpose, float[] value);
 
-    public abstract void uniformMatrix3f(UniformLocation location, bool transpose, float[] value);
+    public abstract void UniformMatrix3F(UniformLocation location, bool transpose, float[] value);
 
-    public abstract void uniformMatrix4f(UniformLocation location, bool transpose, float[] value);
+    public abstract void UniformMatrix4F(UniformLocation location, bool transpose, float[] value);
 
-    public abstract void vertexAttribute1f(int index, float x);
+    public abstract void VertexAttribute1F(int index, float x);
 
-    public abstract void vertexAttribute1f(int index, float[] values);
+    public abstract void VertexAttribute1F(int index, float[] values);
 
-    public abstract void vertexAttribute2f(int index, float x, float y);
+    public abstract void VertexAttribute2F(int index, float x, float y);
 
-    public abstract void vertexAttribute2f(int index, float[] values);
+    public abstract void VertexAttribute2F(int index, float[] values);
 
-    public abstract void vertexAttribute3f(int index, float x, float y, float z);
+    public abstract void VertexAttribute3F(int index, float x, float y, float z);
 
-    public abstract void vertexAttribute3f(int index, float[] values);
+    public abstract void VertexAttribute3F(int index, float[] values);
 
-    public abstract void vertexAttribute4f(int index, float x, float y, float z, float w);
+    public abstract void VertexAttribute4F(int index, float x, float y, float z, float w);
 
-    public abstract void vertexAttribute4f(int index, float[] values);
+    public abstract void VertexAttribute4F(int index, float[] values);
 
-    public abstract void vertexAttributePointer(int index, int size, int type, bool normalized, int stride, int offset);
+    public abstract void VertexAttributePointer(int index, int size, int type, bool normalized, int stride, int offset);
 
 
     /* ------------------------------------------- Buffers -------------------------------------------------------*/
 
-    public abstract void bindBuffer(int target, Buffer buffer);
+    public abstract void BindBuffer(int target, Buffer buffer);
 
-    public abstract void bufferData(int target, Array data, int usage);
+    public abstract void BufferData(int target, Array data, int usage);
 
-    public abstract void bufferSubData(int target, int offset,Array data);
+    public abstract void BufferSubData(int target, int offset,Array data);
 
-    public abstract Buffer createBuffer();
+    public abstract Buffer CreateBuffer();
 
-    public abstract void deleteBuffer(Buffer buffer);
+    public abstract void DeleteBuffer(Buffer buffer);
 
-    public abstract bool isBuffer(Buffer buffer);
+    public abstract bool IsBuffer(Buffer buffer);
 
     /* -----------------------------------------Frame Buffer-----------------------------------------------------------*/
 
-    public abstract void bindFrameBuffer(int target, FrameBuffer frameBuffer);
+    public abstract void BindFrameBuffer(int target, FrameBuffer frameBuffer);
 
-    public abstract int checkFrameBufferStatus(int target);
+    public abstract int CheckFrameBufferStatus(int target);
 
-    public abstract FrameBuffer createFameBuffer();
+    public abstract FrameBuffer CreateFameBuffer();
 
-    public abstract void deleteFrameBuffer(FrameBuffer frameBuffer);
+    public abstract void DeleteFrameBuffer(FrameBuffer frameBuffer);
 
-    public abstract void frameBufferRenderBuffer(int target, int attachment, int renderBufferTarget,
+    public abstract void FrameBufferRenderBuffer(int target, int attachment, int renderBufferTarget,
                                         RenderBuffer renderBuffer);
-    public abstract void frameBufferTexture2D(int target, int attachment, int textureTarget, Texture texture, int level);
+    public abstract void FrameBufferTexture2D(int target, int attachment, int textureTarget, Texture texture, int level);
 
-    public abstract Object getFrameBufferAttachmentParameter(int target, int attachment, int pName);
+    public abstract Object GetFrameBufferAttachmentParameter(int target, int attachment, int pName);
 
-    public abstract bool isFrameBuffer(FrameBuffer frameBuffer);
+    public abstract bool IsFrameBuffer(FrameBuffer frameBuffer);
 
-    public abstract void readPixels(int x, int y, int width, int height, int format, int type, Array pixels);
+    public abstract void ReadPixels(int x, int y, int width, int height, int format, int type, Array pixels);
 
     /* -----------------------------------------Render Buffer-----------------------------------------------------------*/
 
-    public abstract void bindRenderBuffer(int target, RenderBuffer renderBuffer);
+    public abstract void BindRenderBuffer(int target, RenderBuffer renderBuffer);
 
-    public abstract RenderBuffer createRenderBuffer();
+    public abstract RenderBuffer CreateRenderBuffer();
 
-    public abstract void deleteRenderBuffer(RenderBuffer buffer);
+    public abstract void DeleteRenderBuffer(RenderBuffer buffer);
 
-    public abstract Object getRenderBufferParameter(int target, int pName);
+    public abstract Object GetRenderBufferParameter(int target, int pName);
 
-    public abstract bool isRenderBuffer(RenderBuffer renderBuffer);
+    public abstract bool IsRenderBuffer(RenderBuffer renderBuffer);
 
-    public abstract void renderBufferStorage(int target, int internalFormat, int width, int height);
+    public abstract void RenderBufferStorage(int target, int internalFormat, int width, int height);
     }
 }

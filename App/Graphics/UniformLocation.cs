@@ -5,6 +5,9 @@ using System;
 using System.Collections.Generic;
 
 namespace GLSharp.Graphics {
-    public class UniformLocation {
+    /*types of uniforms*/
+
+
+    public class UniformLocation : IUniformLocation {
     }
 }

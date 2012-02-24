@@ -47,8 +47,14 @@
   <ItemGroup>
     <Content Include="Properties\Graphics.ruleset" />
     <Content Include="Properties\Graphics.script" />
+    <Compile Include="Graphics\ICompiledShader.cs" />
+    <Compile Include="Graphics\IUniform.cs" />
     <Compile Include="Graphics\Color.cs" />
     <Compile Include="Graphics\IGraphics.cs" />
+    <Compile Include="Graphics\IShader.cs" />
+    <Compile Include="Graphics\IShaderProgram.cs" />
+    <Compile Include="Graphics\IUniformLocation.cs" />
+    <Compile Include="Graphics\Material.cs" />
     <Compile Include="Universe\Component.cs" />
     <Compile Include="Universe\Node.cs" />
     <Compile Include="Universe\World.cs" />

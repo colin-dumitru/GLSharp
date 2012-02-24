@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Serialization;
+using GLSharp.Graphics;
+using System.Xml;
+using GLSharp.Util.Xml;
 
 namespace GLSharp.Data {
     public interface IResourceLoader {
@@ -75,8 +78,106 @@ namespace GLSharp.Data {
             return ret;
         }
     }
+    //------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------
+    public class ShaderLoader : IResourceLoader {
+        private WebGL _gl = null;
 
+        public ShaderLoader(WebGL gl) {
+            this._gl = gl;
+        }
 
+        public List<string> Extension {
+            get {
+                List<String> ret = new List<String>();
+                ret.Add(".shader");
+                return ret;
+            }
+        }
+
+        public Resource Load(string url) {
+            Resource ret = new Resource();
+            ret.Finished = false;
+
+            XmlHttpRequest req = new XmlHttpRequest();
+
+            req.Open(HttpVerb.Get, url, true);
+            req.OnReadyStateChange = delegate() {
+                if (req.ReadyState == ReadyState.Loaded && req.Status == 200) {
+                    ret.Finished = true;
+
+                    /*parse the xml document*/
+                    ret.Data = this.ParseShader(XmlDocumentParser.Parse(req.ResponseText));
+                }
+            };
+
+            req.Send();
+            return ret;
+        }
+
+        private ICompiledShader ParseShader(XmlDocument doc) {
+            if(doc.DocumentElement.Name != "shader") 
+                throw new Exception("Invalid shader file");
+
+            /*source code for vertex / fragment shaders*/
+            String sourceFragment = null;
+            String sourceVertex = null;
+
+            CompiledShader ret = new CompiledShader();
+
+            /*the name of the shader*/
+            ret.Name = doc.DocumentElement.Attributes.GetNamedItem("name").Value;
+
+            foreach (XmlNode xmlNode in doc.DocumentElement.ChildNodes) {
+                if (xmlNode.NodeType != XmlNodeType.Element) continue;
+                
+                if(xmlNode.Name == "vertex_shader") {
+                    sourceVertex = XmlHelper.InnerText(xmlNode);
+                } else if(xmlNode.Name == "fragment_shader") {
+                    sourceFragment = XmlHelper.InnerText(xmlNode);
+                } else if(xmlNode.Name == "uniform") {
+                    //ret.Uniforms[XmlHelper.InnerText(xmlNode)]
+                }
+            }
+
+            if(sourceFragment == null || sourceVertex == null)
+                throw new Exception("Shader file does not contain fragment and vertex shaders");
+
+            /*compile shaders*/
+            IShader shaderFragment = this.CompileShader(sourceFragment, WebGLE.FragmentShader);
+            IShader shaderVertex = this.CompileShader(sourceVertex, WebGLE.VertexShader);
+
+            /*create the program*/
+            IShaderProgram shaderProgram = this._gl.CreateProgram();
+
+            this._gl.AttachShader(shaderProgram, shaderFragment);
+            this._gl.AttachShader(shaderProgram, shaderVertex);
+            this._gl.LinkProgram(shaderProgram);
+
+            if (!(bool)this._gl.GetProgramParameter(shaderProgram, WebGLE.LinkStatus)) {
+                throw new Exception("Cannot link shaders.");
+            }
+
+            ret.ShaderProgram = shaderProgram;
+
+            return ret;
+
+        }
+
+        private IShader CompileShader(String source, int type) {
+            IShader ret = this._gl.CreateShader(type);
+
+            this._gl.ShaderSource(ret, source);
+            this._gl.CompileShader(ret);
+
+            if(!(bool)this._gl.GetShaderParameter(ret, WebGLE.CompileStatus)) {
+                throw new Exception("Cannot compile shader.");
+            }
+            
+
+            return ret;
+        }
+    }
     //------------------------------------------------------------------------------------------
     //------------------------------------------------------------------------------------------
 
