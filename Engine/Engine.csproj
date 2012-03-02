@@ -55,7 +55,10 @@
     <Compile Include="Graphics\IShaderProgram.cs" />
     <Compile Include="Graphics\IUniformLocation.cs" />
     <Compile Include="Graphics\Material.cs" />
+    <Compile Include="Graphics\Mesh.cs" />
+    <Compile Include="Resource\Library.cs" />
     <Compile Include="Universe\Component.cs" />
+    <Compile Include="Universe\MeshComponent.cs" />
     <Compile Include="Universe\Node.cs" />
     <Compile Include="Universe\World.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -66,5 +69,6 @@
       <Name>Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(ProgramFiles)\ScriptSharp\v1.0\ScriptSharp.targets" />
 </Project>

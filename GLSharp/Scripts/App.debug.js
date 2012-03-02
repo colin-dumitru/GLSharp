@@ -145,6 +145,8 @@ GLSharp.Data.ShaderLoader.prototype = {
             else if (xmlNode.nodeName === 'fragment_shader') {
                 sourceFragment = XmlHelper.innerText(xmlNode);
             }
+            else if (xmlNode.nodeName === 'uniform') {
+            }
         }
         if (sourceFragment == null || sourceVertex == null) {
             throw new Error('Shader file does not contain fragment and vertex shaders');

@@ -180,8 +180,6 @@ namespace GLSharp.Data {
     }
     //------------------------------------------------------------------------------------------
     //------------------------------------------------------------------------------------------
-
-
     public class ResourceManager : IResourceManager {
 
         private readonly Dictionary<String, IResourceLoader> _loaders = new Dictionary<string, IResourceLoader>();

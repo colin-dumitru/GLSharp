@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<TestRun id="cc44d592-537a-4ba4-8429-c0ec6964efe3" name="colin@COLIN-PC 2012-02-29 17:32:04" runUser="colin-PC\colin" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <TestSettings name="Default Test Settings" id="9aeeddb9-63fb-4c91-acac-3c3e67044d12">
+    <Deployment runDeploymentRoot="colin_COLIN-PC 2012-02-29 17_32_04">
+      <DeploymentItem filename="E:\My Work\C#\GL#\GLSharp\bin\GLSharp.dll" />
+    </Deployment>
+    <Execution>
+      <TestTypeSpecific />
+      <AgentRule name="Execution Agents">
+      </AgentRule>
+    </Execution>
+  </TestSettings>
+  <Times creation="2012-02-29T17:32:04.9674819+02:00" queuing="2012-02-29T17:32:14.4515707+02:00" start="2012-02-29T17:32:15.0453070+02:00" finish="2012-02-29T17:32:17.0765101+02:00" />
+  <ResultSummary outcome="Completed">
+    <Counters total="16" executed="16" passed="16" error="0" failed="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+  </ResultSummary>
+  <TestDefinitions>
+    <UnitTest name="Register_Post_ReturnsViewIfModelStateIsInvalid" storage="e:\my work\c#\gl#\glsharp.tests\bin\debug\glsharp.tests.dll" id="4263fafd-e229-1acc-f1a7-7813dd01b7c0">
+      <Execution id="5ed39077-8c6d-4ae7-95b6-15ae67345be8" />
+      <TestMethod codeBase="E:/My Work/C#/GL#/GLSharp.Tests/bin/Debug/GLSharp.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="GLSharp.Tests.Controllers.AccountControllerTest, GLSharp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Register_Post_ReturnsViewIfModelStateIsInvalid" />
+    </UnitTest>
+    <UnitTest name="Register_Get_ReturnsView" storage="e:\my work\c#\gl#\glsharp.tests\bin\debug\glsharp.tests.dll" id="8246a571-1814-6bad-f5c3-f19bf2d97a57">
+      <Execution id="38566c14-faf2-48a2-886e-5078e1b35a05" />
+      <TestMethod codeBase="E:/My Work/C#/GL#/GLSharp.Tests/bin/Debug/GLSharp.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="GLSharp.Tests.Controllers.AccountControllerTest, GLSharp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Register_Get_ReturnsView" />
+    </UnitTest>
+    <UnitTest name="LogOn_Get_ReturnsView" storage="e:\my work\c#\gl#\glsharp.tests\bin\debug\glsharp.tests.dll" id="a760e0ba-cb0a-20d8-137d-9c8308c63daa">
+      <Execution id="db6590b4-011c-421b-88e9-c8a0a4741a0b" />
+      <TestMethod codeBase="E:/My Work/C#/GL#/GLSharp.Tests/bin/Debug/GLSharp.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="GLSharp.Tests.Controllers.AccountControllerTest, GLSharp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="LogOn_Get_ReturnsView" />
+    </UnitTest>
+    <UnitTest name="Register_Post_ReturnsRedirectOnSuccess" storage="e:\my work\c#\gl#\glsharp.tests\bin\debug\glsharp.tests.dll" id="3ecd1057-1a85-49a0-19d7-90fa61eb18a8">
+      <Execution id="3f18605a-329a-4da8-85e2-1a25a93b65d4" />
+      <TestMethod codeBase="E:/My Work/C#/GL#/GLSharp.Tests/bin/Debug/GLSharp.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="GLSharp.Tests.Controllers.AccountControllerTest, GLSharp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Register_Post_ReturnsRedirectOnSuccess" />
+    </UnitTest>
+    <UnitTest name="LogOff_LogsOutAndRedirects" storage="e:\my work\c#\gl#\glsharp.tests\bin\debug\glsharp.tests.dll" id="f64ae8fe-dad3-807e-529d-1651d905bf8d">
+      <Execution id="ee7dcc7d-25e0-43ac-8714-8a0696a1ca6e" />
+      <TestMethod codeBase="E:/My Work/C#/GL#/GLSharp.Tests/bin/Debug/GLSharp.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="GLSharp.Tests.Controllers.AccountControllerTest, GLSharp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="LogOff_LogsOutAndRedirects" />
+    </UnitTest>
+    <UnitTest name="LogOn_Post_ReturnsRedirectOnSuccess_WithoutReturnUrl" storage="e:\my work\c#\gl#\glsharp.tests\bin\debug\glsharp.tests.dll" id="5bccb633-3aaa-911c-3796-a1c6910d7c9c">
+      <Execution id="15482923-3324-420f-a156-29ed33e96a10" />
+      <TestMethod codeBase="E:/My Work/C#/GL#/GLSharp.Tests/bin/Debug/GLSharp.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="GLSharp.Tests.Controllers.AccountControllerTest, GLSharp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="LogOn_Post_ReturnsRedirectOnSuccess_WithoutReturnUrl" />
+    </UnitTest>
+    <UnitTest name="LogOn_Post_ReturnsViewIfValidateUserFails" storage="e:\my work\c#\gl#\glsharp.tests\bin\debug\glsharp.tests.dll" id="ab24901e-2869-87fe-78df-960b737f0a97">
+      <Execution id="dd8dc1bf-311c-4594-ae03-bb343e7852a6" />
+      <TestMethod codeBase="E:/My Work/C#/GL#/GLSharp.Tests/bin/Debug/GLSharp.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="GLSharp.Tests.Controllers.AccountControllerTest, GLSharp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="LogOn_Post_ReturnsViewIfValidateUserFails" />
+    </UnitTest>
+    <UnitTest name="Index" storage="e:\my work\c#\gl#\glsharp.tests\bin\debug\glsharp.tests.dll" id="b9bdef33-3c9b-71b1-4d3a-58f44d410604">
+      <Execution id="60e50bb1-d0eb-4586-98b5-fec033986caa" />
+      <TestMethod codeBase="E:/My Work/C#/GL#/GLSharp.Tests/bin/Debug/GLSharp.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="GLSharp.Tests.Controllers.HomeControllerTest, GLSharp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Index" />
+    </UnitTest>
+    <UnitTest name="LogOn_Post_ReturnsViewIfModelStateIsInvalid" storage="e:\my work\c#\gl#\glsharp.tests\bin\debug\glsharp.tests.dll" id="d3f95d41-93f8-c110-3e70-ab8595454824">
+      <Execution id="8a4cac7b-dd0f-4c62-b801-fb1dccb58f54" />
+      <TestMethod codeBase="E:/My Work/C#/GL#/GLSharp.Tests/bin/Debug/GLSharp.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="GLSharp.Tests.Controllers.AccountControllerTest, GLSharp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="LogOn_Post_ReturnsViewIfModelStateIsInvalid" />
+    </UnitTest>
+    <UnitTest name="LogOn_Post_ReturnsRedirectOnSuccess_WithReturnUrl" storage="e:\my work\c#\gl#\glsharp.tests\bin\debug\glsharp.tests.dll" id="b2a414f0-9b4c-c28e-3dce-c5b710504f94">
+      <Execution id="1fd6c592-a256-4c84-9514-8f5f12ed7dd1" />
+      <TestMethod codeBase="E:/My Work/C#/GL#/GLSharp.Tests/bin/Debug/GLSharp.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="GLSharp.Tests.Controllers.AccountControllerTest, GLSharp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="LogOn_Post_ReturnsRedirectOnSuccess_WithReturnUrl" />
+    </UnitTest>
+    <UnitTest name="ChangePassword_Post_ReturnsViewIfChangePasswordFails" storage="e:\my work\c#\gl#\glsharp.tests\bin\debug\glsharp.tests.dll" id="dfbfef3b-d3d6-002a-eebc-6222c88ffd95">
+      <Execution id="00d6cc60-8b83-4b85-8f26-844945ea2360" />
+      <TestMethod codeBase="E:/My Work/C#/GL#/GLSharp.Tests/bin/Debug/GLSharp.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="GLSharp.Tests.Controllers.AccountControllerTest, GLSharp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="ChangePassword_Post_ReturnsViewIfChangePasswordFails" />
+    </UnitTest>
+    <UnitTest name="ChangePasswordSuccess_ReturnsView" storage="e:\my work\c#\gl#\glsharp.tests\bin\debug\glsharp.tests.dll" id="683acb5d-d16c-7ed2-6f51-bed9ff5fee4d">
+      <Execution id="8448cc5a-a7eb-4eee-9955-a70669a1bae4" />
+      <TestMethod codeBase="E:/My Work/C#/GL#/GLSharp.Tests/bin/Debug/GLSharp.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="GLSharp.Tests.Controllers.AccountControllerTest, GLSharp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="ChangePasswordSuccess_ReturnsView" />
+    </UnitTest>
+    <UnitTest name="ChangePassword_Post_ReturnsViewIfModelStateIsInvalid" storage="e:\my work\c#\gl#\glsharp.tests\bin\debug\glsharp.tests.dll" id="2f8d504f-8b7a-da24-2355-87c6c59734b3">
+      <Execution id="1f39495f-d63f-4bed-966d-cc32e76fd3d7" />
+      <TestMethod codeBase="E:/My Work/C#/GL#/GLSharp.Tests/bin/Debug/GLSharp.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="GLSharp.Tests.Controllers.AccountControllerTest, GLSharp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="ChangePassword_Post_ReturnsViewIfModelStateIsInvalid" />
+    </UnitTest>
+    <UnitTest name="Register_Post_ReturnsViewIfRegistrationFails" storage="e:\my work\c#\gl#\glsharp.tests\bin\debug\glsharp.tests.dll" id="03808d7d-5306-4db2-dc64-df5919965dcd">
+      <Execution id="1476efe4-8166-4e6f-8e4f-544fcb3a90d6" />
+      <TestMethod codeBase="E:/My Work/C#/GL#/GLSharp.Tests/bin/Debug/GLSharp.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="GLSharp.Tests.Controllers.AccountControllerTest, GLSharp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Register_Post_ReturnsViewIfRegistrationFails" />
+    </UnitTest>
+    <UnitTest name="ChangePassword_Get_ReturnsView" storage="e:\my work\c#\gl#\glsharp.tests\bin\debug\glsharp.tests.dll" id="6b339964-3f84-91dc-ed66-5eca59819bac">
+      <Execution id="ab5291cf-0797-4f02-92cf-62c6af015eb9" />
+      <TestMethod codeBase="E:/My Work/C#/GL#/GLSharp.Tests/bin/Debug/GLSharp.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="GLSharp.Tests.Controllers.AccountControllerTest, GLSharp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="ChangePassword_Get_ReturnsView" />
+    </UnitTest>
+    <UnitTest name="ChangePassword_Post_ReturnsRedirectOnSuccess" storage="e:\my work\c#\gl#\glsharp.tests\bin\debug\glsharp.tests.dll" id="6f648be2-97bd-e5eb-2dda-50cbcf053785">
+      <Execution id="7c9ab2b0-2438-4746-b59e-f5e8a901ea7a" />
+      <TestMethod codeBase="E:/My Work/C#/GL#/GLSharp.Tests/bin/Debug/GLSharp.Tests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="GLSharp.Tests.Controllers.AccountControllerTest, GLSharp.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="ChangePassword_Post_ReturnsRedirectOnSuccess" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <TestEntries>
+    <TestEntry testId="6b339964-3f84-91dc-ed66-5eca59819bac" executionId="ab5291cf-0797-4f02-92cf-62c6af015eb9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6f648be2-97bd-e5eb-2dda-50cbcf053785" executionId="7c9ab2b0-2438-4746-b59e-f5e8a901ea7a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="dfbfef3b-d3d6-002a-eebc-6222c88ffd95" executionId="00d6cc60-8b83-4b85-8f26-844945ea2360" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2f8d504f-8b7a-da24-2355-87c6c59734b3" executionId="1f39495f-d63f-4bed-966d-cc32e76fd3d7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="683acb5d-d16c-7ed2-6f51-bed9ff5fee4d" executionId="8448cc5a-a7eb-4eee-9955-a70669a1bae4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f64ae8fe-dad3-807e-529d-1651d905bf8d" executionId="ee7dcc7d-25e0-43ac-8714-8a0696a1ca6e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a760e0ba-cb0a-20d8-137d-9c8308c63daa" executionId="db6590b4-011c-421b-88e9-c8a0a4741a0b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5bccb633-3aaa-911c-3796-a1c6910d7c9c" executionId="15482923-3324-420f-a156-29ed33e96a10" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b2a414f0-9b4c-c28e-3dce-c5b710504f94" executionId="1fd6c592-a256-4c84-9514-8f5f12ed7dd1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d3f95d41-93f8-c110-3e70-ab8595454824" executionId="8a4cac7b-dd0f-4c62-b801-fb1dccb58f54" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ab24901e-2869-87fe-78df-960b737f0a97" executionId="dd8dc1bf-311c-4594-ae03-bb343e7852a6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8246a571-1814-6bad-f5c3-f19bf2d97a57" executionId="38566c14-faf2-48a2-886e-5078e1b35a05" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3ecd1057-1a85-49a0-19d7-90fa61eb18a8" executionId="3f18605a-329a-4da8-85e2-1a25a93b65d4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="03808d7d-5306-4db2-dc64-df5919965dcd" executionId="1476efe4-8166-4e6f-8e4f-544fcb3a90d6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4263fafd-e229-1acc-f1a7-7813dd01b7c0" executionId="5ed39077-8c6d-4ae7-95b6-15ae67345be8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b9bdef33-3c9b-71b1-4d3a-58f44d410604" executionId="60e50bb1-d0eb-4586-98b5-fec033986caa" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <Results>
+    <UnitTestResult executionId="ab5291cf-0797-4f02-92cf-62c6af015eb9" testId="6b339964-3f84-91dc-ed66-5eca59819bac" testName="ChangePassword_Get_ReturnsView" computerName="COLIN-PC" duration="00:00:00.0635000" startTime="2012-02-29T17:32:15.2171767+02:00" endTime="2012-02-29T17:32:16.5140215+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ab5291cf-0797-4f02-92cf-62c6af015eb9">
+    </UnitTestResult>
+    <UnitTestResult executionId="7c9ab2b0-2438-4746-b59e-f5e8a901ea7a" testId="6f648be2-97bd-e5eb-2dda-50cbcf053785" testName="ChangePassword_Post_ReturnsRedirectOnSuccess" computerName="COLIN-PC" duration="00:00:00.0044281" startTime="2012-02-29T17:32:16.5608968+02:00" endTime="2012-02-29T17:32:16.5765214+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7c9ab2b0-2438-4746-b59e-f5e8a901ea7a">
+    </UnitTestResult>
+    <UnitTestResult executionId="00d6cc60-8b83-4b85-8f26-844945ea2360" testId="dfbfef3b-d3d6-002a-eebc-6222c88ffd95" testName="ChangePassword_Post_ReturnsViewIfChangePasswordFails" computerName="COLIN-PC" duration="00:00:00.0025215" startTime="2012-02-29T17:32:16.5921469+02:00" endTime="2012-02-29T17:32:16.5921469+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="00d6cc60-8b83-4b85-8f26-844945ea2360">
+    </UnitTestResult>
+    <UnitTestResult executionId="1f39495f-d63f-4bed-966d-cc32e76fd3d7" testId="2f8d504f-8b7a-da24-2355-87c6c59734b3" testName="ChangePassword_Post_ReturnsViewIfModelStateIsInvalid" computerName="COLIN-PC" duration="00:00:00.0004954" startTime="2012-02-29T17:32:16.6077706+02:00" endTime="2012-02-29T17:32:16.6233952+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1f39495f-d63f-4bed-966d-cc32e76fd3d7">
+    </UnitTestResult>
+    <UnitTestResult executionId="8448cc5a-a7eb-4eee-9955-a70669a1bae4" testId="683acb5d-d16c-7ed2-6f51-bed9ff5fee4d" testName="ChangePasswordSuccess_ReturnsView" computerName="COLIN-PC" duration="00:00:00.0003155" startTime="2012-02-29T17:32:16.6390207+02:00" endTime="2012-02-29T17:32:16.6390207+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8448cc5a-a7eb-4eee-9955-a70669a1bae4">
+    </UnitTestResult>
+    <UnitTestResult executionId="ee7dcc7d-25e0-43ac-8714-8a0696a1ca6e" testId="f64ae8fe-dad3-807e-529d-1651d905bf8d" testName="LogOff_LogsOutAndRedirects" computerName="COLIN-PC" duration="00:00:00.0008360" startTime="2012-02-29T17:32:16.6546444+02:00" endTime="2012-02-29T17:32:16.6702690+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ee7dcc7d-25e0-43ac-8714-8a0696a1ca6e">
+    </UnitTestResult>
+    <UnitTestResult executionId="db6590b4-011c-421b-88e9-c8a0a4741a0b" testId="a760e0ba-cb0a-20d8-137d-9c8308c63daa" testName="LogOn_Get_ReturnsView" computerName="COLIN-PC" duration="00:00:00.0003309" startTime="2012-02-29T17:32:16.6702690+02:00" endTime="2012-02-29T17:32:16.7015194+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="db6590b4-011c-421b-88e9-c8a0a4741a0b">
+    </UnitTestResult>
+    <UnitTestResult executionId="15482923-3324-420f-a156-29ed33e96a10" testId="5bccb633-3aaa-911c-3796-a1c6910d7c9c" testName="LogOn_Post_ReturnsRedirectOnSuccess_WithoutReturnUrl" computerName="COLIN-PC" duration="00:00:00.0016164" startTime="2012-02-29T17:32:16.7171440+02:00" endTime="2012-02-29T17:32:16.7171440+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="15482923-3324-420f-a156-29ed33e96a10">
+    </UnitTestResult>
+    <UnitTestResult executionId="1fd6c592-a256-4c84-9514-8f5f12ed7dd1" testId="b2a414f0-9b4c-c28e-3dce-c5b710504f94" testName="LogOn_Post_ReturnsRedirectOnSuccess_WithReturnUrl" computerName="COLIN-PC" duration="00:00:00.0010619" startTime="2012-02-29T17:32:16.7327677+02:00" endTime="2012-02-29T17:32:16.7483923+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1fd6c592-a256-4c84-9514-8f5f12ed7dd1">
+    </UnitTestResult>
+    <UnitTestResult executionId="8a4cac7b-dd0f-4c62-b801-fb1dccb58f54" testId="d3f95d41-93f8-c110-3e70-ab8595454824" testName="LogOn_Post_ReturnsViewIfModelStateIsInvalid" computerName="COLIN-PC" duration="00:00:00.0003188" startTime="2012-02-29T17:32:16.7483923+02:00" endTime="2012-02-29T17:32:16.7640172+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8a4cac7b-dd0f-4c62-b801-fb1dccb58f54">
+    </UnitTestResult>
+    <UnitTestResult executionId="dd8dc1bf-311c-4594-ae03-bb343e7852a6" testId="ab24901e-2869-87fe-78df-960b737f0a97" testName="LogOn_Post_ReturnsViewIfValidateUserFails" computerName="COLIN-PC" duration="00:00:00.0003748" startTime="2012-02-29T17:32:16.7796424+02:00" endTime="2012-02-29T17:32:16.7796424+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="dd8dc1bf-311c-4594-ae03-bb343e7852a6">
+    </UnitTestResult>
+    <UnitTestResult executionId="38566c14-faf2-48a2-886e-5078e1b35a05" testId="8246a571-1814-6bad-f5c3-f19bf2d97a57" testName="Register_Get_ReturnsView" computerName="COLIN-PC" duration="00:00:00.0004197" startTime="2012-02-29T17:32:16.7952670+02:00" endTime="2012-02-29T17:32:16.8108904+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="38566c14-faf2-48a2-886e-5078e1b35a05">
+    </UnitTestResult>
+    <UnitTestResult executionId="3f18605a-329a-4da8-85e2-1a25a93b65d4" testId="3ecd1057-1a85-49a0-19d7-90fa61eb18a8" testName="Register_Post_ReturnsRedirectOnSuccess" computerName="COLIN-PC" duration="00:00:00.0015643" startTime="2012-02-29T17:32:16.8108904+02:00" endTime="2012-02-29T17:32:16.8265165+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3f18605a-329a-4da8-85e2-1a25a93b65d4">
+    </UnitTestResult>
+    <UnitTestResult executionId="1476efe4-8166-4e6f-8e4f-544fcb3a90d6" testId="03808d7d-5306-4db2-dc64-df5919965dcd" testName="Register_Post_ReturnsViewIfRegistrationFails" computerName="COLIN-PC" duration="00:00:00.0006210" startTime="2012-02-29T17:32:16.8421417+02:00" endTime="2012-02-29T17:32:16.8577645+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1476efe4-8166-4e6f-8e4f-544fcb3a90d6">
+    </UnitTestResult>
+    <UnitTestResult executionId="5ed39077-8c6d-4ae7-95b6-15ae67345be8" testId="4263fafd-e229-1acc-f1a7-7813dd01b7c0" testName="Register_Post_ReturnsViewIfModelStateIsInvalid" computerName="COLIN-PC" duration="00:00:00.0003594" startTime="2012-02-29T17:32:16.8577645+02:00" endTime="2012-02-29T17:32:16.8733900+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5ed39077-8c6d-4ae7-95b6-15ae67345be8">
+    </UnitTestResult>
+    <UnitTestResult executionId="60e50bb1-d0eb-4586-98b5-fec033986caa" testId="b9bdef33-3c9b-71b1-4d3a-58f44d410604" testName="Index" computerName="COLIN-PC" duration="00:00:00.0006883" startTime="2012-02-29T17:32:16.8890137+02:00" endTime="2012-02-29T17:32:16.8890137+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="60e50bb1-d0eb-4586-98b5-fec033986caa">
+    </UnitTestResult>
+  </Results>
+</TestRun>

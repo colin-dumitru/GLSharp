@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace GLSharp.Universe {
     public abstract class Component {
-        private String _type;
+        protected String _type;
 
         /// <summary>
         /// Unique type of the component.
