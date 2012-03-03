@@ -25,17 +25,6 @@ namespace GLSharp.Universe {
             get { return _parent; }
             set { _parent = value; }
         }
-
-
-        /// <summary>
-        /// Gets called on the draw cycle.
-        /// </summary>
-        public abstract void Draw();
-        /// <summary>
-        /// Gets called in the update cycle.
-        /// </summary>
-        /// <param name="dt">Delta time</param>
-        public abstract void Update(long dt);
         
     }
 }

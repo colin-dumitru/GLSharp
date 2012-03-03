@@ -45,6 +45,7 @@
     <Reference Include="Script.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Util\Xml\XmlHelper.cs" />
     <Content Include="Properties\App.ruleset" />
     <Content Include="Properties\App.script" />
     <Compile Include="Core\Environment.cs" />
@@ -52,6 +53,7 @@
     <Compile Include="Data\ResourceManager.cs" />
     <Compile Include="Graphics\ActiveInfo.cs" />
     <Compile Include="Graphics\Buffer.cs" />
+    <Compile Include="Graphics\CompiledShader.cs" />
     <Compile Include="Graphics\FrameBuffer.cs" />
     <Compile Include="Graphics\RenderBuffer.cs" />
     <Compile Include="Graphics\Shader.cs" />

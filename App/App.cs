@@ -8,12 +8,9 @@ using GLSharp.Data;
 
 namespace App {
     public class App {
-        private IGraphics _graphics = null;
+        private WebGLGraphics _graphics = null;
 
         public void Init()  {
-            /*Initialize the environment*/
-            this._InitEnvironment();
-
             /*initialize canvas element*/
             CanvasElementGl canvasElem = Document.GetElementById("mainCanvas").As<CanvasElementGl>();
             if (canvasElem == null)
@@ -22,7 +19,12 @@ namespace App {
             this._graphics = new WebGLGraphics(canvasElem);
             this._graphics.Clear();
 
-            Core.ResourceManager.GetResource("/Data/JSON/test.json").ResourceChanged += delegate(Resource sender, object args) {
+            /*Initialize the environment*/
+            this._InitEnvironment();
+
+            Resource res = Core.ResourceManager.GetResource("/Data/Shader/test.shader");
+            
+            res.ResourceChanged += delegate(Resource sender, object args) {
                 Script.Alert("aaa");
             };
         }
@@ -39,10 +41,9 @@ namespace App {
 
             resourceManager.AddLoader(new ImageLoader());
             resourceManager.AddLoader(new JsonLoader());
+            resourceManager.AddLoader(new ShaderLoader(this._graphics.Context));
 
             Core.ResourceManager = resourceManager;
         }
-
-
     }
 }

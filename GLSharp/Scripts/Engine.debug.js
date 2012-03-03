@@ -6,6 +6,33 @@
 Type.registerNamespace('GLSharp.Graphics');
 
 ////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Graphics.ICompiledShader
+
+GLSharp.Graphics.ICompiledShader = function() { 
+};
+GLSharp.Graphics.ICompiledShader.prototype = {
+    get_name : null,
+    get_shaderProgram : null,
+    get_uniforms : null
+}
+GLSharp.Graphics.ICompiledShader.registerInterface('GLSharp.Graphics.ICompiledShader');
+
+
+////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Graphics.IUniform
+
+GLSharp.Graphics.IUniform = function() { 
+};
+GLSharp.Graphics.IUniform.prototype = {
+    get_uniformLocation : null,
+    set_uniformLocation : null,
+    get_name : null,
+    set : null
+}
+GLSharp.Graphics.IUniform.registerInterface('GLSharp.Graphics.IUniform');
+
+
+////////////////////////////////////////////////////////////////////////////////
 // GLSharp.Graphics.ClearMode
 
 GLSharp.Graphics.ClearMode = function() { 
@@ -41,6 +68,39 @@ GLSharp.Graphics.IGraphics.prototype = {
     clear : null
 }
 GLSharp.Graphics.IGraphics.registerInterface('GLSharp.Graphics.IGraphics');
+
+
+////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Graphics.IShader
+
+GLSharp.Graphics.IShader = function() { 
+};
+GLSharp.Graphics.IShader.prototype = {
+
+}
+GLSharp.Graphics.IShader.registerInterface('GLSharp.Graphics.IShader');
+
+
+////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Graphics.IShaderProgram
+
+GLSharp.Graphics.IShaderProgram = function() { 
+};
+GLSharp.Graphics.IShaderProgram.prototype = {
+
+}
+GLSharp.Graphics.IShaderProgram.registerInterface('GLSharp.Graphics.IShaderProgram');
+
+
+////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Graphics.IUniformLocation
+
+GLSharp.Graphics.IUniformLocation = function() { 
+};
+GLSharp.Graphics.IUniformLocation.prototype = {
+
+}
+GLSharp.Graphics.IUniformLocation.registerInterface('GLSharp.Graphics.IUniformLocation');
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -121,6 +181,34 @@ GLSharp.Graphics.Color.prototype = {
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Graphics.Material
+
+GLSharp.Graphics.Material = function GLSharp_Graphics_Material() {
+    /// <field name="_shader" type="GLSharp.Graphics.IShader">
+    /// </field>
+}
+GLSharp.Graphics.Material.prototype = {
+    _shader: null,
+    
+    get_shader: function GLSharp_Graphics_Material$get_shader() {
+        /// <summary>
+        /// Gets and sets the shader used by the material.
+        /// </summary>
+        /// <value type="GLSharp.Graphics.IShader"></value>
+        return this._shader;
+    },
+    set_shader: function GLSharp_Graphics_Material$set_shader(value) {
+        /// <summary>
+        /// Gets and sets the shader used by the material.
+        /// </summary>
+        /// <value type="GLSharp.Graphics.IShader"></value>
+        this._shader = value;
+        return value;
+    }
+}
+
+
 Type.registerNamespace('GLSharp.Universe');
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -181,9 +269,9 @@ GLSharp.Universe.Node = function GLSharp_Universe_Node() {
     /// </field>
     /// <field name="_name" type="String">
     /// </field>
-    /// <field name="_components" type="Array">
+    /// <field name="_components" type="Object">
     /// </field>
-    this._components = [];
+    this._components = {};
 }
 GLSharp.Universe.Node.prototype = {
     
@@ -241,7 +329,7 @@ GLSharp.Universe.Node.prototype = {
     addComponent: function GLSharp_Universe_Node$addComponent(component) {
         /// <param name="component" type="GLSharp.Universe.Component">
         /// </param>
-        this._components.add(component);
+        this._components[component.get_type()] = component;
         if (this.__componentAdded != null) {
             this.__componentAdded(this, component);
         }
@@ -250,7 +338,7 @@ GLSharp.Universe.Node.prototype = {
     removeComponent: function GLSharp_Universe_Node$removeComponent(component) {
         /// <param name="component" type="GLSharp.Universe.Component">
         /// </param>
-        this._components.remove(component);
+        delete this._components[component.get_type()];
         if (this.__componentRemoved != null) {
             this.__componentRemoved(this, component);
         }
@@ -333,6 +421,7 @@ GLSharp.Universe.World.prototype = {
 
 
 GLSharp.Graphics.Color.registerClass('GLSharp.Graphics.Color');
+GLSharp.Graphics.Material.registerClass('GLSharp.Graphics.Material');
 GLSharp.Universe.Component.registerClass('GLSharp.Universe.Component');
 GLSharp.Universe.Node.registerClass('GLSharp.Universe.Node');
 GLSharp.Universe.World.registerClass('GLSharp.Universe.World');

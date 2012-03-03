@@ -51,7 +51,7 @@ namespace GLSharp.Graphics {
                 this._clearColor = value;
                 /*set the clear color for the context*/
                 if (this._context != null)
-                    this._context.clearColor(this._clearColor.Red, this._clearColor.Green,
+                    this._context.ClearColor(this._clearColor.Red, this._clearColor.Green,
                         this._clearColor.Blue, this._clearColor.Alpha);
             }
         }
@@ -81,6 +81,13 @@ namespace GLSharp.Graphics {
             }
         }
 
+        /// <summary>
+        /// Gets the context used by the graphics object.
+        /// </summary>
+        public WebGL Context {
+            get { return this._context; }
+        }
+
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
 
@@ -96,7 +103,7 @@ namespace GLSharp.Graphics {
 		
         public void Clear() {
             /*no null checking*/
-            this._context.clear((int)this._clearMode);
+            this._context.Clear((int)this._clearMode);
         }
 
         //------------------------------------------------------------------------------------------

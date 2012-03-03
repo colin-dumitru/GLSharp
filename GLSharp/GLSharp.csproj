@@ -77,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\Image\test.jpg" />
+    <None Include="Data\Shader\test.shader" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\App.debug.js" />
     <Content Include="Scripts\App.js" />
