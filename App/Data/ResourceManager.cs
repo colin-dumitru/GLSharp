@@ -28,9 +28,9 @@ namespace GLSharp.Data {
         public List<string> Extension {
             get {
                 List<String> ret = new List<String>();
-                ret.Add(".jpg");
-                ret.Add(".png");
-                ret.Add(".jpeg");
+                ret.Add("jpg");
+                ret.Add("png");
+                ret.Add("jpeg");
                 return ret;
             }
         }
@@ -55,7 +55,7 @@ namespace GLSharp.Data {
         public List<string> Extension {
             get {
                 List<String> ret = new List<String>();
-                ret.Add(".json");
+                ret.Add("json");
                 return ret;
             }
         }
@@ -90,7 +90,7 @@ namespace GLSharp.Data {
         public List<string> Extension {
             get {
                 List<String> ret = new List<String>();
-                ret.Add(".shader");
+                ret.Add("shader");
                 return ret;
             }
         }
@@ -193,14 +193,21 @@ namespace GLSharp.Data {
 
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
-        public Resource GetResource(string resource) {
+        public Resource GetResource(string resource, ResourceManagerParams managerParams) {
+            if(managerParams == null)
+                managerParams = new ResourceManagerParams();
+
             /*get the extension*/
-            int lastPeriod = resource.LastIndexOf('.');
-            String extension = "";
-            if (lastPeriod > -1) extension = (resource.Substring(lastPeriod, resource.Length)).ToLowerCase();
+            if (managerParams.Type == null) {
+                int lastPeriod = resource.LastIndexOf('.');
+                managerParams.Type = "";
+                if (lastPeriod > -1) managerParams.Type = (resource.Substring(lastPeriod + 1, resource.Length));
+            }
+
+            managerParams.Type = managerParams.Type.ToLowerCase();
 
             /*try to load the resource*/
-            IResourceLoader loader = this._loaders[extension];
+            IResourceLoader loader = this._loaders[managerParams.Type];
 
             if (loader == null)
                 throw new Exception("The specified resource is unsuppoted");

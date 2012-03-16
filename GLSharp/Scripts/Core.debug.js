@@ -6,6 +6,17 @@
 Type.registerNamespace('GLSharp.Core');
 
 ////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Core.ILoggingProvider
+
+GLSharp.Core.ILoggingProvider = function() { 
+};
+GLSharp.Core.ILoggingProvider.prototype = {
+    log : null
+}
+GLSharp.Core.ILoggingProvider.registerInterface('GLSharp.Core.ILoggingProvider');
+
+
+////////////////////////////////////////////////////////////////////////////////
 // GLSharp.Core.IEnvironment
 
 GLSharp.Core.IEnvironment = function() { 
@@ -25,42 +36,59 @@ GLSharp.Core.IEnvironment.registerInterface('GLSharp.Core.IEnvironment');
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// GLSharp.Core.Core
+// GLSharp.Core.SystemCore
 
-GLSharp.Core.Core = function GLSharp_Core_Core() {
+GLSharp.Core.SystemCore = function GLSharp_Core_SystemCore() {
     /// <field name="_environment" type="GLSharp.Core.IEnvironment" static="true">
     /// </field>
     /// <field name="_resourceManager" type="GLSharp.Data.IResourceManager" static="true">
     /// </field>
+    /// <field name="_logger" type="GLSharp.Core.ILoggingProvider" static="true">
+    /// </field>
 }
-GLSharp.Core.Core.get_environment = function GLSharp_Core_Core$get_environment() {
+GLSharp.Core.SystemCore.get_environment = function GLSharp_Core_SystemCore$get_environment() {
     /// <summary>
     /// Gets or sets the global Environment object.
     /// </summary>
     /// <value type="GLSharp.Core.IEnvironment"></value>
-    return GLSharp.Core.Core._environment;
+    return GLSharp.Core.SystemCore._environment;
 }
-GLSharp.Core.Core.set_environment = function GLSharp_Core_Core$set_environment(value) {
+GLSharp.Core.SystemCore.set_environment = function GLSharp_Core_SystemCore$set_environment(value) {
     /// <summary>
     /// Gets or sets the global Environment object.
     /// </summary>
     /// <value type="GLSharp.Core.IEnvironment"></value>
-    GLSharp.Core.Core._environment = value;
+    GLSharp.Core.SystemCore._environment = value;
     return value;
 }
-GLSharp.Core.Core.get_resourceManager = function GLSharp_Core_Core$get_resourceManager() {
+GLSharp.Core.SystemCore.get_resourceManager = function GLSharp_Core_SystemCore$get_resourceManager() {
     /// <summary>
     /// Gets or sets the global ResourceManager.
     /// </summary>
     /// <value type="GLSharp.Data.IResourceManager"></value>
-    return GLSharp.Core.Core._resourceManager;
+    return GLSharp.Core.SystemCore._resourceManager;
 }
-GLSharp.Core.Core.set_resourceManager = function GLSharp_Core_Core$set_resourceManager(value) {
+GLSharp.Core.SystemCore.set_resourceManager = function GLSharp_Core_SystemCore$set_resourceManager(value) {
     /// <summary>
     /// Gets or sets the global ResourceManager.
     /// </summary>
     /// <value type="GLSharp.Data.IResourceManager"></value>
-    GLSharp.Core.Core._resourceManager = value;
+    GLSharp.Core.SystemCore._resourceManager = value;
+    return value;
+}
+GLSharp.Core.SystemCore.get_logger = function GLSharp_Core_SystemCore$get_logger() {
+    /// <summary>
+    /// Gets or sets the Logging Provider.
+    /// </summary>
+    /// <value type="GLSharp.Core.ILoggingProvider"></value>
+    return GLSharp.Core.SystemCore._logger;
+}
+GLSharp.Core.SystemCore.set_logger = function GLSharp_Core_SystemCore$set_logger(value) {
+    /// <summary>
+    /// Gets or sets the Logging Provider.
+    /// </summary>
+    /// <value type="GLSharp.Core.ILoggingProvider"></value>
+    GLSharp.Core.SystemCore._logger = value;
     return value;
 }
 
@@ -94,6 +122,28 @@ GLSharp.Data.IResourceManager.prototype = {
     freeResource : null
 }
 GLSharp.Data.IResourceManager.registerInterface('GLSharp.Data.IResourceManager');
+
+
+////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Data.ResourceManagerParams
+
+GLSharp.Data.ResourceManagerParams = function GLSharp_Data_ResourceManagerParams() {
+    /// <field name="_type" type="String">
+    /// </field>
+}
+GLSharp.Data.ResourceManagerParams.prototype = {
+    _type: null,
+    
+    get_type: function GLSharp_Data_ResourceManagerParams$get_type() {
+        /// <value type="String"></value>
+        return this._type;
+    },
+    set_type: function GLSharp_Data_ResourceManagerParams$set_type(value) {
+        /// <value type="String"></value>
+        this._type = value;
+        return value;
+    }
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -165,10 +215,12 @@ GLSharp.Data.Resource.prototype = {
 }
 
 
-GLSharp.Core.Core.registerClass('GLSharp.Core.Core');
+GLSharp.Core.SystemCore.registerClass('GLSharp.Core.SystemCore');
+GLSharp.Data.ResourceManagerParams.registerClass('GLSharp.Data.ResourceManagerParams');
 GLSharp.Data.Resource.registerClass('GLSharp.Data.Resource');
-GLSharp.Core.Core._environment = null;
-GLSharp.Core.Core._resourceManager = null;
+GLSharp.Core.SystemCore._environment = null;
+GLSharp.Core.SystemCore._resourceManager = null;
+GLSharp.Core.SystemCore._logger = null;
 })();
 
 //! This script was generated using Script# v0.7.4.0

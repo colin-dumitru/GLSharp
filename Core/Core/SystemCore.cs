@@ -6,9 +6,12 @@ using System.Collections.Generic;
 using GLSharp.Data;
 
 namespace GLSharp.Core {
-    public static class Core {
+    public interface ILoggingProvider {
+        void Log(String message);
+    }
+
+    public static class SystemCore {
         private static IEnvironment _environment = null;
-        private static IResourceManager _resourceManager = null;
 
         /// <summary>
         /// Gets or sets the global Environment object.
@@ -17,6 +20,9 @@ namespace GLSharp.Core {
             get { return _environment; } 
             set { _environment = value; } 
         }
+
+        private static IResourceManager _resourceManager = null;
+
         /// <summary>
         /// Gets or sets the global ResourceManager.
         /// </summary>
@@ -24,5 +30,16 @@ namespace GLSharp.Core {
             get { return _resourceManager; }
             set { _resourceManager = value; }
         }
+
+        private static ILoggingProvider _logger;
+
+        /// <summary>
+        /// Gets or sets the Logging Provider.
+        /// </summary>
+        public static ILoggingProvider Logger {
+            get { return _logger; }
+            set { _logger = value; }
+        }
+        
     }
 }

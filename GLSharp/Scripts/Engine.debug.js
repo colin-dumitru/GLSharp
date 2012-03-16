@@ -3,6 +3,67 @@
 
 (function() {
 
+Type.registerNamespace('GLSharp');
+
+////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Engine
+
+GLSharp.Engine = function GLSharp_Engine() {
+    /// <field name="_activeGame" type="GLSharp.Game.GameBase">
+    /// </field>
+}
+GLSharp.Engine.prototype = {
+    _activeGame: null,
+    
+    get_activeGame: function GLSharp_Engine$get_activeGame() {
+        /// <summary>
+        /// Gets or sets the active game.
+        /// </summary>
+        /// <value type="GLSharp.Game.GameBase"></value>
+        return this._activeGame;
+    },
+    set_activeGame: function GLSharp_Engine$set_activeGame(value) {
+        /// <summary>
+        /// Gets or sets the active game.
+        /// </summary>
+        /// <value type="GLSharp.Game.GameBase"></value>
+        this._activeGame = value;
+        return value;
+    },
+    
+    run: function GLSharp_Engine$run() {
+        if (this.get_activeGame() == null) {
+            throw new Error('No active game defined.');
+        }
+        this.get_activeGame().initialize();
+    }
+}
+
+
+Type.registerNamespace('GLSharp.Game');
+
+////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Game.GameBase
+
+GLSharp.Game.GameBase = function GLSharp_Game_GameBase() {
+    /// <field name="_library" type="GLSharp.Content.Library">
+    /// </field>
+}
+GLSharp.Game.GameBase.prototype = {
+    _library: null,
+    
+    get_library: function GLSharp_Game_GameBase$get_library() {
+        /// <value type="GLSharp.Content.Library"></value>
+        return this._library;
+    },
+    
+    initialize: function GLSharp_Game_GameBase$initialize() {
+        this._library = new GLSharp.Content.Library();
+        this.startup();
+    }
+}
+
+
 Type.registerNamespace('GLSharp.Graphics');
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -209,6 +270,154 @@ GLSharp.Graphics.Material.prototype = {
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Graphics.Mesh
+
+GLSharp.Graphics.Mesh = function GLSharp_Graphics_Mesh() {
+}
+
+
+Type.registerNamespace('GLSharp.Content');
+
+////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Content.IResourceConverter
+
+GLSharp.Content.IResourceConverter = function() { 
+};
+GLSharp.Content.IResourceConverter.prototype = {
+    get_typeHandled : null,
+    convert : null
+}
+GLSharp.Content.IResourceConverter.registerInterface('GLSharp.Content.IResourceConverter');
+
+
+////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Content.Handle
+
+GLSharp.Content.Handle = function GLSharp_Content_Handle() {
+    /// <summary>
+    /// Resource Handle.
+    /// </summary>
+    /// <field name="_library" type="String">
+    /// </field>
+    /// <field name="_name" type="String">
+    /// </field>
+}
+GLSharp.Content.Handle.prototype = {
+    _library: null,
+    
+    get_library: function GLSharp_Content_Handle$get_library() {
+        /// <value type="String"></value>
+        return this._library;
+    },
+    set_library: function GLSharp_Content_Handle$set_library(value) {
+        /// <value type="String"></value>
+        this._library = value;
+        return value;
+    },
+    
+    _name: null,
+    
+    get_name: function GLSharp_Content_Handle$get_name() {
+        /// <value type="String"></value>
+        return this._name;
+    },
+    set_name: function GLSharp_Content_Handle$set_name(value) {
+        /// <value type="String"></value>
+        this._name = value;
+        return value;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Content.Collection
+
+GLSharp.Content.Collection = function GLSharp_Content_Collection() {
+    /// <summary>
+    /// A named collection of Resources.
+    /// </summary>
+    /// <field name="_name" type="String">
+    /// </field>
+    /// <field name="_resources" type="Object">
+    /// </field>
+}
+GLSharp.Content.Collection.prototype = {
+    _name: null,
+    
+    get_name: function GLSharp_Content_Collection$get_name() {
+        /// <value type="String"></value>
+        return this._name;
+    },
+    set_name: function GLSharp_Content_Collection$set_name(value) {
+        /// <value type="String"></value>
+        this._name = value;
+        return value;
+    },
+    
+    _resources: null,
+    
+    get_resources: function GLSharp_Content_Collection$get_resources() {
+        /// <value type="Object"></value>
+        return this._resources;
+    },
+    set_resources: function GLSharp_Content_Collection$set_resources(value) {
+        /// <value type="Object"></value>
+        this._resources = value;
+        return value;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Content.Library
+
+GLSharp.Content.Library = function GLSharp_Content_Library() {
+    /// <summary>
+    /// Loades and manages resources.
+    /// </summary>
+    /// <field name="_collections" type="Object">
+    /// </field>
+    this._collections = {};
+}
+GLSharp.Content.Library.prototype = {
+    _collections: null,
+    
+    loadLibrary: function GLSharp_Content_Library$loadLibrary(url) {
+        /// <param name="url" type="String">
+        /// </param>
+        var param = new GLSharp.Data.ResourceManagerParams();
+        param.set_type('json');
+        GLSharp.Core.SystemCore.get_resourceManager().getResource(url, param).add_resourceChanged(ss.Delegate.create(this, function(sender, args) {
+            if (sender.get_finished()) {
+                this._loadLibraryFromJson(sender.get_data());
+            }
+        }));
+    },
+    
+    _loadLibraryFromJson: function GLSharp_Content_Library$_loadLibraryFromJson(json) {
+        /// <param name="json" type="Object">
+        /// </param>
+        var library = json;
+        GLSharp.Core.SystemCore.get_logger().log('Loading library : ' + library.name);
+        if (!Object.keyExists(this._collections, library.name)) {
+        }
+    },
+    
+    _appendToCollection: function GLSharp_Content_Library$_appendToCollection(collection, resources) {
+        /// <param name="collection" type="GLSharp.Content.Collection">
+        /// </param>
+        /// <param name="resources" type="Array">
+        /// </param>
+    },
+    
+    unloadLibrary: function GLSharp_Content_Library$unloadLibrary(name) {
+        /// <param name="name" type="String">
+        /// </param>
+    }
+}
+
+
 Type.registerNamespace('GLSharp.Universe');
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -256,6 +465,15 @@ GLSharp.Universe.Component.prototype = {
         this._parent = value;
         return value;
     }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Universe.MeshComponent
+
+GLSharp.Universe.MeshComponent = function GLSharp_Universe_MeshComponent() {
+    GLSharp.Universe.MeshComponent.initializeBase(this);
+    this._type = 'mesh';
 }
 
 
@@ -420,9 +638,16 @@ GLSharp.Universe.World.prototype = {
 }
 
 
+GLSharp.Engine.registerClass('GLSharp.Engine');
+GLSharp.Game.GameBase.registerClass('GLSharp.Game.GameBase');
 GLSharp.Graphics.Color.registerClass('GLSharp.Graphics.Color');
 GLSharp.Graphics.Material.registerClass('GLSharp.Graphics.Material');
+GLSharp.Graphics.Mesh.registerClass('GLSharp.Graphics.Mesh');
+GLSharp.Content.Handle.registerClass('GLSharp.Content.Handle');
+GLSharp.Content.Collection.registerClass('GLSharp.Content.Collection');
+GLSharp.Content.Library.registerClass('GLSharp.Content.Library');
 GLSharp.Universe.Component.registerClass('GLSharp.Universe.Component');
+GLSharp.Universe.MeshComponent.registerClass('GLSharp.Universe.MeshComponent', GLSharp.Universe.Component);
 GLSharp.Universe.Node.registerClass('GLSharp.Universe.Node');
 GLSharp.Universe.World.registerClass('GLSharp.Universe.World');
 })();

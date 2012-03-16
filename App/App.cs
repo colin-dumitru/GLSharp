@@ -1,14 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Html;
+using GLSharp;
 using GLSharp.Graphics;
 using GLSharp.Html;
 using GLSharp.Core;
 using GLSharp.Data;
+using GLSharp.Game;
 
 namespace App {
     public class App {
         private WebGLGraphics _graphics = null;
+        private Engine _engine = null;
+        private GameBase _game = null;
 
         public void Init()  {
             /*initialize canvas element*/
@@ -22,19 +26,23 @@ namespace App {
             /*Initialize the environment*/
             this._InitEnvironment();
 
-            Resource res = Core.ResourceManager.GetResource("/Data/Shader/test.shader");
-            
-            res.ResourceChanged += delegate(Resource sender, object args) {
-                Script.Alert("aaa");
-            };
+            /*create game engine*/
+            this._engine = new Engine();
+
+            /*create game*/
+            this._game = new DemoGame();
+
+            /*startup engine*/
+            this._engine.ActiveGame = this._game;
+            this._engine.Run();
+
+            /*bye bye*/
         }
-
-
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
         private void _InitEnvironment() {
             /*initialize the core*/
-            Core.Environment = new Environment();
+            SystemCore.Environment = new Environment();
             
             /*suported resource types*/
             ResourceManager resourceManager = new ResourceManager();
@@ -43,7 +51,8 @@ namespace App {
             resourceManager.AddLoader(new JsonLoader());
             resourceManager.AddLoader(new ShaderLoader(this._graphics.Context));
 
-            Core.ResourceManager = resourceManager;
+            SystemCore.ResourceManager = resourceManager;
+            SystemCore.Logger = new JSLoggingProvider();
         }
     }
 }

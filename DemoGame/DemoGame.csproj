@@ -5,17 +5,17 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{7E92B68E-6EFB-4E50-92D4-773654F0695B}</ProjectGuid>
+    <ProjectGuid>{C1B590B6-454F-4AAF-8990-48A4FC4F060A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <NoStdLib>True</NoStdLib>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <LangVersion>ISO-2</LangVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GLSharp</RootNamespace>
-    <AssemblyName>App</AssemblyName>
-    <TemplateFile>Properties\App.script</TemplateFile>
-    <CodeAnalysisRuleSet>Properties\App.ruleset</CodeAnalysisRuleSet>
+    <RootNamespace>GLSharp.DemoGame</RootNamespace>
+    <AssemblyName>DemoGame</AssemblyName>
+    <TemplateFile>Properties\DemoGame.script</TemplateFile>
+    <CodeAnalysisRuleSet>Properties\DemoGame.ruleset</CodeAnalysisRuleSet>
     <ReferencePath>$(ProgramFiles)\ScriptSharp\v1.0\Framework\</ReferencePath>
     <DeploymentPath>..\GLSharp\Scripts</DeploymentPath>
   </PropertyGroup>
@@ -27,8 +27,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0028, 1591, 1684</NoWarn>
-    <DocumentationFile>bin\Debug\App.xml</DocumentationFile>
-    <LangVersion>3</LangVersion>
+    <DocumentationFile>bin\Debug\DemoGame.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,44 +37,19 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0028, 1591, 1684</NoWarn>
-    <DocumentationFile>bin\Release\App.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\DemoGame.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib, Version=0.7.0.0, Culture=neutral, PublicKeyToken=8fc0e3af5abcb6c4, processorArchitecture=MSIL" />
     <Reference Include="Script.Web" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\JSLoggingProvider.cs" />
-    <Compile Include="Util\Xml\XmlHelper.cs" />
-    <Content Include="Properties\App.ruleset" />
-    <Content Include="Properties\App.script" />
-    <Compile Include="Core\Environment.cs" />
-    <Compile Include="Data\Image.cs" />
-    <Compile Include="Data\ResourceManager.cs" />
-    <Compile Include="Graphics\ActiveInfo.cs" />
-    <Compile Include="Graphics\Buffer.cs" />
-    <Compile Include="Graphics\CompiledShader.cs" />
-    <Compile Include="Graphics\FrameBuffer.cs" />
-    <Compile Include="Graphics\RenderBuffer.cs" />
-    <Compile Include="Graphics\Shader.cs" />
-    <Compile Include="Graphics\ShaderProgram.cs" />
-    <Compile Include="Graphics\Texture.cs" />
-    <Compile Include="Graphics\UniformLocation.cs" />
-    <Compile Include="Graphics\WebGL.cs" />
-    <Compile Include="Graphics\WebGLGraphics.cs" />
-    <Compile Include="Html\CanvasElementGl.cs" />
+    <Content Include="Properties\DemoGame.ruleset" />
+    <Content Include="Properties\DemoGame.script" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="App.cs" />
+    <Compile Include="DemoGame.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj">
-      <Project>{F47D3BEA-870F-4CB0-AD52-19909B2B9E8B}</Project>
-      <Name>Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DemoGame\DemoGame.csproj">
-      <Project>{C1B590B6-454F-4AAF-8990-48A4FC4F060A}</Project>
-      <Name>DemoGame</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Engine\Engine.csproj">
       <Project>{2DEFA5FE-7947-4D16-B744-C088B34589DD}</Project>
       <Name>Engine</Name>
