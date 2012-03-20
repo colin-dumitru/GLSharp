@@ -43,5 +43,38 @@ namespace GLSharp.Core {
         public uint[] CreateUInt32Array(ulong size) {
             throw new global::System.Exception("Not implemented");
         }
+
+
+        public float[] CreateFloat32ArrayFromArray(float[] input) {
+            throw new global::System.Exception("Not implemented");
+        }
+
+        public double[] CreateFloat64ArrayFromArray(double[] input) {
+            throw new global::System.Exception("Not implemented");
+        }
+
+        public byte[] CreateInt8ArrayFromArray(byte[] input) {
+            throw new global::System.Exception("Not implemented");
+        }
+
+        public char[] CreateUInt8ArrayFromArray(char[] input) {
+            throw new global::System.Exception("Not implemented");
+        }
+
+        public short[] CreateInt16ArrayFromArray(short[] input) {
+            throw new global::System.Exception("Not implemented");
+        }
+
+        public ushort[] CreateUInt16ArrayFromArray(ushort[] input) {
+            throw new global::System.Exception("Not implemented");
+        }
+
+        public int[] CreateInt32ArrayFromArray(int[] input) {
+            throw new global::System.Exception("Not implemented");
+        }
+
+        public uint[] CreateUInt32ArrayFromArray(uint[] input) {
+            throw new global::System.Exception("Not implemented");
+        }
     }
 }

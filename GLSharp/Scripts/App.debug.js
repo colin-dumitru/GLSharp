@@ -27,9 +27,9 @@ GLSharp.Data.ImageLoader.prototype = {
     get_extension: function GLSharp_Data_ImageLoader$get_extension() {
         /// <value type="Array"></value>
         var ret = [];
-        ret.add('.jpg');
-        ret.add('.png');
-        ret.add('.jpeg');
+        ret.add('jpg');
+        ret.add('png');
+        ret.add('jpeg');
         return ret;
     },
     
@@ -60,7 +60,7 @@ GLSharp.Data.JsonLoader.prototype = {
     get_extension: function GLSharp_Data_JsonLoader$get_extension() {
         /// <value type="Array"></value>
         var ret = [];
-        ret.add('.json');
+        ret.add('json');
         return ret;
     },
     
@@ -100,7 +100,7 @@ GLSharp.Data.ShaderLoader.prototype = {
     get_extension: function GLSharp_Data_ShaderLoader$get_extension() {
         /// <value type="Array"></value>
         var ret = [];
-        ret.add('.shader');
+        ret.add('shader');
         return ret;
     },
     
@@ -204,16 +204,24 @@ GLSharp.Data.ResourceManager.prototype = {
         return value;
     },
     
-    getResource: function GLSharp_Data_ResourceManager$getResource(resource) {
+    getResource: function GLSharp_Data_ResourceManager$getResource(resource, managerParams) {
         /// <param name="resource" type="String">
         /// </param>
+        /// <param name="managerParams" type="GLSharp.Data.ResourceManagerParams">
+        /// </param>
         /// <returns type="GLSharp.Data.Resource"></returns>
-        var lastPeriod = resource.lastIndexOf('.');
-        var extension = '';
-        if (lastPeriod > -1) {
-            extension = resource.substring(lastPeriod, resource.length).toLowerCase();
+        if (managerParams == null) {
+            managerParams = new GLSharp.Data.ResourceManagerParams();
         }
-        var loader = this._loaders[extension];
+        if (managerParams.get_type() == null) {
+            var lastPeriod = resource.lastIndexOf('.');
+            managerParams.set_type('');
+            if (lastPeriod > -1) {
+                managerParams.set_type(resource.substring(lastPeriod + 1, resource.length));
+            }
+        }
+        managerParams.set_type(managerParams.get_type().toLowerCase());
+        var loader = this._loaders[managerParams.get_type()];
         if (loader == null) {
             throw new Error('The specified resource is unsuppoted');
         }
@@ -1082,9 +1090,15 @@ Type.registerNamespace('App');
 App.App = function App_App() {
     /// <field name="_graphics" type="GLSharp.Graphics.WebGLGraphics">
     /// </field>
+    /// <field name="_engine" type="GLSharp.Engine">
+    /// </field>
+    /// <field name="_game" type="GLSharp.Game.GameBase">
+    /// </field>
 }
 App.App.prototype = {
     _graphics: null,
+    _engine: null,
+    _game: null,
     
     init: function App_App$init() {
         var canvasElem = document.getElementById('mainCanvas');
@@ -1094,19 +1108,20 @@ App.App.prototype = {
         this._graphics = new GLSharp.Graphics.WebGLGraphics(canvasElem);
         this._graphics.clear();
         this._InitEnvironment();
-        var res = GLSharp.Core.Core.get_resourceManager().getResource('/Data/Shader/test.shader');
-        res.add_resourceChanged(function(sender, args) {
-            alert('aaa');
-        });
+        this._engine = new GLSharp.Engine();
+        this._game = new GLSharp.DemoGame();
+        this._engine.set_activeGame(this._game);
+        this._engine.run();
     },
     
     _InitEnvironment: function App_App$_InitEnvironment() {
-        GLSharp.Core.Core.set_environment(new Environment());
+        GLSharp.Core.SystemCore.set_environment(new Environment());
         var resourceManager = new GLSharp.Data.ResourceManager();
         resourceManager.addLoader(new GLSharp.Data.ImageLoader());
         resourceManager.addLoader(new GLSharp.Data.JsonLoader());
         resourceManager.addLoader(new GLSharp.Data.ShaderLoader(this._graphics.get_context()));
-        GLSharp.Core.Core.set_resourceManager(resourceManager);
+        GLSharp.Core.SystemCore.set_resourceManager(resourceManager);
+        GLSharp.Core.SystemCore.set_logger(new JSLoggingProvider());
     }
 }
 

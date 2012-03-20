@@ -77,12 +77,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\Image\test.jpg" />
+    <None Include="Data\Lib\test.dae.lib">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Data\Shader\test.shader" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\App.debug.js" />
     <Content Include="Scripts\App.js" />
     <Content Include="Scripts\Core.debug.js" />
     <Content Include="Scripts\Core.js" />
+    <Content Include="Scripts\DemoGame.debug.js" />
+    <Content Include="Scripts\DemoGame.js" />
     <Content Include="Scripts\Engine.debug.js" />
     <Content Include="Scripts\Engine.js" />
     <Content Include="Scripts\Environment.js" />

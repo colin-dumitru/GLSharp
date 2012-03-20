@@ -45,8 +45,14 @@
     <Reference Include="Script.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Universe\MaterialComponent.cs" />
+    <Compile Include="Util\Matrix.cs" />
     <Content Include="Properties\Graphics.ruleset" />
     <Content Include="Properties\Graphics.script" />
+    <Compile Include="Content\MeshConverter.cs" />
+    <Compile Include="Content\NodeConverter.cs" />
+    <Compile Include="Engine.cs" />
+    <Compile Include="Game\GameBase.cs" />
     <Compile Include="Graphics\ICompiledShader.cs" />
     <Compile Include="Graphics\IUniform.cs" />
     <Compile Include="Graphics\Color.cs" />
@@ -56,7 +62,7 @@
     <Compile Include="Graphics\IUniformLocation.cs" />
     <Compile Include="Graphics\Material.cs" />
     <Compile Include="Graphics\Mesh.cs" />
-    <Compile Include="Resource\Library.cs" />
+    <Compile Include="Content\Library.cs" />
     <Compile Include="Universe\Component.cs" />
     <Compile Include="Universe\MeshComponent.cs" />
     <Compile Include="Universe\Node.cs" />
