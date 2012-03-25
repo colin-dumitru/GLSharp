@@ -45,6 +45,7 @@
     <Reference Include="Script.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Content\LightConverter.cs" />
     <Compile Include="Universe\MaterialComponent.cs" />
     <Compile Include="Util\Matrix.cs" />
     <Content Include="Properties\Graphics.ruleset" />

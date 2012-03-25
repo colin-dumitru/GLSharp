@@ -14,14 +14,19 @@ namespace GLSharp.Content {
     [IgnoreNamespace]
     internal abstract class MeshObject {
         [IntrinsicProperty]
+        [PreserveCase]
         public abstract String Id { get; set; }
         [IntrinsicProperty]
+        [PreserveCase]
         public abstract int[] Indexes { get; set; }
         [IntrinsicProperty]
+        [PreserveCase]
         public abstract float[] Normals { get; set; }
         [IntrinsicProperty]
+        [PreserveCase]
         public abstract float[] UVs { get; set; }
         [IntrinsicProperty]
+        [PreserveCase]
         public abstract float[] Vertices { get; set; }
     }
 

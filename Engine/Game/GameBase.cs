@@ -20,6 +20,10 @@ namespace GLSharp.Game {
             /*initialize the library*/
             this._library = new Library();
 
+            this._library.AddConverter(new LightConverter());
+            this._library.AddConverter(new MeshConverter());
+            this._library.AddConverter(new NodeConverter());
+
             this.Startup();    
         }
         //------------------------------------------------------------------------------------------

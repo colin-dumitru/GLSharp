@@ -30,6 +30,14 @@ GLSharp.Core.IEnvironment.prototype = {
     createUInt16Array : null,
     createInt32Array : null,
     createUInt32Array : null,
+    createFloat32ArrayFromArray : null,
+    createFloat64ArrayFromArray : null,
+    createInt8ArrayFromArray : null,
+    createUInt8ArrayFromArray : null,
+    createInt16ArrayFromArray : null,
+    createUInt16ArrayFromArray : null,
+    createInt32ArrayFromArray : null,
+    createUInt32ArrayFromArray : null,
     init : null
 }
 GLSharp.Core.IEnvironment.registerInterface('GLSharp.Core.IEnvironment');

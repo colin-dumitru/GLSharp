@@ -101,11 +101,14 @@ namespace GLSharp.Universe {
 
             if (this.ChildRemoved != null)
                 this.ChildRemoved(this, child);
+
+		    return true;
 		}
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
 		public Node FindChild(String id, Boolean deep) {
 		    //!++ todo
+		    return null;
 		}
 				
     }

@@ -11,18 +11,34 @@ namespace GLSharp.Content {
     [Imported]
     [IgnoreNamespace]
     internal abstract class ReferenceObject {
+        [PreserveCase]
+        [IntrinsicProperty]
         public abstract String Type { get; set; }
+        [PreserveCase]
+        [IntrinsicProperty]
         public abstract String Resource { get; set; }
+        [PreserveCase]
+        [IntrinsicProperty]
         public abstract String Library { get; set; }
+        [PreserveCase]
+        [IntrinsicProperty]
         public abstract List<ReferenceObject> Children { get; set; }
     }
 
     [Imported]
     [IgnoreNamespace]
     internal abstract class NodeObject {
+        [PreserveCase]
+        [IntrinsicProperty]
         public abstract String Id { get; set; }
+        [PreserveCase]
+        [IntrinsicProperty]
         public abstract float[] Matrix { get; set; }
+        [PreserveCase]
+        [IntrinsicProperty]
         public abstract List<NodeObject> Children { get; set; }
+        [PreserveCase]
+        [IntrinsicProperty]
         public abstract List<ReferenceObject> References { get; set; }
     }
 
@@ -51,9 +67,10 @@ namespace GLSharp.Content {
             ret.Matrix = new Matrix4X4(root.Matrix);
 
             /*child nodes*/
-            foreach (NodeObject nodeObject in root.Children) {
-                ret.AddChild(this.ConvertNodeObject(nodeObject));
-            }
+            if (root.Children != null)
+                foreach (NodeObject nodeObject in root.Children) {
+                    ret.AddChild(this.ConvertNodeObject(nodeObject));
+                }
 
             List<Component> compColection = new List<Component>();
 
@@ -93,9 +110,10 @@ namespace GLSharp.Content {
             }
 
             /*child references*/
-            foreach (ReferenceObject referenceObject in reference.Children) {
-                this.ConvertReferences(referenceObject, collection);
-            }
+            if (reference.Children != null)
+                foreach (ReferenceObject referenceObject in reference.Children) {
+                    this.ConvertReferences(referenceObject, collection);
+                }
         }
     }
 }

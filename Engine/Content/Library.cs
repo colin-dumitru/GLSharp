@@ -87,12 +87,15 @@ namespace GLSharp.Content {
     [Imported]
     internal abstract class ResourceObject {
         [IntrinsicProperty]
+        [PreserveCase]
         public abstract String Type { get; set; }
 
         [IntrinsicProperty]
+        [PreserveCase]
         public abstract String Id { get; set; }
 
         [IntrinsicProperty]
+        [PreserveCase]
         public abstract Object Resource { get; set; }
     }
 
@@ -102,8 +105,10 @@ namespace GLSharp.Content {
     [Imported]
     internal abstract class LibraryObject {
         [IntrinsicProperty]
+        [PreserveCase]
         public abstract String Name { get; set; }
         [IntrinsicProperty]
+        [PreserveCase]
         public abstract List<ResourceObject> ContentObjects { get; set; }
     }
 
