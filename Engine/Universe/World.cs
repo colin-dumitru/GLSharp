@@ -8,14 +8,7 @@ namespace GLSharp.Universe {
     public delegate void WorldHandler(World sender, Object args);
 
     public class World {
-        private List<Node> _nodeList = null;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public List<Node> RootNodes {
-            get { return _nodeList; }
-        }
 
         /// <summary>
         /// Called when a node gets added.
@@ -26,23 +19,33 @@ namespace GLSharp.Universe {
         /// </summary>
         public event WorldHandler NodeRemoved;
 
+        //------------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------------
+        public World(int cellsX, int cellsY, float cellWidth, float cellHeight) {
 
+
+            this.Reset();
+        }
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
-        public World() {
-            this._nodeList = new List<Node>();
+        public void Reset() {
         }
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
         public void AddNode(Node node) {
-            this._nodeList.Add(node);
+            
             if (this.NodeAdded != null)
                 this.NodeAdded(this, node);
         }
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
+        public void AddDynamicNode(Node node) {
+            
+        }
+        //------------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------------
         public void RemoveNode(Node node) {
-            this._nodeList.Remove(node);
+            
             if (this.NodeRemoved != null)
                 this.NodeRemoved(this, node);
         }

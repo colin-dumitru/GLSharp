@@ -14,7 +14,7 @@ namespace GLSharp.Universe {
 
         public MeshComponent() {
             /*set the type*/
-            this._type = "mesh";
+            this._type = Component.MeshComponent;
         }
 
         

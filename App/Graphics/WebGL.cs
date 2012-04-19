@@ -397,295 +397,303 @@ namespace GLSharp.Graphics {
         public const int UnpackPremultiplyAlpha = 0x9241;
         public const int ContextLost = 0x9242;
         public const int UnpackColorspaceConversion = 0x9243;
-        
+
     }
 
 
     [Imported]
-    public abstract class WebGL{
+    public abstract class WebGL {
 
-   
 
-    /* ---------------------------------------SystemCore Functions-----------------------------------------------------------*/
 
-    public abstract int GetScreenWidth();
+        /* ---------------------------------------SystemCore Functions-----------------------------------------------------------*/
 
-    public abstract int GetScreenHeight();
+        public abstract int GetScreenWidth();
 
-    public abstract void BlendColor(Color color);
+        public abstract int GetScreenHeight();
 
-    public abstract void BlendEquation(int mode);
+        public abstract void BlendColor(Color color);
 
-    public abstract void BlendEquationSeparate(int modeRgb, int modeAlpha);
+        public abstract void BlendEquation(int mode);
 
-    public abstract void BlendFunction(int sourceFactor, int destinationFactor);
+        public abstract void BlendEquationSeparate(int modeRgb, int modeAlpha);
 
-    public abstract void BlendFunctionSeparate(int sourceRgb, int destinationRgb, int sourceAlpha, int destinationAlpha);
+        public abstract void BlendFunction(int sourceFactor, int destinationFactor);
 
-    public abstract void Clear(int mask);
+        public abstract void BlendFunctionSeparate(int sourceRgb, int destinationRgb, int sourceAlpha, int destinationAlpha);
 
-    public abstract void ClearColor(float red, float green, float blue, float alpha);
+        public abstract void Clear(int mask);
 
-    public abstract void ClearDepth(float depth);
+        public abstract void ClearColor(float red, float green, float blue, float alpha);
 
-    public abstract void ClearStencil(int s);
+        public abstract void ClearDepth(float depth);
 
-    public abstract void ColorMask(bool red, bool green, bool blue, bool alpha);
+        public abstract void ClearStencil(int s);
 
-    public abstract void CullFace(int mode);
+        public abstract void ColorMask(bool red, bool green, bool blue, bool alpha);
 
-    public abstract void DepthFunc(int func);
+        public abstract void CullFace(int mode);
 
-    public abstract void DepthMask(bool flag);
+        public abstract void DepthFunc(int func);
 
-    public abstract void DepthRange(float zNear, float zFar);
+        public abstract void DepthMask(bool flag);
 
-    public abstract void Disable(int component);
+        public abstract void DepthRange(float zNear, float zFar);
 
-    public abstract void Enable(int component);
+        public abstract void Disable(int component);
 
-    public abstract void Finish();
+        public abstract void Enable(int component);
 
-    public abstract void Flush();
+        public abstract void Finish();
 
-    public abstract int GetError();
+        public abstract void Flush();
 
-    public abstract void Hint(int target, int mode);
+        public abstract int GetError();
 
-    public abstract bool IsEnabled(int cap);
+        public abstract void Hint(int target, int mode);
 
-    public abstract void PixelStore(int pName, int param);
+        public abstract bool IsEnabled(int cap);
 
-    public abstract void PolygonOffset(float factor, float offset);
+        public abstract void PixelStore(int pName, int param);
 
-    public abstract void SampleCoverage(float value, bool invert);
+        public abstract void PolygonOffset(float factor, float offset);
 
-    public abstract void Scissor(int x, int y, int width, int height);
+        public abstract void SampleCoverage(float value, bool invert);
 
-    public abstract void StencilFunction(int func, int reff, int mask);
+        public abstract void Scissor(int x, int y, int width, int height);
 
-    public abstract void StencilFuncSeparate(int face, int func, int reff, int mask);
+        public abstract void StencilFunction(int func, int reff, int mask);
 
-    public abstract void StencilMask(int mask);
+        public abstract void StencilFuncSeparate(int face, int func, int reff, int mask);
 
-    public abstract void StencilMaskSeparate(int face, int mask);
+        public abstract void StencilMask(int mask);
 
-    public abstract void StencilOp(int fail, int zFail, int zPass);
+        public abstract void StencilMaskSeparate(int face, int mask);
 
-    public abstract void StencilOpSeparate(int face, int fail, int zFail, int zPass);
+        public abstract void StencilOp(int fail, int zFail, int zPass);
 
-    public abstract void Viewport(int x, int y, int width, int height);
+        public abstract void StencilOpSeparate(int face, int fail, int zFail, int zPass);
 
-    /* ------------------------------------------Drawing------------------------------------------------------*/
+        public abstract void Viewport(int x, int y, int width, int height);
 
-    public abstract void DrawArrays(int mode, int first, int count);
+        /* ------------------------------------------Drawing------------------------------------------------------*/
 
-    public abstract void DrawElements(int mode, int count, int type, int offset);
+        public abstract void DrawArrays(int mode, int first, int count);
 
-    public abstract void FrontFace(int mode);
+        public abstract void DrawElements(int mode, int count, int type, int offset);
 
-    public abstract void LineWidth(float width);
+        public abstract void FrontFace(int mode);
 
-    /* ------------------------------------------Textures------------------------------------------------------*/
+        public abstract void LineWidth(float width);
 
-    public abstract void ActivateTexture(int texture);
+        /* ------------------------------------------Textures------------------------------------------------------*/
 
-    public abstract void BindTexture(int target, Texture texture);
+        public abstract void ActivateTexture(int texture);
 
-    public abstract void CopyTexImage2D(int target, int level, int internalFormat, int x, int y, int width, int height,
-                               int border);
+        public abstract void BindTexture(int target, Texture texture);
 
-    public abstract void CopyTexSubImage2D(int target, int level, int xOffset, int yOffset,
-                                  int x, int y, int width, int height);
+        public abstract void CopyTexImage2D(int target, int level, int internalFormat, int x, int y, int width, int height,
+                                   int border);
 
-    public abstract Texture CreateTexture();
+        public abstract void CopyTexSubImage2D(int target, int level, int xOffset, int yOffset,
+                                      int x, int y, int width, int height);
 
-    public abstract void DeleteTexture(Texture texture);
+        public abstract Texture CreateTexture();
 
-    public abstract void GenerateMipmap(int target);
+        public abstract void DeleteTexture(Texture texture);
 
-    public abstract float GetTextureParameter(int target, int pName);
+        public abstract void GenerateMipmap(int target);
 
-    public abstract bool IsTexture(Texture texture);
+        public abstract float GetTextureParameter(int target, int pName);
 
-    public abstract void TexImage2D(int target, int level, int internalFormat, int format, int type, ImageData image);
+        public abstract bool IsTexture(Texture texture);
 
-    public abstract void TexImage2D(int target, int level, int internalFormat, int format, int type, IImageResource image);
+        public abstract void TexImage2D(int target, int level, int internalFormat, int format, int type, ImageData image);
 
-    public abstract void TexParameter(int target, int pName, float param);
+        public abstract void TexImage2D(int target, int level, int internalFormat, int format, int type, IImageResource image);
 
-    public abstract void TexParameter(int target, int pName, int param);
+        public abstract void TexParameterf(int target, int pName, float param);
 
-    public abstract void TexImage2D(int target, int level, int xOffset, int yOffset, int format, int type, ImageData image);
+        public abstract void TexParameteri(int target, int pName, int param);
 
-    public abstract void TexImage2D(int target, int level, int xOffset, int yOffset, int format, int type, IImageResource image);
+        public abstract void TexImage2D(int target, int level, int xOffset, int yOffset, int format, int type, ImageData image);
 
+        public abstract void TexImage2D(int target, int level, int xOffset, int yOffset, int format, int type, IImageResource image);
+        
+        public abstract void TexImage2D(int target, int level, int internalformat, int width, int height, int border, int format,
+                    int type, float[] pixels);
 
-    /* --------------------------------------------Shaders---------------------------------------------------*/
+        /* --------------------------------------------Shaders---------------------------------------------------*/
 
-    public abstract void AttachShader(IShaderProgram program, IShader shader);
+        public abstract void AttachShader(IShaderProgram program, IShader shader);
 
-    public abstract void CompileShader(IShader shader);
+        public abstract void CompileShader(IShader shader);
 
-    public abstract IShaderProgram CreateProgram();
+        public abstract IShaderProgram CreateProgram();
 
-    public abstract IShader CreateShader(int type);
+        public abstract IShader CreateShader(int type);
 
-    public abstract void DeleteShaderProgram(IShader program);
+        public abstract void DeleteShaderProgram(IShader program);
 
-    public abstract void DeleteShader(IShader shader);
+        public abstract void DeleteShader(IShader shader);
 
-    public abstract void DetachShader(IShaderProgram program, IShader shader);
+        public abstract void DetachShader(IShaderProgram program, IShader shader);
 
-    public abstract List<IShader> GetAttachedShaders(IShaderProgram program);
+        public abstract List<IShader> GetAttachedShaders(IShaderProgram program);
 
-    public abstract Object GetProgramParameter(IShaderProgram program, int pName);
+        public abstract Object GetProgramParameter(IShaderProgram program, int pName);
 
-    public abstract String GetProgramInfoLog(IShaderProgram program);
+        public abstract String GetProgramInfoLog(IShaderProgram program);
 
-    public abstract Object GetShaderParameter(IShader shader, int pName);
+        public abstract Object GetShaderParameter(IShader shader, int pName);
 
-    public abstract String GetShaderInfoLog(IShader shader);
+        public abstract String GetShaderInfoLog(IShader shader);
 
-    public abstract String GetShaderSource(IShader shader);
+        public abstract String GetShaderSource(IShader shader);
 
-    public abstract bool IsShaderProgram(IShaderProgram shaderProgram);
+        public abstract bool IsShaderProgram(IShaderProgram shaderProgram);
 
-    public abstract bool IsShader(IShader shader);
+        public abstract bool IsShader(IShader shader);
 
-    public abstract void LinkProgram(IShaderProgram program);
+        public abstract void LinkProgram(IShaderProgram program);
 
-    public abstract void ShaderSource(IShader shader, String source);
+        public abstract void ShaderSource(IShader shader, String source);
 
-    public abstract void UseProgram(IShaderProgram program);
+        public abstract void UseProgram(IShaderProgram program);
 
-    public abstract void ValidateProgram(IShaderProgram program);
+        public abstract void ValidateProgram(IShaderProgram program);
 
-    /* --------------------------------------Attributes and Uniforms---------------------------------------------------*/
+        /* --------------------------------------Attributes and Uniforms---------------------------------------------------*/
 
-    public abstract void BindAttributeLocation(ShaderProgram program, int index, String name);
+        public abstract void BindAttributeLocation(ShaderProgram program, int index, String name);
 
-    public abstract void DisableVertexAttributeArray(int index);
+        public abstract void DisableVertexAttributeArray(int index);
 
-    public abstract void EnableVertexAttributeArray(int index);
+        public abstract void EnableVertexAttributeArray(int index);
 
-    public abstract ActiveInfo GetActiveAttribute(ShaderProgram program, int index);
+        public abstract ActiveInfo GetActiveAttribute(ShaderProgram program, int index);
 
-    public abstract ActiveInfo GetActiveUniform(ShaderProgram program, int index);
+        public abstract ActiveInfo GetActiveUniform(ShaderProgram program, int index);
 
-    public abstract int GetAttributeLocation(ShaderProgram program, String name);
+        public abstract int GetAttributeLocation(ShaderProgram program, String name);
 
-    public abstract List<float> GetUniform(ShaderProgram program, UniformLocation location);
+        public abstract List<float> GetUniform(ShaderProgram program, UniformLocation location);
 
-    public abstract UniformLocation GetUniformLocation(ShaderProgram program, String name);
+        public abstract UniformLocation GetUniformLocation(ShaderProgram program, String name);
 
-    public abstract Object GetVertexAttribute(int index, int pName);
+        public abstract Object GetVertexAttribute(int index, int pName);
 
-    public abstract int GetVertexAttributeOffset(int index, int pName);
+        public abstract int GetVertexAttributeOffset(int index, int pName);
 
-    public abstract void Uniform1F(UniformLocation location, float x);
+        public abstract void Uniform1F(UniformLocation location, float x);
 
-    public abstract void Uniform1F(UniformLocation location, float[] v);
+        public abstract void Uniform1F(UniformLocation location, float[] v);
 
-    public abstract void Uniform1I(UniformLocation location, int x);
+        public abstract void Uniform1I(UniformLocation location, int x);
 
-    public abstract void Uniform1I(UniformLocation location, int[] v);
+        public abstract void Uniform1I(UniformLocation location, int[] v);
 
-    public abstract void Uniform2F(UniformLocation location, float x, float y);
+        public abstract void Uniform2F(UniformLocation location, float x, float y);
 
-    public abstract void Uniform2F(UniformLocation location, float[] v);
+        public abstract void Uniform2F(UniformLocation location, float[] v);
 
-    public abstract void Uniform2I(UniformLocation location, int x, int y);
+        public abstract void Uniform2I(UniformLocation location, int x, int y);
 
-    public abstract void Uniform2I(UniformLocation location, int[] v);
+        public abstract void Uniform2I(UniformLocation location, int[] v);
 
-    public abstract void Uniform3F(UniformLocation location, float x, float y, float z);
+        public abstract void Uniform3F(UniformLocation location, float x, float y, float z);
 
-    public abstract void Uniform3F(UniformLocation location, float[] v);
+        public abstract void Uniform3F(UniformLocation location, float[] v);
 
-    public abstract void Uniform3I(UniformLocation location, int x, int y, int z);
+        public abstract void Uniform3I(UniformLocation location, int x, int y, int z);
 
-    public abstract void Uniform3I(UniformLocation location, int[] v);
+        public abstract void Uniform3I(UniformLocation location, int[] v);
 
-    public abstract void Uniform4F(UniformLocation location, float x, float y, float z, float w);
+        public abstract void Uniform4F(UniformLocation location, float x, float y, float z, float w);
 
-    public abstract void Uniform4F(UniformLocation location, float[] v);
+        public abstract void Uniform4F(UniformLocation location, float[] v);
 
-    public abstract void Uniform4I(UniformLocation location, int x, int y, int z, int w);
+        public abstract void Uniform4I(UniformLocation location, int x, int y, int z, int w);
 
-    public abstract void Uniform4I(UniformLocation location, int[] v);
+        public abstract void Uniform4I(UniformLocation location, int[] v);
 
-    public abstract void UniformMatrix2F(UniformLocation location, bool transpose, float[] value);
+        public abstract void UniformMatrix2F(UniformLocation location, bool transpose, float[] value);
 
-    public abstract void UniformMatrix3F(UniformLocation location, bool transpose, float[] value);
+        public abstract void UniformMatrix3F(UniformLocation location, bool transpose, float[] value);
 
-    public abstract void UniformMatrix4F(UniformLocation location, bool transpose, float[] value);
+        public abstract void UniformMatrix4F(UniformLocation location, bool transpose, float[] value);
 
-    public abstract void VertexAttribute1F(int index, float x);
+        public abstract void VertexAttribute1F(int index, float x);
 
-    public abstract void VertexAttribute1F(int index, float[] values);
+        public abstract void VertexAttribute1F(int index, float[] values);
 
-    public abstract void VertexAttribute2F(int index, float x, float y);
+        public abstract void VertexAttribute2F(int index, float x, float y);
 
-    public abstract void VertexAttribute2F(int index, float[] values);
+        public abstract void VertexAttribute2F(int index, float[] values);
 
-    public abstract void VertexAttribute3F(int index, float x, float y, float z);
+        public abstract void VertexAttribute3F(int index, float x, float y, float z);
 
-    public abstract void VertexAttribute3F(int index, float[] values);
+        public abstract void VertexAttribute3F(int index, float[] values);
 
-    public abstract void VertexAttribute4F(int index, float x, float y, float z, float w);
+        public abstract void VertexAttribute4F(int index, float x, float y, float z, float w);
 
-    public abstract void VertexAttribute4F(int index, float[] values);
+        public abstract void VertexAttribute4F(int index, float[] values);
 
-    public abstract void VertexAttributePointer(int index, int size, int type, bool normalized, int stride, int offset);
+        public abstract void VertexAttributePointer(int index, int size, int type, bool normalized, int stride, int offset);
 
 
-    /* ------------------------------------------- Buffers -------------------------------------------------------*/
+        /* ------------------------------------------- Buffers -------------------------------------------------------*/
 
-    public abstract void BindBuffer(int target, Buffer buffer);
+        public abstract void BindBuffer(int target, Buffer buffer);
 
-    public abstract void BufferData(int target, Array data, int usage);
+        public abstract void BufferData(int target, Array data, int usage);
 
-    public abstract void BufferSubData(int target, int offset,Array data);
+        public abstract void BufferSubData(int target, int offset, Array data);
 
-    public abstract Buffer CreateBuffer();
+        public abstract Buffer CreateBuffer();
 
-    public abstract void DeleteBuffer(Buffer buffer);
+        public abstract void DeleteBuffer(Buffer buffer);
 
-    public abstract bool IsBuffer(Buffer buffer);
+        public abstract bool IsBuffer(Buffer buffer);
 
-    /* -----------------------------------------Frame Buffer-----------------------------------------------------------*/
+        /* -----------------------------------------Frame Buffer-----------------------------------------------------------*/
 
-    public abstract void BindFrameBuffer(int target, FrameBuffer frameBuffer);
+        public abstract void BindFrameBuffer(int target, FrameBuffer frameBuffer);
 
-    public abstract int CheckFrameBufferStatus(int target);
+        public abstract int CheckFrameBufferStatus(int target);
 
-    public abstract FrameBuffer CreateFameBuffer();
+        public abstract FrameBuffer CreateFameBuffer();
 
-    public abstract void DeleteFrameBuffer(FrameBuffer frameBuffer);
+        public abstract void DeleteFrameBuffer(FrameBuffer frameBuffer);
 
-    public abstract void FrameBufferRenderBuffer(int target, int attachment, int renderBufferTarget,
-                                        RenderBuffer renderBuffer);
-    public abstract void FrameBufferTexture2D(int target, int attachment, int textureTarget, Texture texture, int level);
+        public abstract void FrameBufferRenderBuffer(int target, int attachment, int renderBufferTarget,
+                                            RenderBuffer renderBuffer);
+        public abstract void FrameBufferTexture2D(int target, int attachment, int textureTarget, Texture texture, int level);
 
-    public abstract Object GetFrameBufferAttachmentParameter(int target, int attachment, int pName);
+        public abstract Object GetFrameBufferAttachmentParameter(int target, int attachment, int pName);
 
-    public abstract bool IsFrameBuffer(FrameBuffer frameBuffer);
+        public abstract bool IsFrameBuffer(FrameBuffer frameBuffer);
 
-    public abstract void ReadPixels(int x, int y, int width, int height, int format, int type, Array pixels);
+        public abstract void ReadPixels(int x, int y, int width, int height, int format, int type, Array pixels);
 
-    /* -----------------------------------------Render Buffer-----------------------------------------------------------*/
+        /* -----------------------------------------Render Buffer-----------------------------------------------------------*/
 
-    public abstract void BindRenderBuffer(int target, RenderBuffer renderBuffer);
+        public abstract void BindRenderBuffer(int target, RenderBuffer renderBuffer);
 
-    public abstract RenderBuffer CreateRenderBuffer();
+        public abstract RenderBuffer CreateRenderBuffer();
 
-    public abstract void DeleteRenderBuffer(RenderBuffer buffer);
+        public abstract void DeleteRenderBuffer(RenderBuffer buffer);
 
-    public abstract Object GetRenderBufferParameter(int target, int pName);
+        public abstract Object GetRenderBufferParameter(int target, int pName);
 
-    public abstract bool IsRenderBuffer(RenderBuffer renderBuffer);
+        public abstract bool IsRenderBuffer(RenderBuffer renderBuffer);
 
-    public abstract void RenderBufferStorage(int target, int internalFormat, int width, int height);
+        public abstract void RenderBufferStorage(int target, int internalFormat, int width, int height);
+
+        /*--------------------------------------------Extensions------------------------------------------------------------*/
+
+        public abstract String[] GetSupportedExtensions();
+
+        public abstract Object GetExtension(String extension);
     }
 }

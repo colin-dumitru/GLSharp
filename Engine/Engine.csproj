@@ -47,7 +47,8 @@
   <ItemGroup>
     <Compile Include="Content\LightConverter.cs" />
     <Compile Include="Universe\MaterialComponent.cs" />
-    <Compile Include="Util\Matrix.cs" />
+    <Compile Include="Util\Matrix4x4.cs" />
+    <Compile Include="Util\Vector3.cs" />
     <Content Include="Properties\Graphics.ruleset" />
     <Content Include="Properties\Graphics.script" />
     <Compile Include="Content\MeshConverter.cs" />

@@ -1,6 +1,8 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage" %>
 
 <asp:Content ID="HeaderContent" ContentPlaceHolderID="HeaderContent" runat="server">
+    <link href="/Content/Index.css" rel="stylesheet" type="text/css" />
+
     <script src="/Scripts/mscorlib.debug.js" type="text/javascript"></script>
     <script src="/Scripts/jquery-1.4.1.min.js" type="text/javascript"></script>
 
@@ -20,12 +22,9 @@
 </asp:Content>
 
 <asp:Content ID="TitleConten" ContentPlaceHolderID="TitleContent" runat="server">
-    Home Page
+    Home
 </asp:Content>
 
 <asp:Content ID="MainContent" ContentPlaceHolderID="MainContent" runat="server">
-    <h2><%: ViewData["Message"] %></h2>
-    <p>
-        <canvas id="mainCanvas" width="800" height="600"></canvas>
-    </p>
+    <canvas id="mainCanvas" width="800" height="600"></canvas>
 </asp:Content>

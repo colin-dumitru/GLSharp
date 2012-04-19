@@ -47,6 +47,8 @@
   <ItemGroup>
     <Content Include="Properties\Core.ruleset" />
     <Content Include="Properties\Core.script" />
+    <Compile Include="Core\Event.cs" />
+    <Compile Include="Core\ITime.cs" />
     <Compile Include="Core\SystemCore.cs" />
     <Compile Include="Core\IEnvironment.cs" />
     <Compile Include="Data\IImageResource.cs" />

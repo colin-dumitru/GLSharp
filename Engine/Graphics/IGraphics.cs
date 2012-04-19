@@ -34,9 +34,20 @@ namespace GLSharp.Graphics {
         World World { get; set; }
 
         /// <summary>
+        /// Initializes the graphics layer.
+        /// </summary>
+        /// <returns></returns>
+        void Initialize();
+
+        /// <summary>
         /// Clears the drawing area using the clear mode set.
         /// </summary>
         void Clear();
+
+        /// <summary>
+        /// Renders the active world.
+        /// </summary>
+        void Render();
 
     }
 }

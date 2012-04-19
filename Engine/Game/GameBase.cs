@@ -7,23 +7,18 @@ using GLSharp.Content;
 
 namespace GLSharp.Game {
     public abstract class GameBase {
-        private Library _library = null;
+        private Engine _engine;
 
-        public Library Library {
-            get { return _library; }
+        public Engine Engine {
+            get { return _engine; }
+            set { _engine = value; }
         }
+        
 
 
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
         public void Initialize() {
-            /*initialize the library*/
-            this._library = new Library();
-
-            this._library.AddConverter(new LightConverter());
-            this._library.AddConverter(new MeshConverter());
-            this._library.AddConverter(new NodeConverter());
-
             this.Startup();    
         }
         //------------------------------------------------------------------------------------------

@@ -64,7 +64,7 @@ namespace GLSharp.Content {
             Node ret = new Node();
 
             ret.Id = root.Id;
-            ret.Matrix = new Matrix4X4(root.Matrix);
+            ret.Local = new Matrix4X4(root.Matrix);
 
             /*child nodes*/
             if (root.Children != null)
@@ -75,9 +75,10 @@ namespace GLSharp.Content {
             List<Component> compColection = new List<Component>();
 
             /*components*/
-            foreach (ReferenceObject referenceObject in root.References) {
-                this.ConvertReferences(referenceObject, compColection);
-            }
+            if (root.References != null)
+                foreach (ReferenceObject referenceObject in root.References) {
+                    this.ConvertReferences(referenceObject, compColection);
+                }
 
             foreach (Component component in compColection) {
                 ret.AddComponent(component);
@@ -89,7 +90,7 @@ namespace GLSharp.Content {
         //------------------------------------------------------------------------------------------
         private void ConvertReferences(ReferenceObject reference, List<Component> collection) {
             //! change this to a factory method
-            if(reference.Type == "mesh") {
+            if(reference.Type == Component.MeshComponent) {
                 MeshComponent comp = new MeshComponent();
 
                 Handle handle = new Handle();
@@ -98,7 +99,7 @@ namespace GLSharp.Content {
 
                 comp.MeshHandle = handle;
                 collection.Add(comp);
-            } else if (reference.Type == "material") {
+            } else if (reference.Type == Component.MaterialComponent) {
                 MaterialComponent comp = new MaterialComponent();
 
                 Handle handle = new Handle();

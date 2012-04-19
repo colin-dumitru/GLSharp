@@ -6,6 +6,18 @@
 Type.registerNamespace('GLSharp.Core');
 
 ////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Core.ITimer
+
+GLSharp.Core.ITimer = function() { 
+};
+GLSharp.Core.ITimer.prototype = {
+    start : null,
+    stop : null
+}
+GLSharp.Core.ITimer.registerInterface('GLSharp.Core.ITimer');
+
+
+////////////////////////////////////////////////////////////////////////////////
 // GLSharp.Core.ILoggingProvider
 
 GLSharp.Core.ILoggingProvider = function() { 
@@ -44,6 +56,92 @@ GLSharp.Core.IEnvironment.registerInterface('GLSharp.Core.IEnvironment');
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Core.Event
+
+GLSharp.Core.Event = function GLSharp_Core_Event() {
+    /// <summary>
+    /// Faster implementation than the Script# one.
+    /// </summary>
+    /// <field name="_events" type="Array">
+    /// </field>
+}
+GLSharp.Core.Event.prototype = {
+    _events: null,
+    
+    subscribe: function GLSharp_Core_Event$subscribe(handler, unique) {
+        /// <param name="handler" type="Function">
+        /// </param>
+        /// <param name="unique" type="Nullable`1">
+        /// </param>
+        if (this._events == null) {
+            this._events = [];
+        }
+        if (!!unique && this._events.contains(handler)) {
+            return;
+        }
+        this._events.add(handler);
+    },
+    
+    unsubscribe: function GLSharp_Core_Event$unsubscribe(handler) {
+        /// <param name="handler" type="Function">
+        /// </param>
+        if (this._events == null) {
+            return;
+        }
+        this._events.remove(handler);
+    },
+    
+    fire: function GLSharp_Core_Event$fire(sender, args) {
+        /// <param name="sender" type="Object">
+        /// </param>
+        /// <param name="args" type="Object">
+        /// </param>
+        if (this._events != null) {
+            for (var i = 0; i < this._events.length; i++) {
+                this._events[i];
+            }
+        }
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Core.TimerHandle
+
+GLSharp.Core.TimerHandle = function GLSharp_Core_TimerHandle() {
+    /// <field name="_id" type="Number" integer="true">
+    /// </field>
+    /// <field name="_repeat" type="Boolean">
+    /// </field>
+}
+GLSharp.Core.TimerHandle.prototype = {
+    _id: 0,
+    
+    get_id: function GLSharp_Core_TimerHandle$get_id() {
+        /// <value type="Number" integer="true"></value>
+        return this._id;
+    },
+    set_id: function GLSharp_Core_TimerHandle$set_id(value) {
+        /// <value type="Number" integer="true"></value>
+        this._id = value;
+        return value;
+    },
+    
+    _repeat: false,
+    
+    get_repeat: function GLSharp_Core_TimerHandle$get_repeat() {
+        /// <value type="Boolean"></value>
+        return this._repeat;
+    },
+    set_repeat: function GLSharp_Core_TimerHandle$set_repeat(value) {
+        /// <value type="Boolean"></value>
+        this._repeat = value;
+        return value;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 // GLSharp.Core.SystemCore
 
 GLSharp.Core.SystemCore = function GLSharp_Core_SystemCore() {
@@ -52,6 +150,8 @@ GLSharp.Core.SystemCore = function GLSharp_Core_SystemCore() {
     /// <field name="_resourceManager" type="GLSharp.Data.IResourceManager" static="true">
     /// </field>
     /// <field name="_logger" type="GLSharp.Core.ILoggingProvider" static="true">
+    /// </field>
+    /// <field name="_timer" type="GLSharp.Core.ITimer" static="true">
     /// </field>
 }
 GLSharp.Core.SystemCore.get_environment = function GLSharp_Core_SystemCore$get_environment() {
@@ -97,6 +197,15 @@ GLSharp.Core.SystemCore.set_logger = function GLSharp_Core_SystemCore$set_logger
     /// </summary>
     /// <value type="GLSharp.Core.ILoggingProvider"></value>
     GLSharp.Core.SystemCore._logger = value;
+    return value;
+}
+GLSharp.Core.SystemCore.get_timer = function GLSharp_Core_SystemCore$get_timer() {
+    /// <value type="GLSharp.Core.ITimer"></value>
+    return GLSharp.Core.SystemCore._timer;
+}
+GLSharp.Core.SystemCore.set_timer = function GLSharp_Core_SystemCore$set_timer(value) {
+    /// <value type="GLSharp.Core.ITimer"></value>
+    GLSharp.Core.SystemCore._timer = value;
     return value;
 }
 
@@ -223,12 +332,15 @@ GLSharp.Data.Resource.prototype = {
 }
 
 
+GLSharp.Core.Event.registerClass('GLSharp.Core.Event');
+GLSharp.Core.TimerHandle.registerClass('GLSharp.Core.TimerHandle');
 GLSharp.Core.SystemCore.registerClass('GLSharp.Core.SystemCore');
 GLSharp.Data.ResourceManagerParams.registerClass('GLSharp.Data.ResourceManagerParams');
 GLSharp.Data.Resource.registerClass('GLSharp.Data.Resource');
 GLSharp.Core.SystemCore._environment = null;
 GLSharp.Core.SystemCore._resourceManager = null;
 GLSharp.Core.SystemCore._logger = null;
+GLSharp.Core.SystemCore._timer = null;
 })();
 
 //! This script was generated using Script# v0.7.4.0

@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\JSLoggingProvider.cs" />
+    <Compile Include="Core\Timer.cs" />
     <Compile Include="Util\Xml\XmlHelper.cs" />
     <Content Include="Properties\App.ruleset" />
     <Content Include="Properties\App.script" />

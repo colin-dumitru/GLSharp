@@ -2,17 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Html;
 using GLSharp;
+using GLSharp.Content;
 using GLSharp.Graphics;
 using GLSharp.Html;
 using GLSharp.Core;
 using GLSharp.Data;
 using GLSharp.Game;
+using EventHandler = GLSharp.Core.EventHandler;
 
 namespace App {
     public class App {
-        private WebGLGraphics _graphics = null;
         private Engine _engine = null;
-        private GameBase _game = null;
+        private event EventHandler _tmp;
 
         public void Init()  {
             /*initialize canvas element*/
@@ -20,27 +21,32 @@ namespace App {
             if (canvasElem == null)
                 throw new Exception("No canvas element found!");
 
-            this._graphics = new WebGLGraphics(canvasElem);
-            this._graphics.Clear();
-
-            /*Initialize the environment*/
-            this._InitEnvironment();
-
-            /*create game engine*/
+            /*create and initialize the engine*/
             this._engine = new Engine();
 
-            /*create game*/
-            this._game = new DemoGame();
+            this._engine.Graphics = new WebGLGraphics(canvasElem);
+            this._engine.ActiveGame = new DemoGame();
+            this._engine.Library = new Library();
+
+            this._engine.Library.AddConverter(new LightConverter());
+            this._engine.Library.AddConverter(new MeshConverter());
+            this._engine.Library.AddConverter(new NodeConverter());
+
+            /*Initialize the environment*/
+            this.InitEnvironment();
 
             /*startup engine*/
-            this._engine.ActiveGame = this._game;
             this._engine.Run();
-
+            
             /*bye bye*/
+            Event test = new Event();
+            test.Subscribe(Handler, true);
         }
+
+        private void Handler(object sender, object args) {}
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
-        private void _InitEnvironment() {
+        private void InitEnvironment() {
             /*initialize the core*/
             SystemCore.Environment = new Environment();
             
@@ -49,10 +55,11 @@ namespace App {
 
             resourceManager.AddLoader(new ImageLoader());
             resourceManager.AddLoader(new JsonLoader());
-            resourceManager.AddLoader(new ShaderLoader(this._graphics.Context));
+            resourceManager.AddLoader(new ShaderLoader(((WebGLGraphics)this._engine.Graphics).Context));
 
             SystemCore.ResourceManager = resourceManager;
             SystemCore.Logger = new JSLoggingProvider();
+            SystemCore.Timer = new Timer();
         }
     }
 }

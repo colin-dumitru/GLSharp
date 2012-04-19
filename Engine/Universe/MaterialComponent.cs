@@ -16,7 +16,7 @@ namespace GLSharp.Universe {
 
         public MaterialComponent() {
             /*set the type*/
-            this._type = "material";
+            this._type = Component.MaterialComponent;
         }
     }
 }

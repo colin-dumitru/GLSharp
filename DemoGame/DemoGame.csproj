@@ -50,6 +50,10 @@
     <Compile Include="DemoGame.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{F47D3BEA-870F-4CB0-AD52-19909B2B9E8B}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Engine\Engine.csproj">
       <Project>{2DEFA5FE-7947-4D16-B744-C088B34589DD}</Project>
       <Name>Engine</Name>

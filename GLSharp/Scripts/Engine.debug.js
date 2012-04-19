@@ -252,7 +252,7 @@ GLSharp.Content.NodeConverter.prototype = {
         /// <returns type="GLSharp.Universe.Node"></returns>
         var ret = new GLSharp.Universe.Node();
         ret.set_id(root.Id);
-        ret.set_matrix(new GLSharp.Util.Matrix4X4(root.Matrix));
+        ret.set_local(new GLSharp.Util.Matrix4X4(root.Matrix));
         if (root.Children != null) {
             var $enum1 = ss.IEnumerator.getEnumerator(root.Children);
             while ($enum1.moveNext()) {
@@ -261,10 +261,12 @@ GLSharp.Content.NodeConverter.prototype = {
             }
         }
         var compColection = [];
-        var $enum2 = ss.IEnumerator.getEnumerator(root.References);
-        while ($enum2.moveNext()) {
-            var referenceObject = $enum2.current;
-            this._convertReferences(referenceObject, compColection);
+        if (root.References != null) {
+            var $enum2 = ss.IEnumerator.getEnumerator(root.References);
+            while ($enum2.moveNext()) {
+                var referenceObject = $enum2.current;
+                this._convertReferences(referenceObject, compColection);
+            }
         }
         var $enum3 = ss.IEnumerator.getEnumerator(compColection);
         while ($enum3.moveNext()) {
@@ -593,9 +595,85 @@ GLSharp.Universe.MaterialComponent.prototype = {
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Universe.ComponentCollection
+
+GLSharp.Universe.ComponentCollection = function GLSharp_Universe_ComponentCollection() {
+    /// <summary>
+    /// Manages a collection of components.
+    /// </summary>
+    /// <field name="_components" type="Object">
+    /// </field>
+    /// <field name="_knownTypes" type="Array">
+    /// </field>
+    this._components = {};
+    this._knownTypes = [];
+}
+GLSharp.Universe.ComponentCollection.prototype = {
+    
+    addKnownType: function GLSharp_Universe_ComponentCollection$addKnownType(type) {
+        /// <param name="type" type="String">
+        /// </param>
+        this._knownTypes.add(type);
+    },
+    
+    removeKnowType: function GLSharp_Universe_ComponentCollection$removeKnowType(type) {
+        /// <param name="type" type="String">
+        /// </param>
+        this._knownTypes.remove(type);
+        delete this._components[type];
+    },
+    
+    addComponent: function GLSharp_Universe_ComponentCollection$addComponent(component) {
+        /// <summary>
+        /// Adds a component to the collection. If the component is not a known type
+        /// it is ignored.
+        /// </summary>
+        /// <param name="component" type="GLSharp.Universe.Component">
+        /// The component to add.
+        /// </param>
+        /// <returns type="Boolean"></returns>
+        if (!this._knownTypes.contains(component.get_type())) {
+            return false;
+        }
+        this._components[component.get_type()].add(component);
+        return true;
+    },
+    
+    removeComponent: function GLSharp_Universe_ComponentCollection$removeComponent(component) {
+        /// <summary>
+        /// Removes a component to the collection. If the component is not a known type
+        /// it is ignored.
+        /// </summary>
+        /// <param name="component" type="GLSharp.Universe.Component">
+        /// The component to remove.
+        /// </param>
+        /// <returns type="Boolean"></returns>
+        if (!this._knownTypes.contains(component.get_type())) {
+            return false;
+        }
+        return this._components[component.get_type()].remove(component);
+    },
+    
+    getCollection: function GLSharp_Universe_ComponentCollection$getCollection(type) {
+        /// <param name="type" type="String">
+        /// </param>
+        /// <returns type="Array"></returns>
+        if (!this._knownTypes.contains(type)) {
+            return null;
+        }
+        return this._components[type];
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 // GLSharp.Universe.Component
 
 GLSharp.Universe.Component = function GLSharp_Universe_Component() {
+    /// <field name="meshComponent" type="String" static="true">
+    /// </field>
+    /// <field name="materialComponent" type="String" static="true">
+    /// </field>
     /// <field name="_type" type="String">
     /// </field>
     /// <field name="_parent" type="GLSharp.Universe.Node">
@@ -676,15 +754,31 @@ GLSharp.Universe.Node = function GLSharp_Universe_Node() {
     /// </field>
     /// <field name="__childRemoved" type="Function">
     /// </field>
+    /// <field name="__transformChanged" type="Function">
+    /// </field>
     /// <field name="_components" type="Object">
     /// </field>
     /// <field name="_id" type="String">
     /// </field>
-    /// <field name="_matrix4" type="GLSharp.Util.Matrix4X4">
+    /// <field name="_cachedTransformation" type="GLSharp.Util.Matrix4X4">
+    /// </field>
+    /// <field name="_needWordUpdate" type="Boolean">
+    /// </field>
+    /// <field name="_localTransformation" type="GLSharp.Util.Matrix4X4">
+    /// </field>
+    /// <field name="_localTranslation" type="GLSharp.Util.Vector3">
+    /// </field>
+    /// <field name="_localRotation" type="GLSharp.Util.Vector3">
+    /// </field>
+    /// <field name="_localScale" type="GLSharp.Util.Vector3">
     /// </field>
     /// <field name="_children" type="Object">
     /// </field>
+    /// <field name="_parent" type="GLSharp.Universe.Node">
+    /// </field>
     this._components = {};
+    this._needWordUpdate = true;
+    this._localTransformation = GLSharp.Util.Matrix4X4.get_identity().clone();
 }
 GLSharp.Universe.Node.prototype = {
     
@@ -755,6 +849,29 @@ GLSharp.Universe.Node.prototype = {
     },
     
     __childRemoved: null,
+    
+    add_transformChanged: function GLSharp_Universe_Node$add_transformChanged(value) {
+        /// <summary>
+        /// Called when the node transformation has changed.
+        /// </summary>
+        /// <param name="value" type="Function" />
+        this.__transformChanged = ss.Delegate.combine(this.__transformChanged, value);
+    },
+    remove_transformChanged: function GLSharp_Universe_Node$remove_transformChanged(value) {
+        /// <summary>
+        /// Called when the node transformation has changed.
+        /// </summary>
+        /// <param name="value" type="Function" />
+        this.__transformChanged = ss.Delegate.remove(this.__transformChanged, value);
+    },
+    
+    __transformChanged: null,
+    
+    get_components: function GLSharp_Universe_Node$get_components() {
+        /// <value type="Object"></value>
+        return this._components;
+    },
+    
     _id: 'Undefined',
     
     get_id: function GLSharp_Universe_Node$get_id() {
@@ -773,27 +890,87 @@ GLSharp.Universe.Node.prototype = {
         return value;
     },
     
-    _matrix4: null,
+    _cachedTransformation: null,
+    _needWordUpdate: false,
     
-    get_matrix: function GLSharp_Universe_Node$get_matrix() {
-        /// <summary>
-        /// A 4x4 transformation matrix.
-        /// </summary>
+    get_world: function GLSharp_Universe_Node$get_world() {
         /// <value type="GLSharp.Util.Matrix4X4"></value>
-        return this._matrix4;
+        if (this._needWordUpdate) {
+            this._updateWorldTransformation();
+        }
+        return this._cachedTransformation;
     },
-    set_matrix: function GLSharp_Universe_Node$set_matrix(value) {
+    
+    _localTransformation: null,
+    
+    get_local: function GLSharp_Universe_Node$get_local() {
         /// <summary>
-        /// A 4x4 transformation matrix.
+        /// Local transformation matrix.
         /// </summary>
         /// <value type="GLSharp.Util.Matrix4X4"></value>
-        this._matrix4 = value;
+        return this._localTransformation;
+    },
+    set_local: function GLSharp_Universe_Node$set_local(value) {
+        /// <summary>
+        /// Local transformation matrix.
+        /// </summary>
+        /// <value type="GLSharp.Util.Matrix4X4"></value>
+        this._localTransformation = value;
+        return value;
+    },
+    
+    _localTranslation: null,
+    
+    get_localTranslation: function GLSharp_Universe_Node$get_localTranslation() {
+        /// <summary>
+        /// Local translation.
+        /// </summary>
+        /// <value type="GLSharp.Util.Vector3"></value>
+        return this._localTranslation;
+    },
+    
+    _localRotation: null,
+    
+    get_localRotation: function GLSharp_Universe_Node$get_localRotation() {
+        /// <summary>
+        /// Local Rotation.
+        /// </summary>
+        /// <value type="GLSharp.Util.Vector3"></value>
+        return this._localRotation;
+    },
+    set_localRotation: function GLSharp_Universe_Node$set_localRotation(value) {
+        /// <summary>
+        /// Local Rotation.
+        /// </summary>
+        /// <value type="GLSharp.Util.Vector3"></value>
+        this._localRotation = value;
+        return value;
+    },
+    
+    _localScale: null,
+    
+    get_localScale: function GLSharp_Universe_Node$get_localScale() {
+        /// <summary>
+        /// Local Scale.
+        /// </summary>
+        /// <value type="GLSharp.Util.Vector3"></value>
+        return this._localScale;
+    },
+    set_localScale: function GLSharp_Universe_Node$set_localScale(value) {
+        /// <summary>
+        /// Local Scale.
+        /// </summary>
+        /// <value type="GLSharp.Util.Vector3"></value>
+        this._localScale = value;
         return value;
     },
     
     _children: null,
     
     get_children: function GLSharp_Universe_Node$get_children() {
+        /// <summary>
+        /// Child nodes.
+        /// </summary>
         /// <value type="Object"></value>
         if (this._children == null) {
             this._children = {};
@@ -801,9 +978,42 @@ GLSharp.Universe.Node.prototype = {
         return this._children;
     },
     
+    _parent: null,
+    
+    get_parent: function GLSharp_Universe_Node$get_parent() {
+        /// <summary>
+        /// Parent node.
+        /// </summary>
+        /// <value type="GLSharp.Universe.Node"></value>
+        return this._parent;
+    },
+    set_parent: function GLSharp_Universe_Node$set_parent(value) {
+        /// <summary>
+        /// Parent node.
+        /// </summary>
+        /// <value type="GLSharp.Universe.Node"></value>
+        this._parent = value;
+        return value;
+    },
+    
+    _updateWorldTransformation: function GLSharp_Universe_Node$_updateWorldTransformation() {
+        this._cachedTransformation = this.get_parent().get_world().clone().multiplyAffineM(this._cachedTransformation);
+        this._needWordUpdate = false;
+    },
+    
+    invalidateWorldTransformation: function GLSharp_Universe_Node$invalidateWorldTransformation() {
+        this._needWordUpdate = true;
+        var $dict1 = this.get_children();
+        for (var $key2 in $dict1) {
+            var keyValuePair = { key: $key2, value: $dict1[$key2] };
+            keyValuePair.value.invalidateWorldTransformation();
+        }
+    },
+    
     addComponent: function GLSharp_Universe_Node$addComponent(component) {
         /// <param name="component" type="GLSharp.Universe.Component">
         /// </param>
+        component.set_parent(this);
         this._components[component.get_type()] = component;
         if (this.__componentAdded != null) {
             this.__componentAdded(this, component);
@@ -813,6 +1023,7 @@ GLSharp.Universe.Node.prototype = {
     removeComponent: function GLSharp_Universe_Node$removeComponent(component) {
         /// <param name="component" type="GLSharp.Universe.Component">
         /// </param>
+        component.set_parent(null);
         delete this._components[component.get_type()];
         if (this.__componentRemoved != null) {
             this.__componentRemoved(this, component);
@@ -833,6 +1044,7 @@ GLSharp.Universe.Node.prototype = {
             throw new Error('Child with the same name already exists.');
         }
         this._children[child.get_id()] = child;
+        child.set_parent(this);
         if (this.__childAdded != null) {
             this.__childAdded(this, child);
         }
@@ -846,6 +1058,7 @@ GLSharp.Universe.Node.prototype = {
             return false;
         }
         delete this._children[child.get_id()];
+        child.set_parent(null);
         if (this.__childRemoved != null) {
             this.__childRemoved(this, child);
         }
@@ -859,6 +1072,41 @@ GLSharp.Universe.Node.prototype = {
         /// </param>
         /// <returns type="GLSharp.Universe.Node"></returns>
         return null;
+    },
+    
+    translate: function GLSharp_Universe_Node$translate(distance) {
+        /// <param name="distance" type="GLSharp.Util.Vector3">
+        /// </param>
+        this._localTranslation.add(distance);
+        this._localTransformation.translate(distance);
+        this.invalidateWorldTransformation();
+        if (this.__transformChanged != null) {
+            this.__transformChanged(this, null);
+        }
+    },
+    
+    rotate: function GLSharp_Universe_Node$rotate(angle, axis) {
+        /// <param name="angle" type="Number">
+        /// </param>
+        /// <param name="axis" type="GLSharp.Util.Vector3">
+        /// </param>
+        this._localRotation.add(axis.clone().scale(angle));
+        this._localTransformation.rotate(angle, axis);
+        this.invalidateWorldTransformation();
+        if (this.__transformChanged != null) {
+            this.__transformChanged(this, null);
+        }
+    },
+    
+    scale: function GLSharp_Universe_Node$scale(scale) {
+        /// <param name="scale" type="GLSharp.Util.Vector3">
+        /// </param>
+        this._localScale.add(scale);
+        this._localTransformation.scale(scale);
+        this.invalidateWorldTransformation();
+        if (this.__transformChanged != null) {
+            this.__transformChanged(this, null);
+        }
     }
 }
 
@@ -866,22 +1114,22 @@ GLSharp.Universe.Node.prototype = {
 ////////////////////////////////////////////////////////////////////////////////
 // GLSharp.Universe.World
 
-GLSharp.Universe.World = function GLSharp_Universe_World() {
-    /// <field name="_nodeList" type="Array">
-    /// </field>
+GLSharp.Universe.World = function GLSharp_Universe_World(cellsX, cellsY, cellWidth, cellHeight) {
+    /// <param name="cellsX" type="Number" integer="true">
+    /// </param>
+    /// <param name="cellsY" type="Number" integer="true">
+    /// </param>
+    /// <param name="cellWidth" type="Number">
+    /// </param>
+    /// <param name="cellHeight" type="Number">
+    /// </param>
     /// <field name="__nodeAdded" type="Function">
     /// </field>
     /// <field name="__nodeRemoved" type="Function">
     /// </field>
-    this._nodeList = [];
+    this.reset();
 }
 GLSharp.Universe.World.prototype = {
-    _nodeList: null,
-    
-    get_rootNodes: function GLSharp_Universe_World$get_rootNodes() {
-        /// <value type="Array"></value>
-        return this._nodeList;
-    },
     
     add_nodeAdded: function GLSharp_Universe_World$add_nodeAdded(value) {
         /// <summary>
@@ -917,19 +1165,25 @@ GLSharp.Universe.World.prototype = {
     
     __nodeRemoved: null,
     
+    reset: function GLSharp_Universe_World$reset() {
+    },
+    
     addNode: function GLSharp_Universe_World$addNode(node) {
         /// <param name="node" type="GLSharp.Universe.Node">
         /// </param>
-        this._nodeList.add(node);
         if (this.__nodeAdded != null) {
             this.__nodeAdded(this, node);
         }
     },
     
+    addDynamicNode: function GLSharp_Universe_World$addDynamicNode(node) {
+        /// <param name="node" type="GLSharp.Universe.Node">
+        /// </param>
+    },
+    
     removeNode: function GLSharp_Universe_World$removeNode(node) {
         /// <param name="node" type="GLSharp.Universe.Node">
         /// </param>
-        this._nodeList.remove(node);
         if (this.__nodeRemoved != null) {
             this.__nodeRemoved(this, node);
         }
@@ -945,9 +1199,144 @@ Type.registerNamespace('GLSharp.Util');
 GLSharp.Util.Matrix4X4 = function GLSharp_Util_Matrix4X4(elements) {
     /// <param name="elements" type="Array" elementType="Number">
     /// </param>
+    /// <field name="_identity" type="GLSharp.Util.Matrix4X4" static="true">
+    /// </field>
     /// <field name="_elements" type="Array" elementType="Number">
     /// </field>
     this._elements = (elements == null) ? GLSharp.Core.SystemCore.get_environment().createFloat32Array(16) : GLSharp.Core.SystemCore.get_environment().createFloat32ArrayFromArray(elements);
+}
+GLSharp.Util.Matrix4X4.get_identity = function GLSharp_Util_Matrix4X4$get_identity() {
+    /// <value type="GLSharp.Util.Matrix4X4"></value>
+    return GLSharp.Util.Matrix4X4._identity || (GLSharp.Util.Matrix4X4._identity = new GLSharp.Util.Matrix4X4([ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ]));
+}
+GLSharp.Util.Matrix4X4.makeFrustrum = function GLSharp_Util_Matrix4X4$makeFrustrum(left, right, bottom, top, znear, zfar) {
+    /// <param name="left" type="Number">
+    /// </param>
+    /// <param name="right" type="Number">
+    /// </param>
+    /// <param name="bottom" type="Number">
+    /// </param>
+    /// <param name="top" type="Number">
+    /// </param>
+    /// <param name="znear" type="Number">
+    /// </param>
+    /// <param name="zfar" type="Number">
+    /// </param>
+    /// <returns type="GLSharp.Util.Matrix4X4"></returns>
+    var ret = new GLSharp.Util.Matrix4X4(null);
+    ret._elements[0] = 2 * znear / (right - left);
+    ret._elements[1] = 0;
+    ret._elements[2] = 0;
+    ret._elements[3] = 0;
+    ret._elements[4] = 0;
+    ret._elements[5] = 2 * znear / (top - bottom);
+    ret._elements[6] = 0;
+    ret._elements[7] = 0;
+    ret._elements[8] = (right + left) / (right - left);
+    ret._elements[9] = (top + bottom) / (top - bottom);
+    ret._elements[10] = -(zfar + znear) / (zfar - znear);
+    ret._elements[11] = -1;
+    ret._elements[12] = 0;
+    ret._elements[13] = 0;
+    ret._elements[14] = -2 * zfar * znear / (zfar - znear);
+    ret._elements[15] = 0;
+    return ret;
+}
+GLSharp.Util.Matrix4X4.makePerspective = function GLSharp_Util_Matrix4X4$makePerspective(fov, aspect, znear, zfar) {
+    /// <param name="fov" type="Number">
+    /// </param>
+    /// <param name="aspect" type="Number">
+    /// </param>
+    /// <param name="znear" type="Number">
+    /// </param>
+    /// <param name="zfar" type="Number">
+    /// </param>
+    /// <returns type="GLSharp.Util.Matrix4X4"></returns>
+    var ymax = znear * Math.tan(fov * Math.PI / 360);
+    var ymin = -ymax;
+    var xmin = ymin * aspect;
+    var xmax = ymax * aspect;
+    return GLSharp.Util.Matrix4X4.makeFrustrum(xmin, xmax, ymin, ymax, znear, zfar);
+}
+GLSharp.Util.Matrix4X4.makeOrtho = function GLSharp_Util_Matrix4X4$makeOrtho(left, right, bottom, top, znear, zfar) {
+    /// <param name="left" type="Number">
+    /// </param>
+    /// <param name="right" type="Number">
+    /// </param>
+    /// <param name="bottom" type="Number">
+    /// </param>
+    /// <param name="top" type="Number">
+    /// </param>
+    /// <param name="znear" type="Number">
+    /// </param>
+    /// <param name="zfar" type="Number">
+    /// </param>
+    /// <returns type="GLSharp.Util.Matrix4X4"></returns>
+    var ret = new GLSharp.Util.Matrix4X4(null);
+    ret._elements[0] = 2 / (right - left);
+    ret._elements[1] = 0;
+    ret._elements[2] = 0;
+    ret._elements[3] = 0;
+    ret._elements[4] = 0;
+    ret._elements[5] = 2 / (top - bottom);
+    ret._elements[6] = 0;
+    ret._elements[7] = 0;
+    ret._elements[8] = 0;
+    ret._elements[9] = 0;
+    ret._elements[10] = -2 / (zfar - znear);
+    ret._elements[11] = 0;
+    ret._elements[12] = -(right + left) / (right - left);
+    ret._elements[13] = -(top + bottom) / (top - bottom);
+    ret._elements[14] = -(zfar + znear) / (zfar - znear);
+    ret._elements[15] = 1;
+    return ret;
+}
+GLSharp.Util.Matrix4X4.makeLookAt = function GLSharp_Util_Matrix4X4$makeLookAt(eye, center, up) {
+    /// <param name="eye" type="GLSharp.Util.Vector3">
+    /// </param>
+    /// <param name="center" type="GLSharp.Util.Vector3">
+    /// </param>
+    /// <param name="up" type="GLSharp.Util.Vector3">
+    /// </param>
+    /// <returns type="GLSharp.Util.Matrix4X4"></returns>
+    var ret = new GLSharp.Util.Matrix4X4(null);
+    var z = eye.direction(center);
+    var x = up.clone().cross(z).normalize();
+    var y = z.clone().cross(x).normalize();
+    ret._elements[0] = x._elements[0];
+    ret._elements[1] = y._elements[0];
+    ret._elements[2] = z._elements[0];
+    ret._elements[3] = 0;
+    ret._elements[4] = x._elements[1];
+    ret._elements[5] = y._elements[1];
+    ret._elements[6] = z._elements[1];
+    ret._elements[7] = 0;
+    ret._elements[8] = x._elements[2];
+    ret._elements[9] = y._elements[2];
+    ret._elements[10] = z._elements[2];
+    ret._elements[11] = 0;
+    ret._elements[12] = 0;
+    ret._elements[13] = 0;
+    ret._elements[14] = 0;
+    ret._elements[15] = 1;
+    var tmp = new GLSharp.Util.Matrix4X4(null);
+    tmp._elements[0] = 1;
+    tmp._elements[1] = 0;
+    tmp._elements[2] = 0;
+    tmp._elements[3] = 0;
+    tmp._elements[4] = 0;
+    tmp._elements[5] = 1;
+    tmp._elements[6] = 0;
+    tmp._elements[7] = 0;
+    tmp._elements[8] = 0;
+    tmp._elements[9] = 0;
+    tmp._elements[10] = 1;
+    tmp._elements[11] = 0;
+    tmp._elements[12] = -eye._elements[0];
+    tmp._elements[13] = -eye._elements[1];
+    tmp._elements[14] = -eye._elements[2];
+    tmp._elements[15] = 1;
+    return ret.multiplyAffineM(tmp);
 }
 GLSharp.Util.Matrix4X4.prototype = {
     _elements: null,
@@ -960,6 +1349,259 @@ GLSharp.Util.Matrix4X4.prototype = {
         /// <value type="Array" elementType="Number"></value>
         this._elements = value;
         return value;
+    },
+    
+    multiplyM: function GLSharp_Util_Matrix4X4$multiplyM(other) {
+        /// <param name="other" type="GLSharp.Util.Matrix4X4">
+        /// </param>
+        /// <returns type="GLSharp.Util.Matrix4X4"></returns>
+        var newe = GLSharp.Core.SystemCore.get_environment().createFloat32Array(16);
+        newe[0] = this._elements[0] * other._elements[0] + this._elements[4] * other._elements[1] + this._elements[8] * other._elements[2] + this._elements[12] * other._elements[3];
+        newe[1] = this._elements[1] * other._elements[0] + this._elements[5] * other._elements[1] + this._elements[9] * other._elements[2] + this._elements[13] * other._elements[3];
+        newe[2] = this._elements[2] * other._elements[0] + this._elements[6] * other._elements[1] + this._elements[10] * other._elements[2] + this._elements[14] * other._elements[3];
+        newe[3] = this._elements[3] * other._elements[0] + this._elements[7] * other._elements[1] + this._elements[11] * other._elements[2] + this._elements[15] * other._elements[3];
+        newe[4] = this._elements[0] * other._elements[4] + this._elements[4] * other._elements[5] + this._elements[8] * other._elements[6] + this._elements[12] * other._elements[7];
+        newe[5] = this._elements[1] * other._elements[4] + this._elements[5] * other._elements[5] + this._elements[9] * other._elements[6] + this._elements[13] * other._elements[7];
+        newe[6] = this._elements[2] * other._elements[4] + this._elements[6] * other._elements[5] + this._elements[10] * other._elements[6] + this._elements[14] * other._elements[7];
+        newe[7] = this._elements[3] * other._elements[4] + this._elements[7] * other._elements[5] + this._elements[11] * other._elements[6] + this._elements[15] * other._elements[7];
+        newe[8] = this._elements[0] * other._elements[8] + this._elements[4] * other._elements[9] + this._elements[8] * other._elements[10] + this._elements[12] * other._elements[11];
+        newe[9] = this._elements[1] * other._elements[8] + this._elements[5] * other._elements[9] + this._elements[9] * other._elements[10] + this._elements[13] * other._elements[11];
+        newe[10] = this._elements[2] * other._elements[8] + this._elements[6] * other._elements[9] + this._elements[10] * other._elements[10] + this._elements[14] * other._elements[11];
+        newe[11] = this._elements[3] * other._elements[8] + this._elements[7] * other._elements[9] + this._elements[11] * other._elements[10] + this._elements[15] * other._elements[11];
+        newe[12] = this._elements[0] * other._elements[12] + this._elements[4] * other._elements[13] + this._elements[8] * other._elements[14] + this._elements[12] * other._elements[15];
+        newe[13] = this._elements[1] * other._elements[12] + this._elements[5] * other._elements[13] + this._elements[9] * other._elements[14] + this._elements[13] * other._elements[15];
+        newe[14] = this._elements[2] * other._elements[12] + this._elements[6] * other._elements[13] + this._elements[10] * other._elements[14] + this._elements[14] * other._elements[15];
+        newe[15] = this._elements[3] * other._elements[12] + this._elements[7] * other._elements[13] + this._elements[11] * other._elements[14] + this._elements[15] * other._elements[15];
+        this._elements = newe;
+        return this;
+    },
+    
+    multiplyAffineM: function GLSharp_Util_Matrix4X4$multiplyAffineM(other) {
+        /// <param name="other" type="GLSharp.Util.Matrix4X4">
+        /// </param>
+        /// <returns type="GLSharp.Util.Matrix4X4"></returns>
+        var newe = GLSharp.Core.SystemCore.get_environment().createFloat32Array(16);
+        newe[0] = this._elements[0] * other._elements[0] + this._elements[4] * other._elements[1] + this._elements[8] * other._elements[2];
+        newe[1] = this._elements[1] * other._elements[0] + this._elements[5] * other._elements[1] + this._elements[9] * other._elements[2];
+        newe[2] = this._elements[2] * other._elements[0] + this._elements[6] * other._elements[1] + this._elements[10] * other._elements[2];
+        newe[3] = 0;
+        newe[4] = this._elements[0] * other._elements[4] + this._elements[4] * other._elements[5] + this._elements[8] * other._elements[6];
+        newe[5] = this._elements[1] * other._elements[4] + this._elements[5] * other._elements[5] + this._elements[9] * other._elements[6];
+        newe[6] = this._elements[2] * other._elements[4] + this._elements[6] * other._elements[5] + this._elements[10] * other._elements[6];
+        newe[7] = 0;
+        newe[8] = this._elements[0] * other._elements[8] + this._elements[4] * other._elements[9] + this._elements[8] * other._elements[10];
+        newe[9] = this._elements[1] * other._elements[8] + this._elements[5] * other._elements[9] + this._elements[9] * other._elements[10];
+        newe[10] = this._elements[2] * other._elements[8] + this._elements[6] * other._elements[9] + this._elements[10] * other._elements[10];
+        newe[11] = 0;
+        newe[12] = this._elements[0] * other._elements[12] + this._elements[4] * other._elements[13] + this._elements[8] * other._elements[14] + this._elements[12];
+        newe[13] = this._elements[1] * other._elements[12] + this._elements[5] * other._elements[13] + this._elements[9] * other._elements[14] + this._elements[13];
+        newe[14] = this._elements[2] * other._elements[12] + this._elements[6] * other._elements[13] + this._elements[10] * other._elements[14] + this._elements[14];
+        newe[15] = 1;
+        this._elements = newe;
+        return this;
+    },
+    
+    rotate: function GLSharp_Util_Matrix4X4$rotate(angle, axis) {
+        /// <param name="angle" type="Number">
+        /// </param>
+        /// <param name="axis" type="GLSharp.Util.Vector3">
+        /// </param>
+        /// <returns type="GLSharp.Util.Matrix4X4"></returns>
+        var c = Math.cos(angle);
+        var c1 = 1 - c;
+        var s = Math.cos(angle);
+        var xs = axis._elements[0] * s;
+        var ys = axis._elements[1] * s;
+        var zs = axis._elements[2] * s;
+        var xyc1 = axis._elements[0] * axis._elements[1] * c1;
+        var xzc1 = axis._elements[0] * axis._elements[2] * c1;
+        var yzc1 = axis._elements[1] * axis._elements[2] * c1;
+        var t11 = axis._elements[0] * axis._elements[0] * c1 + c;
+        var t21 = xyc1 + zs;
+        var t31 = xzc1 - ys;
+        var t12 = xyc1 - zs;
+        var t22 = axis._elements[1] * axis._elements[1] * c1 + c;
+        var t32 = yzc1 + xs;
+        var t13 = xzc1 + ys;
+        var t23 = yzc1 - xs;
+        var t33 = axis._elements[2] * axis._elements[2] * c1 + c;
+        var aux = new GLSharp.Util.Matrix4X4(null);
+        aux._elements[0] = this._elements[0] * t11 + this._elements[4] * t21 + this._elements[8] * t31;
+        aux._elements[1] = this._elements[1] * t11 + this._elements[5] * t21 + this._elements[9] * t31;
+        aux._elements[2] = this._elements[2] * t11 + this._elements[6] * t21 + this._elements[10] * t31;
+        aux._elements[3] = this._elements[3] * t11 + this._elements[7] * t21 + this._elements[11] * t31;
+        aux._elements[4] = this._elements[0] * t12 + this._elements[4] * t22 + this._elements[8] * t32;
+        aux._elements[5] = this._elements[1] * t12 + this._elements[5] * t22 + this._elements[9] * t32;
+        aux._elements[6] = this._elements[2] * t12 + this._elements[6] * t22 + this._elements[10] * t32;
+        aux._elements[7] = this._elements[3] * t12 + this._elements[7] * t22 + this._elements[11] * t32;
+        aux._elements[8] = this._elements[0] * t13 + this._elements[4] * t23 + this._elements[8] * t33;
+        aux._elements[9] = this._elements[1] * t13 + this._elements[5] * t23 + this._elements[9] * t33;
+        aux._elements[10] = this._elements[2] * t13 + this._elements[6] * t23 + this._elements[10] * t33;
+        aux._elements[11] = this._elements[3] * t13 + this._elements[7] * t23 + this._elements[11] * t33;
+        this._elements = aux._elements;
+        return this;
+    },
+    
+    scale: function GLSharp_Util_Matrix4X4$scale(scale) {
+        /// <param name="scale" type="GLSharp.Util.Vector3">
+        /// </param>
+        /// <returns type="GLSharp.Util.Matrix4X4"></returns>
+        this._elements[0] = this._elements[0] * scale._elements[0];
+        this._elements[1] = this._elements[1] * scale._elements[0];
+        this._elements[2] = this._elements[2] * scale._elements[0];
+        this._elements[3] = this._elements[3] * scale._elements[0];
+        this._elements[4] = this._elements[4] * scale._elements[1];
+        this._elements[5] = this._elements[5] * scale._elements[1];
+        this._elements[6] = this._elements[6] * scale._elements[1];
+        this._elements[7] = this._elements[7] * scale._elements[1];
+        this._elements[8] = this._elements[8] * scale._elements[2];
+        this._elements[9] = this._elements[9] * scale._elements[2];
+        this._elements[10] = this._elements[10] * scale._elements[2];
+        this._elements[11] = this._elements[11] * scale._elements[2];
+        this._elements[12] = this._elements[12];
+        this._elements[13] = this._elements[13];
+        this._elements[14] = this._elements[14];
+        this._elements[15] = this._elements[15];
+        return this;
+    },
+    
+    translate: function GLSharp_Util_Matrix4X4$translate(distance) {
+        /// <param name="distance" type="GLSharp.Util.Vector3">
+        /// </param>
+        /// <returns type="GLSharp.Util.Matrix4X4"></returns>
+        this._elements[12] += this._elements[0] * distance._elements[0] + this._elements[4] * distance._elements[1] + this._elements[8] * distance._elements[2];
+        this._elements[13] += this._elements[1] * distance._elements[0] + this._elements[5] * distance._elements[1] + this._elements[9] * distance._elements[2];
+        this._elements[14] += this._elements[2] * distance._elements[0] + this._elements[6] * distance._elements[1] + this._elements[10] * distance._elements[2];
+        this._elements[15] += this._elements[3] * distance._elements[0] + this._elements[7] * distance._elements[1] + this._elements[11] * distance._elements[2];
+        return this;
+    },
+    
+    transpose: function GLSharp_Util_Matrix4X4$transpose() {
+        /// <returns type="GLSharp.Util.Matrix4X4"></returns>
+        var tmp = this._elements[1];
+        this._elements[1] = this._elements[4];
+        this._elements[4] = tmp;
+        tmp = this._elements[2];
+        this._elements[2] = this._elements[8];
+        this._elements[8] = tmp;
+        tmp = this._elements[3];
+        this._elements[3] = this._elements[12];
+        this._elements[12] = tmp;
+        tmp = this._elements[6];
+        this._elements[6] = this._elements[9];
+        this._elements[9] = tmp;
+        tmp = this._elements[7];
+        this._elements[7] = this._elements[13];
+        this._elements[13] = tmp;
+        tmp = this._elements[11];
+        this._elements[11] = this._elements[14];
+        this._elements[14] = tmp;
+        return this;
+    },
+    
+    clone: function GLSharp_Util_Matrix4X4$clone() {
+        /// <returns type="GLSharp.Util.Matrix4X4"></returns>
+        return new GLSharp.Util.Matrix4X4(this._elements);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Util.Vector3
+
+GLSharp.Util.Vector3 = function GLSharp_Util_Vector3(elements) {
+    /// <param name="elements" type="Array" elementType="Number">
+    /// </param>
+    /// <field name="_elements" type="Array" elementType="Number">
+    /// </field>
+    this._elements = (elements == null) ? GLSharp.Core.SystemCore.get_environment().createFloat32Array(3) : GLSharp.Core.SystemCore.get_environment().createFloat32ArrayFromArray(elements);
+}
+GLSharp.Util.Vector3.prototype = {
+    _elements: null,
+    
+    get_elements: function GLSharp_Util_Vector3$get_elements() {
+        /// <value type="Array" elementType="Number"></value>
+        return this._elements;
+    },
+    set_elements: function GLSharp_Util_Vector3$set_elements(value) {
+        /// <value type="Array" elementType="Number"></value>
+        this._elements = value;
+        return value;
+    },
+    
+    add: function GLSharp_Util_Vector3$add(other) {
+        /// <param name="other" type="GLSharp.Util.Vector3">
+        /// </param>
+        /// <returns type="GLSharp.Util.Vector3"></returns>
+        this._elements[0] += other._elements[0];
+        this._elements[1] += other._elements[1];
+        this._elements[2] += other._elements[2];
+        return this;
+    },
+    
+    subtract: function GLSharp_Util_Vector3$subtract(other) {
+        /// <param name="other" type="GLSharp.Util.Vector3">
+        /// </param>
+        /// <returns type="GLSharp.Util.Vector3"></returns>
+        this._elements[0] -= other._elements[0];
+        this._elements[1] -= other._elements[1];
+        this._elements[2] -= other._elements[2];
+        return this;
+    },
+    
+    direction: function GLSharp_Util_Vector3$direction(to) {
+        /// <param name="to" type="GLSharp.Util.Vector3">
+        /// </param>
+        /// <returns type="GLSharp.Util.Vector3"></returns>
+        return this.clone().subtract(to).normalize();
+    },
+    
+    length: function GLSharp_Util_Vector3$length() {
+        /// <returns type="Number" integer="true"></returns>
+        return Math.sqrt(this._elements[0] * this._elements[0] + this._elements[1] * this._elements[1] + this._elements[2] * this._elements[2]);
+    },
+    
+    normalize: function GLSharp_Util_Vector3$normalize() {
+        /// <returns type="GLSharp.Util.Vector3"></returns>
+        var len = 1 / this.length();
+        this._elements[0] *= len;
+        this._elements[1] *= len;
+        this._elements[2] *= len;
+        return this;
+    },
+    
+    scale: function GLSharp_Util_Vector3$scale(val) {
+        /// <param name="val" type="Number">
+        /// </param>
+        /// <returns type="GLSharp.Util.Vector3"></returns>
+        this._elements[0] *= val;
+        this._elements[1] *= val;
+        this._elements[2] *= val;
+        return this;
+    },
+    
+    dot: function GLSharp_Util_Vector3$dot(other) {
+        /// <param name="other" type="GLSharp.Util.Vector3">
+        /// </param>
+        /// <returns type="Number"></returns>
+        return this._elements[0] * other._elements[0] + this._elements[1] * other._elements[1] + this._elements[2] * other._elements[2];
+    },
+    
+    cross: function GLSharp_Util_Vector3$cross(other) {
+        /// <param name="other" type="GLSharp.Util.Vector3">
+        /// </param>
+        /// <returns type="GLSharp.Util.Vector3"></returns>
+        var aux = new GLSharp.Util.Vector3(null);
+        aux._elements[0] = this._elements[1] * other._elements[2] - this._elements[2] * other._elements[1];
+        aux._elements[1] = this._elements[2] * other._elements[0] - this._elements[0] * other._elements[2];
+        aux._elements[2] = this._elements[0] * other._elements[1] - this._elements[1] * other._elements[0];
+        this._elements = aux._elements;
+        return this;
+    },
+    
+    clone: function GLSharp_Util_Vector3$clone() {
+        /// <returns type="GLSharp.Util.Vector3"></returns>
+        return new GLSharp.Util.Vector3(this._elements);
     }
 }
 
@@ -970,10 +1612,19 @@ Type.registerNamespace('GLSharp');
 // GLSharp.Engine
 
 GLSharp.Engine = function GLSharp_Engine() {
+    /// <field name="_renderHandle" type="GLSharp.Core.TimerHandle">
+    /// </field>
     /// <field name="_activeGame" type="GLSharp.Game.GameBase">
+    /// </field>
+    /// <field name="_activeWorld" type="GLSharp.Universe.World">
+    /// </field>
+    /// <field name="_graphics" type="GLSharp.Graphics.IGraphics">
+    /// </field>
+    /// <field name="_library" type="GLSharp.Content.Library">
     /// </field>
 }
 GLSharp.Engine.prototype = {
+    _renderHandle: null,
     _activeGame: null,
     
     get_activeGame: function GLSharp_Engine$get_activeGame() {
@@ -989,14 +1640,76 @@ GLSharp.Engine.prototype = {
         /// </summary>
         /// <value type="GLSharp.Game.GameBase"></value>
         this._activeGame = value;
+        this._activeGame.set_engine(this);
+        return value;
+    },
+    
+    _activeWorld: null,
+    
+    get_world: function GLSharp_Engine$get_world() {
+        /// <summary>
+        /// Gets or sets the active world which will be rendered.
+        /// </summary>
+        /// <value type="GLSharp.Universe.World"></value>
+        return this._activeWorld;
+    },
+    set_world: function GLSharp_Engine$set_world(value) {
+        /// <summary>
+        /// Gets or sets the active world which will be rendered.
+        /// </summary>
+        /// <value type="GLSharp.Universe.World"></value>
+        this._activeWorld = value;
+        return value;
+    },
+    
+    _graphics: null,
+    
+    get_graphics: function GLSharp_Engine$get_graphics() {
+        /// <summary>
+        /// Gets or sets the graphics object which renders the scene.
+        /// </summary>
+        /// <value type="GLSharp.Graphics.IGraphics"></value>
+        return this._graphics;
+    },
+    set_graphics: function GLSharp_Engine$set_graphics(value) {
+        /// <summary>
+        /// Gets or sets the graphics object which renders the scene.
+        /// </summary>
+        /// <value type="GLSharp.Graphics.IGraphics"></value>
+        this._graphics = value;
+        return value;
+    },
+    
+    _library: null,
+    
+    get_library: function GLSharp_Engine$get_library() {
+        /// <summary>
+        /// Gets or sets the library.
+        /// </summary>
+        /// <value type="GLSharp.Content.Library"></value>
+        return this._library;
+    },
+    set_library: function GLSharp_Engine$set_library(value) {
+        /// <summary>
+        /// Gets or sets the library.
+        /// </summary>
+        /// <value type="GLSharp.Content.Library"></value>
+        this._library = value;
         return value;
     },
     
     run: function GLSharp_Engine$run() {
+        this._initDebug();
         if (this.get_activeGame() == null) {
             throw new Error('No active game defined.');
         }
+        this._renderHandle = GLSharp.Core.SystemCore.get_timer().start(ss.Delegate.create(this.get_graphics(), this.get_graphics().render), 1000 / 60, true);
+        this.get_graphics().initialize();
         this.get_activeGame().initialize();
+    },
+    
+    _initDebug: function GLSharp_Engine$_initDebug() {
+        GLSharp.Core.SystemCore.get_logger().log('warning : debug is enabled.');
     }
 }
 
@@ -1007,22 +1720,23 @@ Type.registerNamespace('GLSharp.Game');
 // GLSharp.Game.GameBase
 
 GLSharp.Game.GameBase = function GLSharp_Game_GameBase() {
-    /// <field name="_library" type="GLSharp.Content.Library">
+    /// <field name="_engine" type="GLSharp.Engine">
     /// </field>
 }
 GLSharp.Game.GameBase.prototype = {
-    _library: null,
+    _engine: null,
     
-    get_library: function GLSharp_Game_GameBase$get_library() {
-        /// <value type="GLSharp.Content.Library"></value>
-        return this._library;
+    get_engine: function GLSharp_Game_GameBase$get_engine() {
+        /// <value type="GLSharp.Engine"></value>
+        return this._engine;
+    },
+    set_engine: function GLSharp_Game_GameBase$set_engine(value) {
+        /// <value type="GLSharp.Engine"></value>
+        this._engine = value;
+        return value;
     },
     
     initialize: function GLSharp_Game_GameBase$initialize() {
-        this._library = new GLSharp.Content.Library();
-        this._library.addConverter(new GLSharp.Content.LightConverter());
-        this._library.addConverter(new GLSharp.Content.MeshConverter());
-        this._library.addConverter(new GLSharp.Content.NodeConverter());
         this.startup();
     }
 }
@@ -1090,7 +1804,9 @@ GLSharp.Graphics.IGraphics.prototype = {
     set_clearMode : null,
     get_world : null,
     set_world : null,
-    clear : null
+    initialize : null,
+    clear : null,
+    render : null
 }
 GLSharp.Graphics.IGraphics.registerInterface('GLSharp.Graphics.IGraphics');
 
@@ -1252,15 +1968,20 @@ GLSharp.Content.ResourceItem.registerClass('GLSharp.Content.ResourceItem');
 GLSharp.Content.Library.registerClass('GLSharp.Content.Library');
 GLSharp.Universe.Component.registerClass('GLSharp.Universe.Component');
 GLSharp.Universe.MaterialComponent.registerClass('GLSharp.Universe.MaterialComponent', GLSharp.Universe.Component);
+GLSharp.Universe.ComponentCollection.registerClass('GLSharp.Universe.ComponentCollection');
 GLSharp.Universe.MeshComponent.registerClass('GLSharp.Universe.MeshComponent', GLSharp.Universe.Component);
 GLSharp.Universe.Node.registerClass('GLSharp.Universe.Node');
 GLSharp.Universe.World.registerClass('GLSharp.Universe.World');
 GLSharp.Util.Matrix4X4.registerClass('GLSharp.Util.Matrix4X4');
+GLSharp.Util.Vector3.registerClass('GLSharp.Util.Vector3');
 GLSharp.Engine.registerClass('GLSharp.Engine');
 GLSharp.Game.GameBase.registerClass('GLSharp.Game.GameBase');
 GLSharp.Graphics.Color.registerClass('GLSharp.Graphics.Color');
 GLSharp.Graphics.Material.registerClass('GLSharp.Graphics.Material');
 GLSharp.Graphics.Mesh.registerClass('GLSharp.Graphics.Mesh');
+GLSharp.Universe.Component.meshComponent = 'mesh';
+GLSharp.Universe.Component.materialComponent = 'material';
+GLSharp.Util.Matrix4X4._identity = null;
 })();
 
 //! This script was generated using Script# v0.7.4.0

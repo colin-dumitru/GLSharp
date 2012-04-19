@@ -5,7 +5,7 @@ to use a different color start by replacing all instances of
 ----------------------------------------------------------*/
 body
 {
-    background-color: #89c3fd;
+    background-color: #999;
     font-size: .75em;
     font-family: Verdana, Helvetica, Sans-Serif;
     margin: 0;
@@ -84,17 +84,22 @@ first child of the left and right table columns */
 page width. Or, you can specify an exact pixel width. */
 .page
 {
-    width: 90%;
+    width: 850px;
     margin-left: auto;
     margin-right: auto;
+    background-color: #555;
+    box-shadow:0px 0px 10px #000;
 }
 
 #header
 {
     position: relative;
     margin-bottom: 0px;
-    color: #000;
+    color: #555;
+    background-color: #EEE;
+    border-radius: 0px 0px 5px 5px;
     padding: 0;
+    height: 30px;
 }
 
 #header h1
@@ -111,10 +116,10 @@ page width. Or, you can specify an exact pixel width. */
 
 #main
 {
-    padding: 30px 30px 15px 30px;
-    background-color: #fff;
-    margin-bottom: 30px;
+    padding: 5px;
     _height: 1px; /* only IE6 applies CSS properties starting with an underscore */
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #footer
@@ -268,24 +273,24 @@ div#title
     display:block;
     text-align:right;
     margin:10px;
-    color:White;
+    color:#555;
 }
 
 #logindisplay a:link
 {
-    color: white;
+    color: #555;
     text-decoration: underline;
 }
 
 #logindisplay a:visited
 {
-    color: white;
+    color: #557;
     text-decoration: underline;
 }
 
 #logindisplay a:hover
 {
-    color: white;
+    color: 888;
     text-decoration: none;
 }
 

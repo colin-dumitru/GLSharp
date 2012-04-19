@@ -3,6 +3,47 @@
 
 (function() {
 
+Type.registerNamespace('GLSharp.Core');
+
+////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Core.Timer
+
+GLSharp.Core.Timer = function GLSharp_Core_Timer() {
+}
+GLSharp.Core.Timer.prototype = {
+    
+    start: function GLSharp_Core_Timer$start(action, interval, repeat) {
+        /// <param name="action" type="Function">
+        /// </param>
+        /// <param name="interval" type="Number" integer="true">
+        /// </param>
+        /// <param name="repeat" type="Boolean">
+        /// </param>
+        /// <returns type="GLSharp.Core.TimerHandle"></returns>
+        var ret = new GLSharp.Core.TimerHandle();
+        ret.set_repeat(repeat);
+        if (repeat) {
+            ret.set_id(window.setInterval(action, interval));
+        }
+        else {
+            ret.set_id(window.setTimeout(action, interval));
+        }
+        return ret;
+    },
+    
+    stop: function GLSharp_Core_Timer$stop(handle) {
+        /// <param name="handle" type="GLSharp.Core.TimerHandle">
+        /// </param>
+        if (handle.get_repeat()) {
+            window.clearInterval(handle.get_id());
+        }
+        else {
+            window.clearTimeout(handle.get_id());
+        }
+    }
+}
+
+
 Type.registerNamespace('GLSharp.Data');
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -956,11 +997,23 @@ GLSharp.Graphics.WebGLGraphics = function GLSharp_Graphics_WebGLGraphics(canvas)
     /// </field>
     /// <field name="_context" type="GLSharp.Graphics.WebGL">
     /// </field>
+    /// <field name="_diffuseTexture" type="GLSharp.Graphics.Texture">
+    /// </field>
+    /// <field name="_positionTexture" type="GLSharp.Graphics.Texture">
+    /// </field>
+    /// <field name="_normalTexture" type="GLSharp.Graphics.Texture">
+    /// </field>
     /// <field name="_clearColor" type="GLSharp.Graphics.Color">
     /// </field>
     /// <field name="_clearMode" type="GLSharp.Graphics.ClearMode">
     /// </field>
     /// <field name="_world" type="GLSharp.Universe.World">
+    /// </field>
+    /// <field name="_renderableComponent" type="GLSharp.Universe.ComponentCollection">
+    /// </field>
+    /// <field name="_meshQueue" type="Array">
+    /// </field>
+    /// <field name="_meshShader" type="GLSharp.Graphics.ICompiledShader">
     /// </field>
     this._clearMode = GLSharp.Graphics.ClearMode.color;
     this._canvas = canvas;
@@ -970,6 +1023,9 @@ GLSharp.Graphics.WebGLGraphics = function GLSharp_Graphics_WebGLGraphics(canvas)
 GLSharp.Graphics.WebGLGraphics.prototype = {
     _canvas: null,
     _context: null,
+    _diffuseTexture: null,
+    _positionTexture: null,
+    _normalTexture: null,
     _clearColor: null,
     _world: null,
     
@@ -1038,46 +1094,121 @@ GLSharp.Graphics.WebGLGraphics.prototype = {
         return this._context;
     },
     
+    _renderableComponent: null,
+    _meshQueue: null,
+    _meshShader: null,
+    
+    initialize: function GLSharp_Graphics_WebGLGraphics$initialize() {
+        this._displayDebugInformation();
+        this._context.getExtension('OES_texture_float');
+        this._diffuseTexture = this._createRenderTexture();
+        this._normalTexture = this._createRenderTexture();
+        this._positionTexture = this._createRenderTexture();
+        this._renderableComponent = new GLSharp.Universe.ComponentCollection();
+        this._renderableComponent.addKnownType(GLSharp.Universe.Component.meshComponent);
+        this._meshQueue = [];
+    },
+    
+    _createRenderTexture: function GLSharp_Graphics_WebGLGraphics$_createRenderTexture() {
+        /// <returns type="GLSharp.Graphics.Texture"></returns>
+        var ret = this._context.createTexture();
+        this._context.bindTexture(3553, ret);
+        this._context.texParameteri(3553, 10241, 9728);
+        this._context.texParameteri(3553, 10240, 9728);
+        this._context.texImage2D(3553, 0, 6408, this.get_width(), this.get_height(), 0, 6408, 5126, null);
+        return ret;
+    },
+    
+    _displayDebugInformation: function GLSharp_Graphics_WebGLGraphics$_displayDebugInformation() {
+        GLSharp.Core.SystemCore.get_logger().log('Supported extensions : ' + this.get_context().getSupportedExtensions());
+    },
+    
     clear: function GLSharp_Graphics_WebGLGraphics$clear() {
         this._context.clear(this._clearMode);
+    },
+    
+    render: function GLSharp_Graphics_WebGLGraphics$render() {
+        this.clear();
+        this._meshQueue.clear();
+        this._geometryPass();
+    },
+    
+    _geometryPass: function GLSharp_Graphics_WebGLGraphics$_geometryPass() {
+        var node = null;
+        while ((node = this._meshQueue.dequeue()) != null) {
+            this._renderMesh(node);
+        }
+    },
+    
+    _renderMesh: function GLSharp_Graphics_WebGLGraphics$_renderMesh(node) {
+        /// <param name="node" type="GLSharp.Universe.Node">
+        /// </param>
     },
     
     _bindWorld: function GLSharp_Graphics_WebGLGraphics$_bindWorld(world) {
         /// <param name="world" type="GLSharp.Universe.World">
         /// </param>
-        world.add_nodeAdded(ss.Delegate.create(this, this._world_NodeAdded));
-        world.add_nodeRemoved(ss.Delegate.create(this, this._world_NodeRemoved));
+        this._world = world;
+        world.add_nodeAdded(ss.Delegate.create(this, this._worldNodeAdded));
+        world.add_nodeRemoved(ss.Delegate.create(this, this._worldNodeRemoved));
     },
     
-    _world_NodeRemoved: function GLSharp_Graphics_WebGLGraphics$_world_NodeRemoved(sender, args) {
+    _worldNodeRemoved: function GLSharp_Graphics_WebGLGraphics$_worldNodeRemoved(sender, args) {
         /// <param name="sender" type="GLSharp.Universe.World">
         /// </param>
         /// <param name="args" type="Object">
         /// </param>
         var node = Type.safeCast(args, GLSharp.Universe.Node);
-        node.add_componentAdded(ss.Delegate.create(this, this._node_ComponentAdded));
-        node.add_componentRemoved(ss.Delegate.create(this, this._node_ComponentRemoved));
+        node.remove_componentAdded(ss.Delegate.create(this, this._nodeComponentAdded));
+        node.remove_componentRemoved(ss.Delegate.create(this, this._nodeComponentRemoved));
+        var $dict1 = node.get_components();
+        for (var $key2 in $dict1) {
+            var component = { key: $key2, value: $dict1[$key2] };
+            this._nodeComponentRemoved(node, component.value);
+        }
     },
     
-    _world_NodeAdded: function GLSharp_Graphics_WebGLGraphics$_world_NodeAdded(sender, args) {
+    _worldNodeAdded: function GLSharp_Graphics_WebGLGraphics$_worldNodeAdded(sender, args) {
         /// <param name="sender" type="GLSharp.Universe.World">
         /// </param>
         /// <param name="args" type="Object">
         /// </param>
+        var node = args;
+        node.add_componentAdded(ss.Delegate.create(this, this._nodeComponentAdded));
+        node.add_componentRemoved(ss.Delegate.create(this, this._nodeComponentRemoved));
+        var $dict1 = node.get_components();
+        for (var $key2 in $dict1) {
+            var comp = { key: $key2, value: $dict1[$key2] };
+            this._nodeComponentAdded(node, comp.value);
+        }
     },
     
-    _node_ComponentRemoved: function GLSharp_Graphics_WebGLGraphics$_node_ComponentRemoved(sender, args) {
+    _nodeComponentRemoved: function GLSharp_Graphics_WebGLGraphics$_nodeComponentRemoved(sender, args) {
         /// <param name="sender" type="GLSharp.Universe.Node">
         /// </param>
         /// <param name="args" type="Object">
         /// </param>
+        this._popComponent(args);
     },
     
-    _node_ComponentAdded: function GLSharp_Graphics_WebGLGraphics$_node_ComponentAdded(sender, args) {
+    _nodeComponentAdded: function GLSharp_Graphics_WebGLGraphics$_nodeComponentAdded(sender, args) {
         /// <param name="sender" type="GLSharp.Universe.Node">
         /// </param>
         /// <param name="args" type="Object">
         /// </param>
+        this._pushComponent(args);
+    },
+    
+    _pushComponent: function GLSharp_Graphics_WebGLGraphics$_pushComponent(component) {
+        /// <param name="component" type="GLSharp.Universe.Component">
+        /// </param>
+        this._renderableComponent.addComponent(component);
+    },
+    
+    _popComponent: function GLSharp_Graphics_WebGLGraphics$_popComponent(component) {
+        /// <param name="component" type="GLSharp.Universe.Component">
+        /// </param>
+        this._renderableComponent.removeComponent(component);
     }
 }
 
@@ -1088,44 +1219,64 @@ Type.registerNamespace('App');
 // App.App
 
 App.App = function App_App() {
-    /// <field name="_graphics" type="GLSharp.Graphics.WebGLGraphics">
-    /// </field>
     /// <field name="_engine" type="GLSharp.Engine">
     /// </field>
-    /// <field name="_game" type="GLSharp.Game.GameBase">
+    /// <field name="___tmp" type="GLSharp.Core.Function">
     /// </field>
 }
 App.App.prototype = {
-    _graphics: null,
     _engine: null,
-    _game: null,
+    
+    add__tmp: function App_App$add__tmp(value) {
+        /// <param name="value" type="Function" />
+        this.___tmp = ss.Delegate.combine(this.___tmp, value);
+    },
+    remove__tmp: function App_App$remove__tmp(value) {
+        /// <param name="value" type="Function" />
+        this.___tmp = ss.Delegate.remove(this.___tmp, value);
+    },
+    
+    ___tmp: null,
     
     init: function App_App$init() {
         var canvasElem = document.getElementById('mainCanvas');
         if (canvasElem == null) {
             throw new Error('No canvas element found!');
         }
-        this._graphics = new GLSharp.Graphics.WebGLGraphics(canvasElem);
-        this._graphics.clear();
-        this._InitEnvironment();
         this._engine = new GLSharp.Engine();
-        this._game = new GLSharp.DemoGame();
-        this._engine.set_activeGame(this._game);
+        this._engine.set_graphics(new GLSharp.Graphics.WebGLGraphics(canvasElem));
+        this._engine.set_activeGame(new GLSharp.DemoGame());
+        this._engine.set_library(new GLSharp.Content.Library());
+        this._engine.get_library().addConverter(new GLSharp.Content.LightConverter());
+        this._engine.get_library().addConverter(new GLSharp.Content.MeshConverter());
+        this._engine.get_library().addConverter(new GLSharp.Content.NodeConverter());
+        this._initEnvironment();
         this._engine.run();
+        var test = new GLSharp.Core.Event();
+        test.subscribe(ss.Delegate.create(this, this._handler), true);
     },
     
-    _InitEnvironment: function App_App$_InitEnvironment() {
+    _handler: function App_App$_handler(sender, args) {
+        /// <param name="sender" type="Object">
+        /// </param>
+        /// <param name="args" type="Object">
+        /// </param>
+    },
+    
+    _initEnvironment: function App_App$_initEnvironment() {
         GLSharp.Core.SystemCore.set_environment(new Environment());
         var resourceManager = new GLSharp.Data.ResourceManager();
         resourceManager.addLoader(new GLSharp.Data.ImageLoader());
         resourceManager.addLoader(new GLSharp.Data.JsonLoader());
-        resourceManager.addLoader(new GLSharp.Data.ShaderLoader(this._graphics.get_context()));
+        resourceManager.addLoader(new GLSharp.Data.ShaderLoader((this._engine.get_graphics()).get_context()));
         GLSharp.Core.SystemCore.set_resourceManager(resourceManager);
         GLSharp.Core.SystemCore.set_logger(new JSLoggingProvider());
+        GLSharp.Core.SystemCore.set_timer(new GLSharp.Core.Timer());
     }
 }
 
 
+GLSharp.Core.Timer.registerClass('GLSharp.Core.Timer', null, GLSharp.Core.ITimer);
 GLSharp.Data.ImageLoader.registerClass('GLSharp.Data.ImageLoader', null, GLSharp.Data.IResourceLoader);
 GLSharp.Data.JsonLoader.registerClass('GLSharp.Data.JsonLoader', null, GLSharp.Data.IResourceLoader);
 GLSharp.Data.ShaderLoader.registerClass('GLSharp.Data.ShaderLoader', null, GLSharp.Data.IResourceLoader);

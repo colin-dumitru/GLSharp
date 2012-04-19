@@ -7,7 +7,7 @@ using GLSharp.Data;
 
 namespace GLSharp.Core {
     public interface ILoggingProvider {
-        void Log(String message);
+        void Log(string message);
     }
 
     public static class SystemCore {
@@ -40,6 +40,14 @@ namespace GLSharp.Core {
             get { return _logger; }
             set { _logger = value; }
         }
+
+        private static ITimer _timer;
+
+        public static ITimer Timer {
+            get { return _timer; }
+            set { _timer = value; }
+        }
+
         
     }
 }
