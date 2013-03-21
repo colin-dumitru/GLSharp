@@ -96,5 +96,8 @@ namespace GLSharp.Core {
         ///                     moust be a multiple of 2.</param>
         /// <returns>The same object passed as an argument.</returns>
         Object Init(Object obj, Object[] args);
+
+
+        void RequestAnimationFrame(Action action);
     }
 }

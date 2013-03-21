@@ -22,7 +22,7 @@
         precision mediump float;
 
         void main(void) {
-            gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+            gl_FragData[0] = vec4(1.0, 1.0, 1.0, 1.0);
         }
         ]]>
     </fragment_shader>

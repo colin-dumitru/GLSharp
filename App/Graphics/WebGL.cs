@@ -7,6 +7,16 @@ using System.Html;
 using GLSharp.Data;
 
 namespace GLSharp.Graphics {
+
+    public class WebGLContextAttributes {
+        public Boolean Alpha = true;
+        public Boolean Depth = true;
+        public Boolean Stencil = false;
+        public Boolean Antialias = false;
+        public Boolean PremultipliedAlpha = true;
+        public Boolean PreserveDrawingBuffer = false;
+    }
+
     public class WebGLE {
         /* What buffer to clear. Can use a combination of each one.*/
         public const int DepthBufferBit = 0x00000100;
@@ -418,7 +428,7 @@ namespace GLSharp.Graphics {
 
         public abstract void BlendEquationSeparate(int modeRgb, int modeAlpha);
 
-        public abstract void BlendFunction(int sourceFactor, int destinationFactor);
+        public abstract void BlendFunc(int sourceFactor, int destinationFactor);
 
         public abstract void BlendFunctionSeparate(int sourceRgb, int destinationRgb, int sourceAlpha, int destinationAlpha);
 
@@ -454,7 +464,7 @@ namespace GLSharp.Graphics {
 
         public abstract bool IsEnabled(int cap);
 
-        public abstract void PixelStore(int pName, int param);
+        public abstract void PixelStorei(int pName, int param);
 
         public abstract void PolygonOffset(float factor, float offset);
 
@@ -488,9 +498,9 @@ namespace GLSharp.Graphics {
 
         /* ------------------------------------------Textures------------------------------------------------------*/
 
-        public abstract void ActivateTexture(int texture);
+        public abstract void ActiveTexture(int texture);
 
-        public abstract void BindTexture(int target, Texture texture);
+        public abstract void BindTexture(int target, ITexture texture);
 
         public abstract void CopyTexImage2D(int target, int level, int internalFormat, int x, int y, int width, int height,
                                    int border);
@@ -498,15 +508,15 @@ namespace GLSharp.Graphics {
         public abstract void CopyTexSubImage2D(int target, int level, int xOffset, int yOffset,
                                       int x, int y, int width, int height);
 
-        public abstract Texture CreateTexture();
+        public abstract ITexture CreateTexture();
 
-        public abstract void DeleteTexture(Texture texture);
+        public abstract void DeleteTexture(ITexture texture);
 
         public abstract void GenerateMipmap(int target);
 
         public abstract float GetTextureParameter(int target, int pName);
 
-        public abstract bool IsTexture(Texture texture);
+        public abstract bool IsTexture(ITexture texture);
 
         public abstract void TexImage2D(int target, int level, int internalFormat, int format, int type, ImageData image);
 
@@ -565,130 +575,130 @@ namespace GLSharp.Graphics {
 
         /* --------------------------------------Attributes and Uniforms---------------------------------------------------*/
 
-        public abstract void BindAttributeLocation(ShaderProgram program, int index, String name);
+        public abstract void BindAttributeLocation(IShaderProgram program, int index, String name);
 
         public abstract void DisableVertexAttributeArray(int index);
 
-        public abstract void EnableVertexAttributeArray(int index);
+        public abstract void EnableVertexAttribArray(int index);
 
-        public abstract ActiveInfo GetActiveAttribute(ShaderProgram program, int index);
+        public abstract IActiveInfo GetActiveAttribute(IShaderProgram program, int index);
 
-        public abstract ActiveInfo GetActiveUniform(ShaderProgram program, int index);
+        public abstract IActiveInfo GetActiveUniform(IShaderProgram program, int index);
 
-        public abstract int GetAttributeLocation(ShaderProgram program, String name);
+        public abstract int GetAttribLocation(IShaderProgram program, String name);
 
-        public abstract List<float> GetUniform(ShaderProgram program, UniformLocation location);
+        public abstract List<float> GetUniform(IShaderProgram program, IUniformLocation location);
 
-        public abstract UniformLocation GetUniformLocation(ShaderProgram program, String name);
+        public abstract IUniformLocation GetUniformLocation(IShaderProgram program, String name);
 
-        public abstract Object GetVertexAttribute(int index, int pName);
+        public abstract Object GetVertexAttrib(int index, int pName);
 
-        public abstract int GetVertexAttributeOffset(int index, int pName);
+        public abstract int GetVertexAttribOffset(int index, int pName);
 
-        public abstract void Uniform1F(UniformLocation location, float x);
+        public abstract void Uniform1f(IUniformLocation location, float x);
 
-        public abstract void Uniform1F(UniformLocation location, float[] v);
+        public abstract void Uniform1fv(IUniformLocation location, float[] v);
 
-        public abstract void Uniform1I(UniformLocation location, int x);
+        public abstract void Uniform1i(IUniformLocation location, int x);
 
-        public abstract void Uniform1I(UniformLocation location, int[] v);
+        public abstract void Uniform1iv(IUniformLocation location, int[] v);
 
-        public abstract void Uniform2F(UniformLocation location, float x, float y);
+        public abstract void Uniform2f(IUniformLocation location, float x, float y);
 
-        public abstract void Uniform2F(UniformLocation location, float[] v);
+        public abstract void Uniform2fv(IUniformLocation location, float[] v);
 
-        public abstract void Uniform2I(UniformLocation location, int x, int y);
+        public abstract void Uniform2i(IUniformLocation location, int x, int y);
 
-        public abstract void Uniform2I(UniformLocation location, int[] v);
+        public abstract void Uniform2iv(IUniformLocation location, int[] v);
 
-        public abstract void Uniform3F(UniformLocation location, float x, float y, float z);
+        public abstract void Uniform3f(IUniformLocation location, float x, float y, float z);
 
-        public abstract void Uniform3F(UniformLocation location, float[] v);
+        public abstract void Uniform3fv(IUniformLocation location, float[] v);
 
-        public abstract void Uniform3I(UniformLocation location, int x, int y, int z);
+        public abstract void Uniform3i(IUniformLocation location, int x, int y, int z);
 
-        public abstract void Uniform3I(UniformLocation location, int[] v);
+        public abstract void Uniform3iv(IUniformLocation location, int[] v);
 
-        public abstract void Uniform4F(UniformLocation location, float x, float y, float z, float w);
+        public abstract void Uniform4f(IUniformLocation location, float x, float y, float z, float w);
 
-        public abstract void Uniform4F(UniformLocation location, float[] v);
+        public abstract void Uniform4fv(IUniformLocation location, float[] v);
 
-        public abstract void Uniform4I(UniformLocation location, int x, int y, int z, int w);
+        public abstract void Uniform4i(IUniformLocation location, int x, int y, int z, int w);
 
-        public abstract void Uniform4I(UniformLocation location, int[] v);
+        public abstract void Uniform4iv(IUniformLocation location, int[] v);
 
-        public abstract void UniformMatrix2F(UniformLocation location, bool transpose, float[] value);
+        public abstract void UniformMatrix2fv(IUniformLocation location, bool transpose, float[] value);
 
-        public abstract void UniformMatrix3F(UniformLocation location, bool transpose, float[] value);
+        public abstract void UniformMatrix3fv(IUniformLocation location, bool transpose, float[] value);
 
-        public abstract void UniformMatrix4F(UniformLocation location, bool transpose, float[] value);
+        public abstract void UniformMatrix4fv(IUniformLocation location, bool transpose, float[] value);
 
-        public abstract void VertexAttribute1F(int index, float x);
+        public abstract void VertexAttrib1f(int index, float x);
 
-        public abstract void VertexAttribute1F(int index, float[] values);
+        public abstract void VertexAttrib1fv(int index, float[] values);
 
-        public abstract void VertexAttribute2F(int index, float x, float y);
+        public abstract void VertexAttrib2f(int index, float x, float y);
 
-        public abstract void VertexAttribute2F(int index, float[] values);
+        public abstract void VertexAttrib2fv(int index, float[] values);
 
-        public abstract void VertexAttribute3F(int index, float x, float y, float z);
+        public abstract void VertexAttrib3f(int index, float x, float y, float z);
 
-        public abstract void VertexAttribute3F(int index, float[] values);
+        public abstract void VertexAttrib3fv(int index, float[] values);
 
-        public abstract void VertexAttribute4F(int index, float x, float y, float z, float w);
+        public abstract void VertexAttrib4f(int index, float x, float y, float z, float w);
 
-        public abstract void VertexAttribute4F(int index, float[] values);
+        public abstract void VertexAttrib4fv(int index, float[] values);
 
-        public abstract void VertexAttributePointer(int index, int size, int type, bool normalized, int stride, int offset);
+        public abstract void VertexAttribPointer(int index, int size, int type, bool normalized, int stride, int offset);
 
 
         /* ------------------------------------------- Buffers -------------------------------------------------------*/
 
-        public abstract void BindBuffer(int target, Buffer buffer);
+        public abstract void BindBuffer(int target, IBuffer buffer);
 
         public abstract void BufferData(int target, Array data, int usage);
 
         public abstract void BufferSubData(int target, int offset, Array data);
 
-        public abstract Buffer CreateBuffer();
+        public abstract IBuffer CreateBuffer();
 
-        public abstract void DeleteBuffer(Buffer buffer);
+        public abstract void DeleteBuffer(IBuffer buffer);
 
-        public abstract bool IsBuffer(Buffer buffer);
+        public abstract bool IsBuffer(IBuffer buffer);
 
         /* -----------------------------------------Frame Buffer-----------------------------------------------------------*/
 
-        public abstract void BindFrameBuffer(int target, FrameBuffer frameBuffer);
+        public abstract void BindFramebuffer(int target, IFrameBuffer frameBuffer);
 
-        public abstract int CheckFrameBufferStatus(int target);
+        public abstract int CheckFramebufferStatus(int target);
 
-        public abstract FrameBuffer CreateFameBuffer();
+        public abstract IFrameBuffer CreateFramebuffer();
 
-        public abstract void DeleteFrameBuffer(FrameBuffer frameBuffer);
+        public abstract void DeleteFramebuffer(IFrameBuffer frameBuffer);
 
-        public abstract void FrameBufferRenderBuffer(int target, int attachment, int renderBufferTarget,
-                                            RenderBuffer renderBuffer);
-        public abstract void FrameBufferTexture2D(int target, int attachment, int textureTarget, Texture texture, int level);
+        public abstract void FramebufferRenderbuffer(int target, int attachment, int renderBufferTarget,
+                                            IRenderBuffer renderBuffer);
+        public abstract void FramebufferTexture2D(int target, int attachment, int textureTarget, ITexture texture, int level);
 
-        public abstract Object GetFrameBufferAttachmentParameter(int target, int attachment, int pName);
+        public abstract Object GetFramebufferAttachmentParameter(int target, int attachment, int pName);
 
-        public abstract bool IsFrameBuffer(FrameBuffer frameBuffer);
+        public abstract bool IsFramebuffer(IFrameBuffer frameBuffer);
 
         public abstract void ReadPixels(int x, int y, int width, int height, int format, int type, Array pixels);
 
         /* -----------------------------------------Render Buffer-----------------------------------------------------------*/
 
-        public abstract void BindRenderBuffer(int target, RenderBuffer renderBuffer);
+        public abstract void BindRenderbuffer(int target, IRenderBuffer renderBuffer);
 
-        public abstract RenderBuffer CreateRenderBuffer();
+        public abstract IRenderBuffer CreateRenderbuffer();
 
-        public abstract void DeleteRenderBuffer(RenderBuffer buffer);
+        public abstract void DeleteRenderbuffer(IRenderBuffer buffer);
 
-        public abstract Object GetRenderBufferParameter(int target, int pName);
+        public abstract Object GetRenderbufferParameter(int target, int pName);
 
-        public abstract bool IsRenderBuffer(RenderBuffer renderBuffer);
+        public abstract bool IsRenderbuffer(IRenderBuffer renderBuffer);
 
-        public abstract void RenderBufferStorage(int target, int internalFormat, int width, int height);
+        public abstract void RenderbufferStorage(int target, int internalFormat, int width, int height);
 
         /*--------------------------------------------Extensions------------------------------------------------------------*/
 

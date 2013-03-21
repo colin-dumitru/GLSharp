@@ -57,28 +57,29 @@ namespace GLSharp.Universe {
     //------------------------------------------------------------------------------------------
     //------------------------------------------------------------------------------------------
     public abstract class Component {
+        private static int _nextId = 0;
+
         public const String MeshComponent = "mesh";
         public const String MaterialComponent = "material";
-
-        protected String _type;
+        public const String TextureComponent = "texture";
+        public const String CameraComponent = "camera";
+        public const String LightComponent = "light";
+        public const String CollisionComponent = "collision";
 
         /// <summary>
         /// Unique type of the component.
         /// </summary>
-        public String Type {
-            get { return _type; }
-            set { _type = value; }
-        }
-
-        private Node _parent;
+        public String Type;
 
         /// <summary>
         /// Parent node which contains the component.
         /// </summary>
-        public Node Parent {
-            get { return _parent; }
-            set { _parent = value; }
+        public Node Parent;
+
+        public int Id;
+
+        public Component() {
+            this.Id = Component._nextId++;
         }
-        
     }
 }

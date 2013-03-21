@@ -9,6 +9,17 @@ using GLSharp.Core;
 namespace GLSharp.Content {
     [IgnoreNamespace]
     [Imported]
+    internal abstract class LightPropertyObject {
+        [PreserveCase]
+        [IntrinsicProperty]
+        public abstract String Key { get; set; }
+        [PreserveCase]
+        [IntrinsicProperty]
+        public abstract String Value { get; set; }
+    }
+
+    [IgnoreNamespace]
+    [Imported]
     internal abstract class LightObject {
         [PreserveCase]
         [IntrinsicProperty]
@@ -18,31 +29,21 @@ namespace GLSharp.Content {
         public abstract int Type { get; set; }
         [PreserveCase]
         [IntrinsicProperty]
-        public abstract Dictionary<String, String> Properties { get; set; } 
+        public abstract List<LightPropertyObject> Properties { get; set; } 
     }
 
-    public class LightItem {
-        private String _id;
+    public class LightItem : ResourceItem{
+        public int LightType;
+        public Dictionary<String, object> Properties;
 
-        public String Id {
-            get { return _id; }
-            set { _id = value; }
+        public override Boolean Free() {
+            this.Alocated = false;
+            return true;
         }
-
-        private int _type;
-
-        public int Type {
-            get { return _type; }
-            set { _type = value; }
+        public override Boolean Readlocate() {
+            this.Alocated = true;
+            return true;
         }
-
-        private Dictionary<String, object> _properties;
-
-        public Dictionary<String, object> Properties {
-            get { return _properties; }
-            set { _properties = value; }
-        }
-        
     }
 
     public class LightConverter : IResourceConverter {
@@ -57,18 +58,17 @@ namespace GLSharp.Content {
 
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
-				
-        public object Convert(object input) {
+
+        public ResourceItem Convert(object input, String collection) {
             LightObject obj = (LightObject) input;
             LightItem ret = new LightItem();
 
-            ret.Id = obj.Id;
-            ret.Type = obj.Type;
+            ret.LightType = obj.Type;
             ret.Properties = new Dictionary<string, object>();
 
-            foreach (KeyValuePair<string, string> keyValuePair in obj.Properties) {
-                if(keyValuePair.Key == "color") {
-                    String[] colors = keyValuePair.Value.Split(' ');
+            foreach (LightPropertyObject property in obj.Properties) {
+                if(property.Key == "color") {
+                    String[] colors = property.Value.Split(' ');
                     float[] colorf = SystemCore.Environment.CreateFloat32Array((ulong)colors.Length);
 
                     for (int i = 0; i < colors.Length; i++) {
@@ -76,10 +76,10 @@ namespace GLSharp.Content {
                     }
 
                     ret.Properties["color"] = colorf;
-                } else if (keyValuePair.Key == "intensity") {
-                    ret.Properties["intensity"] = float.Parse(keyValuePair.Value);
-                } else if (keyValuePair.Key == "falloff_angle") {
-                    ret.Properties["falloff_angle"] = float.Parse(keyValuePair.Value);
+                } else if (property.Key == "intensity") {
+                    ret.Properties["intensity"] = float.Parse(property.Value);
+                } else if (property.Key == "falloff_angle") {
+                    ret.Properties["falloff_angle"] = float.Parse(property.Value);
                 }
             }
 

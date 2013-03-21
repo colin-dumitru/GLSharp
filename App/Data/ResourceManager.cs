@@ -21,7 +21,32 @@ namespace GLSharp.Data {
         /// <returns>The loaded resouces.</returns>
         Resource Load(String url);
     }
+    //------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------
+    public class AudioLoader : IResourceLoader {
+        public List<string> Extension {
+            get {
+                List<String> ret = new List<string>();
 
+                ret.Add("mp3");
+
+                return ret;
+            }
+        }
+
+        public Resource Load(string url) {
+            Resource ret = new Resource();
+
+            Audio audio = new Audio();
+            audio.Src = url;
+
+            /*onload does not work for audio*/
+            ret.Finished = true;
+            ret.Data = audio;
+
+            return ret;
+        }
+    }
     //------------------------------------------------------------------------------------------
     //------------------------------------------------------------------------------------------
     public class ImageLoader : IResourceLoader {
@@ -29,6 +54,7 @@ namespace GLSharp.Data {
             get {
                 List<String> ret = new List<String>();
                 ret.Add("jpg");
+                ret.Add("gif");
                 ret.Add("png");
                 ret.Add("jpeg");
                 return ret;
@@ -115,9 +141,11 @@ namespace GLSharp.Data {
             return ret;
         }
 
-        private ICompiledShader ParseShader(XmlDocument doc) {
+        private CompiledShader ParseShader(XmlDocument doc) {
             if(doc.DocumentElement.Name != "shader") 
                 throw new Exception("Invalid shader file");
+
+            ShaderLoader that = this;
 
             /*source code for vertex / fragment shaders*/
             String sourceFragment = null;
@@ -127,6 +155,9 @@ namespace GLSharp.Data {
 
             /*the name of the shader*/
             ret.Name = doc.DocumentElement.Attributes.GetNamedItem("name").Value;
+            /*the lists of all unoforms and attributes-*/
+            List<String> uniforms = new List<string>();
+            List<String> attributes = new List<string>();
 
             foreach (XmlNode xmlNode in doc.DocumentElement.ChildNodes) {
                 if (xmlNode.NodeType != XmlNodeType.Element) continue;
@@ -136,7 +167,9 @@ namespace GLSharp.Data {
                 } else if(xmlNode.Name == "fragment_shader") {
                     sourceFragment = XmlHelper.InnerText(xmlNode);
                 } else if(xmlNode.Name == "uniform") {
-                    //ret.Uniforms[XmlHelper.InnerText(xmlNode)]
+                    uniforms.Add(XmlHelper.InnerText(xmlNode));
+                } else if(xmlNode.Name == "attribute") {
+                    attributes.Add(XmlHelper.InnerText(xmlNode));
                 }
             }
 
@@ -158,6 +191,19 @@ namespace GLSharp.Data {
                 throw new Exception("Cannot link shaders.");
             }
 
+            ret.Attributes = new Dictionary<string, int>();
+            ret.Uniforms = new Dictionary<string, IUniformLocation>();
+
+            /*attribute locations*/
+            attributes.ForEach(delegate(string value) {
+                ret.Attributes[value] = that._gl.GetAttribLocation(shaderProgram, value);
+            });
+
+            /*uniform locations*/
+            uniforms.ForEach(delegate(string value) {
+                ret.Uniforms[value] = that._gl.GetUniformLocation(shaderProgram, value);
+            });
+
             ret.ShaderProgram = shaderProgram;
 
             return ret;
@@ -171,7 +217,7 @@ namespace GLSharp.Data {
             this._gl.CompileShader(ret);
 
             if(!(bool)this._gl.GetShaderParameter(ret, WebGLE.CompileStatus)) {
-                throw new Exception("Cannot compile shader.");
+                throw new Exception("Cannot compile shader : " + this._gl.GetShaderInfoLog(ret));
             }
             
 

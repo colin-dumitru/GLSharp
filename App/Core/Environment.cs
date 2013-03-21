@@ -76,5 +76,9 @@ namespace GLSharp.Core {
         public uint[] CreateUInt32ArrayFromArray(uint[] input) {
             throw new global::System.Exception("Not implemented");
         }
+
+        public void RequestAnimationFrame(Action action) {
+            
+        }
     }
 }

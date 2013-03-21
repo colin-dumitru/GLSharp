@@ -1,9 +1,9 @@
 ﻿
-var JSLoggingProvider = function() {
+var JsLoggingProvider = function () {
 
 };
 
-JSLoggingProvider.prototype.log = function(message) {
+JsLoggingProvider.prototype.log = function (message) {
     console.log(message);
 };
 //--------------------------------------------------------------------------------------------------
@@ -79,8 +79,19 @@ Environment.prototype = {
         return new window.Int32Array(input);
     },
 
-    CreateUInt32ArrayFromArray: function (input) {
+    createUInt32ArrayFromArray: function (input) {
         return new window.Uint32Array(input);
+    },
+    
+    requestAnimationFrame: function(action){
+        var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||  
+                                window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;  
+  
+        function step(timestamp) {
+            action();
+            requestAnimationFrame(step);  
+        }  
+        requestAnimationFrame(step);  
     }
 };
 
@@ -93,3 +104,19 @@ var XmlHelper = function innerText() {
 XmlHelper.innerText = function(node) {
     return node.textContent;
 };
+//--------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+
+ss.Delegate.create = function Delegate$create(object, method) {
+    if (!object) {
+        return method;
+    }
+    var ret = function () {
+        return method.apply(object, arguments);
+    };
+
+    ret.object = object;
+    ret.method = method;
+
+    return ret;
+}

@@ -22,6 +22,11 @@ namespace GLSharp.Core {
         }
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
+        public void RequestAnimationFrame(Action action) {
+            SystemCore.Environment.RequestAnimationFrame(action);
+        }
+        //------------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------------
         public void Stop(TimerHandle handle) {
             if(handle.Repeat) {
                 Window.ClearInterval(handle.Id);

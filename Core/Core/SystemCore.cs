@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using GLSharp.Data;
 
 namespace GLSharp.Core {
@@ -16,38 +17,37 @@ namespace GLSharp.Core {
         /// <summary>
         /// Gets or sets the global Environment object.
         /// </summary>
-        public static IEnvironment Environment { 
-            get { return _environment; } 
-            set { _environment = value; } 
-        }
-
-        private static IResourceManager _resourceManager = null;
+        public static IEnvironment Environment;
 
         /// <summary>
         /// Gets or sets the global ResourceManager.
         /// </summary>
-        public static IResourceManager ResourceManager {
-            get { return _resourceManager; }
-            set { _resourceManager = value; }
-        }
-
-        private static ILoggingProvider _logger;
+        public static IResourceManager ResourceManager;
 
         /// <summary>
         /// Gets or sets the Logging Provider.
         /// </summary>
-        public static ILoggingProvider Logger {
-            get { return _logger; }
-            set { _logger = value; }
+        public static ILoggingProvider Logger;
+
+        /// <summary>
+        /// Gets or sets the timingprovider.
+        /// </summary>
+        public static ITimer Timer;
+
+        /// <summary>
+        /// Gets or sets the input provider.
+        /// </summary>
+        public static IInputProvider Input;
+
+        [Conditional("DEBUG")]
+        public static void Assert(Boolean condition, String message) {
+            if(condition)
+                Logger.Log(message);
         }
 
-        private static ITimer _timer;
-
-        public static ITimer Timer {
-            get { return _timer; }
-            set { _timer = value; }
+        [Conditional("DEBUG")]
+        public static void Log(String message) {
+            Logger.Log(message);
         }
-
-        
     }
 }

@@ -77,18 +77,78 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Index.css" />
-    <Content Include="Data\Image\test.jpg" />
-    <None Include="Data\Lib\test.dae.lib">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Data\Audio\mech_walk.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Image\bunker1_texture.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Image\bunker2_texture.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Image\checker_large.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Image\girder_texture.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Image\grass_texture.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Image\ground_low.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Image\lamp_texture.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Image\options.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Image\shop_texture.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Image\tank_base_texture.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Image\test.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="ClassDiagram.cd" />
+    <None Include="Data\JSON\mech.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Data\Shader\pass_geom.shader" />
+    <None Include="Data\JSON\scene.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\JSON\test.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\Shader\phong_pass_final.shader" />
+    <None Include="Data\Shader\phong_pass_geom.shader" />
+    <None Include="Data\Shader\phong_pass_light.shader" />
     <None Include="Data\Shader\test.shader" />
+    <Content Include="Data\Image\mech_texture.jpg" />
+    <Content Include="Data\Image\turret_texture.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Image\wall_texture.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Image\wheel_texture.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Global.asax" />
     <Content Include="Scripts\App.debug.js" />
     <Content Include="Scripts\App.js" />
+    <Content Include="Scripts\Box2d.debug.js" />
+    <Content Include="Scripts\Box2d.js" />
+    <Content Include="Scripts\Box2dWeb-2.1.a.3.js" />
+    <Content Include="Scripts\Box2dWeb-2.1.a.3.min.js" />
     <Content Include="Scripts\Core.debug.js" />
     <Content Include="Scripts\Core.js" />
-    <Content Include="Scripts\DemoGame.debug.js" />
+    <Content Include="Scripts\DemoGame.debug.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\DemoGame.js" />
     <Content Include="Scripts\Engine.debug.js" />
     <Content Include="Scripts\Engine.js" />
@@ -127,7 +187,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Data\JSON\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

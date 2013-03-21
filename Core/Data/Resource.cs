@@ -3,10 +3,9 @@
 
 using System;
 using System.Collections.Generic;
+using GLSharp.Core;
 
 namespace GLSharp.Data {
-    public delegate void ResourceHandler (Resource sender, Object args);
-
     public class Resource {
         private Boolean _finished;
         private Object _data;
@@ -27,13 +26,13 @@ namespace GLSharp.Data {
             set { 
                 _data = value;
                 if (this.ResourceChanged != null)
-                    this.ResourceChanged(this, null);
+                    this.ResourceChanged.Fire(this, null);
             }
         }
 
         /// <summary>
-        /// Called when the Data object has changed.
+        /// Called when the Data object has changed. Sender object is of type Resource.
         /// </summary>
-        public event ResourceHandler ResourceChanged;
+        public Event ResourceChanged = new Event();
     }
 }

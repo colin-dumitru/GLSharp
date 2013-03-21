@@ -1,5 +1,52 @@
 ﻿#mainCanvas 
 {
     width: 800px;
+    height: 600px;
     margin-left: 20px;
+    display: inline-block;
+}
+
+.optionsButton {
+    width: 30px;
+    height: 200px;
+    
+    background-color: #111;
+    background-image: url("/Data/Image/options.gif");
+    background-repeat: no-repeat;
+    background-position: center;
+
+    border-radius: 0px 5px 5px 0px;
+}
+
+.optionsButton:hover {
+    background-color: lightblue;
+}
+
+.optionsContainer {
+    width: 200px;
+    height: 200px;
+    
+    background-color: rgb(80, 0, 0);
+    border-radius: 5px;
+}
+
+.ui-effects-wrapper {
+}
+
+.mainContainer 
+{
+    width: 1100px;
+    vertical-align: top;
+}
+
+.optionsButton,
+.optionsContainer{
+    float: left;
+    margin: 0px;
+    padding: 5px;
+}
+
+.options {
+    width: 250px;
+    display: inline-block;
 }

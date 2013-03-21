@@ -48,9 +48,11 @@
     <Content Include="Properties\Core.ruleset" />
     <Content Include="Properties\Core.script" />
     <Compile Include="Core\Event.cs" />
-    <Compile Include="Core\ITime.cs" />
+    <Compile Include="Core\IInputProvider.cs" />
+    <Compile Include="Core\ITimeProvider.cs" />
     <Compile Include="Core\SystemCore.cs" />
     <Compile Include="Core\IEnvironment.cs" />
+    <Compile Include="Data\IAudioResource.cs" />
     <Compile Include="Data\IImageResource.cs" />
     <Compile Include="Data\IResourceManager.cs" />
     <Compile Include="Data\Resource.cs" />

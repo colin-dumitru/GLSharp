@@ -6,6 +6,106 @@
 Type.registerNamespace('GLSharp.Core');
 
 ////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Core.JsInputProvider
+
+GLSharp.Core.JsInputProvider = function GLSharp_Core_JsInputProvider() {
+    /// <field name="_keys" type="Array">
+    /// </field>
+    /// <field name="_mouseX" type="Number">
+    /// </field>
+    /// <field name="_mouseY" type="Number">
+    /// </field>
+    /// <field name="_screenX" type="Number" integer="true">
+    /// </field>
+    /// <field name="_screenY" type="Number" integer="true">
+    /// </field>
+    this._keys = [];
+}
+GLSharp.Core.JsInputProvider.prototype = {
+    _mouseX: 0,
+    _mouseY: 0,
+    _screenX: 0,
+    _screenY: 0,
+    
+    initialize: function GLSharp_Core_JsInputProvider$initialize(canvas, screenX, screenY) {
+        /// <param name="canvas" type="Object" domElement="true">
+        /// </param>
+        /// <param name="screenX" type="Number" integer="true">
+        /// </param>
+        /// <param name="screenY" type="Number" integer="true">
+        /// </param>
+        this._screenX = screenX;
+        this._screenY = screenY;
+        var that = this;
+        canvas.addEventListener('keydown', function(e) {
+            that._keys[e.keyCode] = true;
+        }, true);
+        canvas.addEventListener('keyup', function(e) {
+            that._keys[e.keyCode] = false;
+        }, true);
+        canvas.addEventListener('mousedown', function(e) {
+            that._keys[GLSharp.Core.Keys.mouseLeft] = true;
+        }, true);
+        canvas.addEventListener('mouseup', function(e) {
+            that._keys[GLSharp.Core.Keys.mouseRight] = true;
+        }, true);
+        canvas.addEventListener('mousemove', ss.Delegate.create(this, function(e) {
+            that._mouseX = ((((e).pageX - e.target.offsetLeft) / this._screenX) - 0.5) * 2;
+            that._mouseY = ((((e).pageY - e.target.offsetTop) / this._screenY) - 0.5) * 2;
+        }), true);
+    },
+    
+    _mouseMove: function GLSharp_Core_JsInputProvider$_mouseMove(e) {
+        /// <param name="e" type="ElementEvent">
+        /// </param>
+        this._mouseX = e.offsetX;
+        this._mouseY = e.offsetY;
+    },
+    
+    _mouseUp: function GLSharp_Core_JsInputProvider$_mouseUp(e) {
+        /// <param name="e" type="ElementEvent">
+        /// </param>
+        this._keys[GLSharp.Core.Keys.mouseRight] = true;
+    },
+    
+    _mouseDown: function GLSharp_Core_JsInputProvider$_mouseDown(e) {
+        /// <param name="e" type="ElementEvent">
+        /// </param>
+        this._keys[GLSharp.Core.Keys.mouseLeft] = true;
+    },
+    
+    _keyUp: function GLSharp_Core_JsInputProvider$_keyUp(e) {
+        /// <param name="e" type="ElementEvent">
+        /// </param>
+        this._keys[e.keyCode] = false;
+    },
+    
+    _keyDown: function GLSharp_Core_JsInputProvider$_keyDown(e) {
+        /// <param name="e" type="ElementEvent">
+        /// </param>
+        this._keys[e.keyCode] = true;
+    },
+    
+    keySet: function GLSharp_Core_JsInputProvider$keySet(key) {
+        /// <param name="key" type="Number" integer="true">
+        /// </param>
+        /// <returns type="Boolean"></returns>
+        return this._keys[key];
+    },
+    
+    get_mouseX: function GLSharp_Core_JsInputProvider$get_mouseX() {
+        /// <value type="Number"></value>
+        return this._mouseX;
+    },
+    
+    get_mouseY: function GLSharp_Core_JsInputProvider$get_mouseY() {
+        /// <value type="Number"></value>
+        return this._mouseY;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 // GLSharp.Core.Timer
 
 GLSharp.Core.Timer = function GLSharp_Core_Timer() {
@@ -29,6 +129,12 @@ GLSharp.Core.Timer.prototype = {
             ret.set_id(window.setTimeout(action, interval));
         }
         return ret;
+    },
+    
+    requestAnimationFrame: function GLSharp_Core_Timer$requestAnimationFrame(action) {
+        /// <param name="action" type="Function">
+        /// </param>
+        GLSharp.Core.SystemCore.environment.requestAnimationFrame(action);
     },
     
     stop: function GLSharp_Core_Timer$stop(handle) {
@@ -59,6 +165,34 @@ GLSharp.Data.IResourceLoader.registerInterface('GLSharp.Data.IResourceLoader');
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Data.AudioLoader
+
+GLSharp.Data.AudioLoader = function GLSharp_Data_AudioLoader() {
+}
+GLSharp.Data.AudioLoader.prototype = {
+    
+    get_extension: function GLSharp_Data_AudioLoader$get_extension() {
+        /// <value type="Array"></value>
+        var ret = [];
+        ret.add('mp3');
+        return ret;
+    },
+    
+    load: function GLSharp_Data_AudioLoader$load(url) {
+        /// <param name="url" type="String">
+        /// </param>
+        /// <returns type="GLSharp.Data.Resource"></returns>
+        var ret = new GLSharp.Data.Resource();
+        var audio = new Audio();
+        audio.src = url;
+        ret.set_finished(true);
+        ret.set_data(audio);
+        return ret;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 // GLSharp.Data.ImageLoader
 
 GLSharp.Data.ImageLoader = function GLSharp_Data_ImageLoader() {
@@ -69,6 +203,7 @@ GLSharp.Data.ImageLoader.prototype = {
         /// <value type="Array"></value>
         var ret = [];
         ret.add('jpg');
+        ret.add('gif');
         ret.add('png');
         ret.add('jpeg');
         return ret;
@@ -166,14 +301,17 @@ GLSharp.Data.ShaderLoader.prototype = {
     _parseShader: function GLSharp_Data_ShaderLoader$_parseShader(doc) {
         /// <param name="doc" type="XmlDocument">
         /// </param>
-        /// <returns type="GLSharp.Graphics.ICompiledShader"></returns>
+        /// <returns type="GLSharp.Graphics.CompiledShader"></returns>
         if (doc.documentElement.nodeName !== 'shader') {
             throw new Error('Invalid shader file');
         }
+        var that = this;
         var sourceFragment = null;
         var sourceVertex = null;
         var ret = new GLSharp.Graphics.CompiledShader();
-        ret.set_name(doc.documentElement.attributes.getNamedItem('name').nodeValue);
+        ret.name = doc.documentElement.attributes.getNamedItem('name').nodeValue;
+        var uniforms = [];
+        var attributes = [];
         var $enum1 = ss.IEnumerator.getEnumerator(doc.documentElement.childNodes);
         while ($enum1.moveNext()) {
             var xmlNode = $enum1.current;
@@ -187,6 +325,10 @@ GLSharp.Data.ShaderLoader.prototype = {
                 sourceFragment = XmlHelper.innerText(xmlNode);
             }
             else if (xmlNode.nodeName === 'uniform') {
+                uniforms.add(XmlHelper.innerText(xmlNode));
+            }
+            else if (xmlNode.nodeName === 'attribute') {
+                attributes.add(XmlHelper.innerText(xmlNode));
             }
         }
         if (sourceFragment == null || sourceVertex == null) {
@@ -201,7 +343,15 @@ GLSharp.Data.ShaderLoader.prototype = {
         if (!this._gl.getProgramParameter(shaderProgram, 35714)) {
             throw new Error('Cannot link shaders.');
         }
-        ret.set_shaderProgram(shaderProgram);
+        ret.attributes = {};
+        ret.uniforms = {};
+        attributes.forEach(function(value) {
+            ret.attributes[value] = that._gl.getAttribLocation(shaderProgram, value);
+        });
+        uniforms.forEach(function(value) {
+            ret.uniforms[value] = that._gl.getUniformLocation(shaderProgram, value);
+        });
+        ret.shaderProgram = shaderProgram;
         return ret;
     },
     
@@ -215,7 +365,7 @@ GLSharp.Data.ShaderLoader.prototype = {
         this._gl.shaderSource(ret, source);
         this._gl.compileShader(ret);
         if (!this._gl.getShaderParameter(ret, 35713)) {
-            throw new Error('Cannot compile shader.');
+            throw new Error('Cannot compile shader : ' + this._gl.getShaderInfoLog(ret));
         }
         return ret;
     }
@@ -301,94 +451,29 @@ GLSharp.Data.ResourceManager.prototype = {
 Type.registerNamespace('GLSharp.Graphics');
 
 ////////////////////////////////////////////////////////////////////////////////
-// GLSharp.Graphics.Buffer
+// GLSharp.Graphics.WebGLContextAttributes
 
-GLSharp.Graphics.Buffer = function GLSharp_Graphics_Buffer() {
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-// GLSharp.Graphics.CompiledShader
-
-GLSharp.Graphics.CompiledShader = function GLSharp_Graphics_CompiledShader() {
-    /// <field name="_name" type="String">
+GLSharp.Graphics.WebGLContextAttributes = function GLSharp_Graphics_WebGLContextAttributes() {
+    /// <field name="alpha" type="Boolean">
     /// </field>
-    /// <field name="_shaderProgram" type="GLSharp.Graphics.IShaderProgram">
+    /// <field name="depth" type="Boolean">
     /// </field>
-    /// <field name="_uniforms" type="Object">
+    /// <field name="stencil" type="Boolean">
     /// </field>
-    this._shaderProgram = new GLSharp.Graphics.ShaderProgram();
-    this._uniforms = {};
+    /// <field name="antialias" type="Boolean">
+    /// </field>
+    /// <field name="premultipliedAlpha" type="Boolean">
+    /// </field>
+    /// <field name="preserveDrawingBuffer" type="Boolean">
+    /// </field>
 }
-GLSharp.Graphics.CompiledShader.prototype = {
-    _name: 'Undefined',
-    
-    get_name: function GLSharp_Graphics_CompiledShader$get_name() {
-        /// <value type="String"></value>
-        return this._name;
-    },
-    set_name: function GLSharp_Graphics_CompiledShader$set_name(value) {
-        /// <value type="String"></value>
-        this._name = value;
-        return value;
-    },
-    
-    get_shaderProgram: function GLSharp_Graphics_CompiledShader$get_shaderProgram() {
-        /// <value type="GLSharp.Graphics.IShaderProgram"></value>
-        return this._shaderProgram;
-    },
-    set_shaderProgram: function GLSharp_Graphics_CompiledShader$set_shaderProgram(value) {
-        /// <value type="GLSharp.Graphics.IShaderProgram"></value>
-        this._shaderProgram = value;
-        return value;
-    },
-    
-    get_uniforms: function GLSharp_Graphics_CompiledShader$get_uniforms() {
-        /// <value type="Object"></value>
-        return this._uniforms;
-    }
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-// GLSharp.Graphics.FrameBuffer
-
-GLSharp.Graphics.FrameBuffer = function GLSharp_Graphics_FrameBuffer() {
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-// GLSharp.Graphics.RenderBuffer
-
-GLSharp.Graphics.RenderBuffer = function GLSharp_Graphics_RenderBuffer() {
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-// GLSharp.Graphics.Shader
-
-GLSharp.Graphics.Shader = function GLSharp_Graphics_Shader() {
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-// GLSharp.Graphics.ShaderProgram
-
-GLSharp.Graphics.ShaderProgram = function GLSharp_Graphics_ShaderProgram() {
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-// GLSharp.Graphics.Texture
-
-GLSharp.Graphics.Texture = function GLSharp_Graphics_Texture() {
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-// GLSharp.Graphics.UniformLocation
-
-GLSharp.Graphics.UniformLocation = function GLSharp_Graphics_UniformLocation() {
+GLSharp.Graphics.WebGLContextAttributes.prototype = {
+    alpha: true,
+    depth: true,
+    stencil: false,
+    antialias: false,
+    premultipliedAlpha: true,
+    preserveDrawingBuffer: false
 }
 
 
@@ -988,6 +1073,211 @@ GLSharp.Graphics.WebGLE = function GLSharp_Graphics_WebGLE() {
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// GLSharp.Graphics._phongBinder
+
+GLSharp.Graphics._phongBinder = function GLSharp_Graphics__phongBinder(library, graphics, parent) {
+    /// <param name="library" type="GLSharp.Content.Library">
+    /// </param>
+    /// <param name="graphics" type="GLSharp.Graphics.WebGL">
+    /// </param>
+    /// <param name="parent" type="GLSharp.Graphics.ShaderGroup">
+    /// </param>
+    /// <field name="_library" type="GLSharp.Content.Library">
+    /// </field>
+    /// <field name="_graphics" type="GLSharp.Graphics.WebGL">
+    /// </field>
+    /// <field name="_parent" type="GLSharp.Graphics.ShaderGroup">
+    /// </field>
+    /// <field name="_vertexBuffer" type="GLSharp.Graphics.IBuffer">
+    /// </field>
+    if (parent == null) {
+        throw new Error('Parent cannot be null');
+    }
+    if (graphics == null) {
+        throw new Error('Graphics cannot be null');
+    }
+    if (library == null) {
+        throw new Error('Library cannot be null');
+    }
+    this._library = library;
+    this._graphics = graphics;
+    this._parent = parent;
+    this._vertexBuffer = this._graphics.createBuffer();
+    this._graphics.bindBuffer(34962, this._vertexBuffer);
+    var vertices = GLSharp.Core.SystemCore.environment.createFloat32ArrayFromArray([ 1, 1, 0, -1, 1, 0, 1, -1, 0, -1, -1, 0 ]);
+    this._graphics.bufferData(34962, vertices, 35044);
+}
+GLSharp.Graphics._phongBinder.prototype = {
+    _library: null,
+    _graphics: null,
+    _parent: null,
+    _vertexBuffer: null,
+    
+    bindGeometryPass: function GLSharp_Graphics__phongBinder$bindGeometryPass(pMatrix) {
+        /// <param name="pMatrix" type="GLSharp.Util.Matrix4X4">
+        /// </param>
+        if (this._parent.geometryPassShader == null) {
+            return;
+        }
+        this._graphics.useProgram(this._parent.geometryPassShader.shaderProgram);
+        this._graphics.uniformMatrix4fv(this._parent.geometryPassShader.uniforms['uPMatrix'], false, pMatrix.elements);
+    },
+    
+    bindGeometryInstance: function GLSharp_Graphics__phongBinder$bindGeometryInstance(mvMatrix, nMatrix) {
+        /// <param name="mvMatrix" type="GLSharp.Util.Matrix4X4">
+        /// </param>
+        /// <param name="nMatrix" type="GLSharp.Util.Matrix4X4">
+        /// </param>
+        if (this._parent.geometryPassShader == null) {
+            return;
+        }
+        this._graphics.uniformMatrix4fv(this._parent.geometryPassShader.uniforms['uMVMatrix'], false, mvMatrix.elements);
+        this._graphics.uniformMatrix4fv(this._parent.geometryPassShader.uniforms['uNMatrix'], false, nMatrix.elements);
+    },
+    
+    bindGeometryMesh: function GLSharp_Graphics__phongBinder$bindGeometryMesh(mesh) {
+        /// <param name="mesh" type="GLSharp.Content.MeshItem">
+        /// </param>
+        if (this._parent.geometryPassShader == null) {
+            return;
+        }
+        this._graphics.bindBuffer(34962, mesh.meshBuffer);
+        this._graphics.vertexAttribPointer(this._parent.geometryPassShader.attributes['aVertexPosition'], 3, 5126, false, 0, mesh.offsetPosition * 4);
+        this._graphics.vertexAttribPointer(this._parent.geometryPassShader.attributes['aNormalPosition'], 3, 5126, false, 0, mesh.offsetNormal * 4);
+        this._graphics.vertexAttribPointer(this._parent.geometryPassShader.attributes['aUVPosition'], 2, 5126, false, 0, mesh.offsetUv * 4);
+        this._graphics.bindBuffer(34963, mesh.indexBuffer);
+    },
+    
+    bindGeometryMaterial: function GLSharp_Graphics__phongBinder$bindGeometryMaterial(material) {
+        /// <param name="material" type="GLSharp.Content.MaterialItem">
+        /// </param>
+        if (this._parent.geometryPassShader == null) {
+            return;
+        }
+        var texture = this._library.getResource(material.properties['diffuse'].value);
+        this._graphics.uniform1f(this._parent.geometryPassShader.uniforms['uShinines'], (material.properties['shininess'] != null) ? material.properties['shininess'].value : 0);
+        this._graphics.uniform1f(this._parent.geometryPassShader.uniforms['uEmissive'], (material.properties['emission'] != null) ? (material.properties['emission'].value)[0] : 1);
+        if (texture != null) {
+            this._graphics.activeTexture(33984);
+            this._graphics.bindTexture(3553, texture.texture);
+            this._graphics.uniform1i(this._parent.geometryPassShader.uniforms['uSampler'], 0);
+        }
+        else {
+            this._graphics.activeTexture(33984);
+            this._graphics.bindTexture(3553, null);
+            this._graphics.uniform1i(this._parent.geometryPassShader.uniforms['uSampler'], 0);
+        }
+    },
+    
+    bindGeometryPassNum: function GLSharp_Graphics__phongBinder$bindGeometryPassNum(pass) {
+        /// <param name="pass" type="Number" integer="true">
+        /// </param>
+        if (this._parent.geometryPassShader == null) {
+            return;
+        }
+        this._graphics.uniform1i(this._parent.geometryPassShader.uniforms['uPass'], pass);
+    },
+    
+    bindLightPass: function GLSharp_Graphics__phongBinder$bindLightPass(diffuse, position, normal, viewport) {
+        /// <param name="diffuse" type="GLSharp.Graphics.ITexture">
+        /// </param>
+        /// <param name="position" type="GLSharp.Graphics.ITexture">
+        /// </param>
+        /// <param name="normal" type="GLSharp.Graphics.ITexture">
+        /// </param>
+        /// <param name="viewport" type="Array" elementType="Number">
+        /// </param>
+        if (this._parent.lightPassShader == null) {
+            return;
+        }
+        this._graphics.useProgram(this._parent.lightPassShader.shaderProgram);
+        this._graphics.uniform2f(this._parent.lightPassShader.uniforms['uViewport'], viewport[0], viewport[1]);
+        this._graphics.activeTexture(33984);
+        this._graphics.bindTexture(3553, diffuse);
+        this._graphics.uniform1i(this._parent.lightPassShader.uniforms['uSDiffuse'], 0);
+        this._graphics.activeTexture(33985);
+        this._graphics.bindTexture(3553, position);
+        this._graphics.uniform1i(this._parent.lightPassShader.uniforms['uSPosition'], 1);
+        this._graphics.activeTexture(33986);
+        this._graphics.bindTexture(3553, normal);
+        this._graphics.uniform1i(this._parent.lightPassShader.uniforms['uSNormal'], 2);
+    },
+    
+    bindLightMesh: function GLSharp_Graphics__phongBinder$bindLightMesh(lightVolume) {
+        /// <param name="lightVolume" type="GLSharp.Content.MeshItem">
+        /// </param>
+        if (this._parent.lightPassShader == null) {
+            return;
+        }
+        this._graphics.bindBuffer(34962, lightVolume.meshBuffer);
+        this._graphics.vertexAttribPointer(this._parent.lightPassShader.attributes['aVertexPosition'], 3, 5126, false, 0, lightVolume.offsetPosition * 4);
+        this._graphics.bindBuffer(34963, lightVolume.indexBuffer);
+    },
+    
+    bindLight: function GLSharp_Graphics__phongBinder$bindLight(lightPos, light, mvMatrix, pMatrix) {
+        /// <param name="lightPos" type="GLSharp.Util.Vector3">
+        /// </param>
+        /// <param name="light" type="GLSharp.Content.LightItem">
+        /// </param>
+        /// <param name="mvMatrix" type="GLSharp.Util.Matrix4X4">
+        /// </param>
+        /// <param name="pMatrix" type="GLSharp.Util.Matrix4X4">
+        /// </param>
+        if (this._parent.lightPassShader == null) {
+            return;
+        }
+        this._graphics.uniformMatrix4fv(this._parent.lightPassShader.uniforms['uMVMatrix'], false, mvMatrix.elements);
+        this._graphics.uniformMatrix4fv(this._parent.lightPassShader.uniforms['uPMatrix'], false, pMatrix.elements);
+        this._graphics.uniform3f(this._parent.lightPassShader.uniforms['uLightPos'], lightPos.elements[0], lightPos.elements[1], lightPos.elements[2]);
+        this._graphics.uniform3f(this._parent.lightPassShader.uniforms['uLightColor'], (light.properties['color'])[0], (light.properties['color'])[1], (light.properties['color'])[2]);
+        this._graphics.uniform1i(this._parent.lightPassShader.uniforms['uLightType'], light.lightType);
+        this._graphics.uniform1f(this._parent.lightPassShader.uniforms['uLightIntensity'], light.properties['intensity']);
+    },
+    
+    bindPrePostPass: function GLSharp_Graphics__phongBinder$bindPrePostPass(diffuse, position, normal, accumulation) {
+        /// <param name="diffuse" type="GLSharp.Graphics.ITexture">
+        /// </param>
+        /// <param name="position" type="GLSharp.Graphics.ITexture">
+        /// </param>
+        /// <param name="normal" type="GLSharp.Graphics.ITexture">
+        /// </param>
+        /// <param name="accumulation" type="GLSharp.Graphics.ITexture">
+        /// </param>
+        if (this._parent.prePostProcessPassShader == null) {
+            return;
+        }
+        this._graphics.useProgram(this._parent.prePostProcessPassShader.shaderProgram);
+        this._graphics.bindBuffer(34962, this._vertexBuffer);
+        this._graphics.vertexAttribPointer(this._parent.prePostProcessPassShader.attributes['aVertexPosition'], 3, 5126, false, 0, 0);
+        this._graphics.activeTexture(33984);
+        this._graphics.bindTexture(3553, diffuse);
+        this._graphics.uniform1i(this._parent.prePostProcessPassShader.uniforms['uSDiffuse'], 0);
+        this._graphics.activeTexture(33985);
+        this._graphics.bindTexture(3553, position);
+        this._graphics.uniform1i(this._parent.prePostProcessPassShader.uniforms['uSPosition'], 1);
+        this._graphics.activeTexture(33986);
+        this._graphics.bindTexture(3553, normal);
+        this._graphics.uniform1i(this._parent.prePostProcessPassShader.uniforms['uSNormal'], 2);
+        this._graphics.activeTexture(33987);
+        this._graphics.bindTexture(3553, accumulation);
+        this._graphics.uniform1i(this._parent.prePostProcessPassShader.uniforms['uSAccumulation'], 3);
+    },
+    
+    bindFinalPass: function GLSharp_Graphics__phongBinder$bindFinalPass(post) {
+        /// <param name="post" type="GLSharp.Graphics.ITexture">
+        /// </param>
+        if (this._parent.finalPassShader == null) {
+            return;
+        }
+        this._graphics.useProgram(this._parent.finalPassShader.shaderProgram);
+        this._graphics.activeTexture(33984);
+        this._graphics.bindTexture(3553, post);
+        this._graphics.uniform1i(this._parent.finalPassShader.uniforms['uSPost'], 0);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 // GLSharp.Graphics.WebGLGraphics
 
 GLSharp.Graphics.WebGLGraphics = function GLSharp_Graphics_WebGLGraphics(canvas) {
@@ -997,37 +1287,99 @@ GLSharp.Graphics.WebGLGraphics = function GLSharp_Graphics_WebGLGraphics(canvas)
     /// </field>
     /// <field name="_context" type="GLSharp.Graphics.WebGL">
     /// </field>
-    /// <field name="_diffuseTexture" type="GLSharp.Graphics.Texture">
+    /// <field name="_renderTextureDim" type="Number" integer="true">
     /// </field>
-    /// <field name="_positionTexture" type="GLSharp.Graphics.Texture">
+    /// <field name="_renderViewport" type="Array" elementType="Number">
     /// </field>
-    /// <field name="_normalTexture" type="GLSharp.Graphics.Texture">
+    /// <field name="_diffuseGroup" type="GLSharp.Graphics.Core.RenderGroup">
     /// </field>
-    /// <field name="_clearColor" type="GLSharp.Graphics.Color">
+    /// <field name="_positionGroup" type="GLSharp.Graphics.Core.RenderGroup">
     /// </field>
-    /// <field name="_clearMode" type="GLSharp.Graphics.ClearMode">
+    /// <field name="_normalGroup" type="GLSharp.Graphics.Core.RenderGroup">
+    /// </field>
+    /// <field name="_accumulationGroup" type="GLSharp.Graphics.Core.RenderGroup">
+    /// </field>
+    /// <field name="_postGroup" type="GLSharp.Graphics.Core.RenderGroup">
+    /// </field>
+    /// <field name="_depthbuffer" type="GLSharp.Graphics.IRenderBuffer">
+    /// </field>
+    /// <field name="_effects" type="Array">
+    /// </field>
+    /// <field name="_lastGroup" type="GLSharp.Graphics.Core.RenderGroup">
+    /// </field>
+    /// <field name="_activeTextureTarget" type="Array">
+    /// </field>
+    /// <field name="_shaderGroups" type="Object">
+    /// </field>
+    /// <field name="activeShaderGroup" type="String">
+    /// </field>
+    /// <field name="_lastGeometryShader" type="String">
+    /// </field>
+    /// <field name="_lastLightShader" type="String">
+    /// </field>
+    /// <field name="_lightSphereVolume" type="GLSharp.Content.MeshItem">
+    /// </field>
+    /// <field name="_meshLoaded" type="Boolean">
+    /// </field>
+    /// <field name="_cullInfo" type="GLSharp.Graphics.CullInfo">
+    /// </field>
+    /// <field name="_mvMatrix" type="GLSharp.Util.Matrix4X4">
+    /// </field>
+    /// <field name="_pMatrix" type="GLSharp.Util.Matrix4X4">
+    /// </field>
+    /// <field name="_nMatrix" type="GLSharp.Util.Matrix4X4">
+    /// </field>
+    /// <field name="_vMatrix" type="GLSharp.Util.Matrix4X4">
+    /// </field>
+    /// <field name="_scaleMatrix" type="GLSharp.Util.Matrix4X4">
+    /// </field>
+    /// <field name="_camera" type="GLSharp.Universe.Node">
+    /// </field>
+    /// <field name="_occluder" type="GLSharp.Graphics.IViewOccluder">
     /// </field>
     /// <field name="_world" type="GLSharp.Universe.World">
     /// </field>
-    /// <field name="_renderableComponent" type="GLSharp.Universe.ComponentCollection">
+    /// <field name="_library" type="GLSharp.Content.Library">
     /// </field>
-    /// <field name="_meshQueue" type="Array">
+    /// <field name="_opaqueMeshQueue" type="Array">
     /// </field>
-    /// <field name="_meshShader" type="GLSharp.Graphics.ICompiledShader">
+    /// <field name="_transparentMeshQueue" type="Array">
     /// </field>
-    this._clearMode = GLSharp.Graphics.ClearMode.color;
+    /// <field name="_lightQueue" type="Object">
+    /// </field>
     this._canvas = canvas;
-    this._context = canvas.getContext('experimental-webgl');
-    this.set_clearColor(GLSharp.Graphics.Color.create(0.3, 0.6, 0.9, 1));
+    this._context = canvas.getContext('experimental-webgl', new GLSharp.Graphics.WebGLContextAttributes());
 }
 GLSharp.Graphics.WebGLGraphics.prototype = {
     _canvas: null,
     _context: null,
-    _diffuseTexture: null,
-    _positionTexture: null,
-    _normalTexture: null,
-    _clearColor: null,
+    _renderTextureDim: 0,
+    _renderViewport: null,
+    _diffuseGroup: null,
+    _positionGroup: null,
+    _normalGroup: null,
+    _accumulationGroup: null,
+    _postGroup: null,
+    _depthbuffer: null,
+    _effects: null,
+    _lastGroup: null,
+    _activeTextureTarget: null,
+    _shaderGroups: null,
+    activeShaderGroup: null,
+    _lastGeometryShader: null,
+    _lastLightShader: null,
+    _lightSphereVolume: null,
+    _meshLoaded: false,
+    _cullInfo: null,
+    _mvMatrix: null,
+    _pMatrix: null,
+    _nMatrix: null,
+    _vMatrix: null,
+    _scaleMatrix: null,
+    _camera: null,
+    _occluder: null,
     _world: null,
+    _library: null,
     
     get_height: function GLSharp_Graphics_WebGLGraphics$get_height() {
         /// <summary>
@@ -1051,38 +1403,59 @@ GLSharp.Graphics.WebGLGraphics.prototype = {
         return -1;
     },
     
-    get_clearColor: function GLSharp_Graphics_WebGLGraphics$get_clearColor() {
+    get_world: function GLSharp_Graphics_WebGLGraphics$get_world() {
         /// <summary>
-        /// Gets or sets the color used for drawing.
+        /// Gets and sets the world used for drawing.
         /// </summary>
-        /// <value type="GLSharp.Graphics.Color"></value>
-        return this._clearColor;
+        /// <value type="GLSharp.Universe.World"></value>
+        return this._world;
     },
-    set_clearColor: function GLSharp_Graphics_WebGLGraphics$set_clearColor(value) {
+    set_world: function GLSharp_Graphics_WebGLGraphics$set_world(value) {
         /// <summary>
-        /// Gets or sets the color used for drawing.
+        /// Gets and sets the world used for drawing.
         /// </summary>
-        /// <value type="GLSharp.Graphics.Color"></value>
-        this._clearColor = value;
-        if (this._context != null) {
-            this._context.clearColor(this._clearColor.get_red(), this._clearColor.get_green(), this._clearColor.get_blue(), this._clearColor.get_alpha());
-        }
+        /// <value type="GLSharp.Universe.World"></value>
+        this._world = value;
+        this._bindWorld(this._world);
         return value;
     },
     
-    get_clearMode: function GLSharp_Graphics_WebGLGraphics$get_clearMode() {
-        /// <summary>
-        /// Gets or sets the clear mode used when clearing the graphics.
-        /// </summary>
-        /// <value type="GLSharp.Graphics.ClearMode"></value>
-        return this._clearMode;
+    get_camera: function GLSharp_Graphics_WebGLGraphics$get_camera() {
+        /// <value type="GLSharp.Universe.Node"></value>
+        return this._camera;
     },
-    set_clearMode: function GLSharp_Graphics_WebGLGraphics$set_clearMode(value) {
+    set_camera: function GLSharp_Graphics_WebGLGraphics$set_camera(value) {
+        /// <value type="GLSharp.Universe.Node"></value>
+        if (value.get_components()[GLSharp.Universe.Component.cameraComponent] == null) {
+            throw new Error('Camera does not have a camera component.');
+        }
+        this._camera = value;
+        return value;
+    },
+    
+    get_viewOccluder: function GLSharp_Graphics_WebGLGraphics$get_viewOccluder() {
+        /// <value type="GLSharp.Graphics.IViewOccluder"></value>
+        return this._occluder;
+    },
+    set_viewOccluder: function GLSharp_Graphics_WebGLGraphics$set_viewOccluder(value) {
+        /// <value type="GLSharp.Graphics.IViewOccluder"></value>
+        this._occluder = value;
+        return value;
+    },
+    
+    get_library: function GLSharp_Graphics_WebGLGraphics$get_library() {
         /// <summary>
-        /// Gets or sets the clear mode used when clearing the graphics.
+        /// Gets or sets the main library.
         /// </summary>
-        /// <value type="GLSharp.Graphics.ClearMode"></value>
-        this._clearMode = value;
+        /// <value type="GLSharp.Content.Library"></value>
+        return this._library;
+    },
+    set_library: function GLSharp_Graphics_WebGLGraphics$set_library(value) {
+        /// <summary>
+        /// Gets or sets the main library.
+        /// </summary>
+        /// <value type="GLSharp.Content.Library"></value>
+        this._library = value;
         return value;
     },
     
@@ -1094,97 +1467,553 @@ GLSharp.Graphics.WebGLGraphics.prototype = {
         return this._context;
     },
     
-    _renderableComponent: null,
-    _meshQueue: null,
-    _meshShader: null,
+    _opaqueMeshQueue: null,
+    _transparentMeshQueue: null,
+    _lightQueue: null,
     
-    initialize: function GLSharp_Graphics_WebGLGraphics$initialize() {
+    initialize: function GLSharp_Graphics_WebGLGraphics$initialize(fov, zNear, zFar) {
+        /// <param name="fov" type="Number">
+        /// </param>
+        /// <param name="zNear" type="Number">
+        /// </param>
+        /// <param name="zFar" type="Number">
+        /// </param>
         this._displayDebugInformation();
-        this._context.getExtension('OES_texture_float');
-        this._diffuseTexture = this._createRenderTexture();
-        this._normalTexture = this._createRenderTexture();
-        this._positionTexture = this._createRenderTexture();
-        this._renderableComponent = new GLSharp.Universe.ComponentCollection();
-        this._renderableComponent.addKnownType(GLSharp.Universe.Component.meshComponent);
-        this._meshQueue = [];
+        var that = this;
+        this._renderTextureDim = this._smallestPowerOfTwo(this._canvas.width);
+        this._renderViewport = GLSharp.Core.SystemCore.environment.createFloat32ArrayFromArray([ this._renderTextureDim, this._renderTextureDim ]);
+        this._shaderGroups = {};
+        var phongShaderGroup = new GLSharp.Graphics.ShaderGroup();
+        phongShaderGroup.name = 'phong';
+        phongShaderGroup.shaderBinder = new GLSharp.Graphics._phongBinder(that.get_library(), that._context, phongShaderGroup);
+        GLSharp.Core.SystemCore.resourceManager.getResource('/Data/Shader/phong_pass_geom.shader', null).resourceChanged.subscribe(function(sender, args) {
+            var resource = sender;
+            if (resource.get_finished()) {
+                phongShaderGroup.geometryPassShader = resource.get_data();
+            }
+        }, null);
+        GLSharp.Core.SystemCore.resourceManager.getResource('/Data/Shader/phong_pass_prepost.shader', null).resourceChanged.subscribe(function(sender, args) {
+            var resource = sender;
+            if (resource.get_finished()) {
+                phongShaderGroup.prePostProcessPassShader = resource.get_data();
+            }
+        }, null);
+        GLSharp.Core.SystemCore.resourceManager.getResource('/Data/Shader/phong_pass_light.shader', null).resourceChanged.subscribe(function(sender, args) {
+            var resource = sender;
+            if (resource.get_finished()) {
+                phongShaderGroup.lightPassShader = resource.get_data();
+            }
+        }, null);
+        GLSharp.Core.SystemCore.resourceManager.getResource('/Data/Shader/phong_pass_final.shader', null).resourceChanged.subscribe(function(sender, args) {
+            var resource = sender;
+            if (resource.get_finished()) {
+                phongShaderGroup.finalPassShader = resource.get_data();
+            }
+        }, null);
+        this.addShaderGroup(phongShaderGroup);
+        this.activeShaderGroup = 'phong';
+        this.get_library().loadLibrary('/Data/JSON/core.json').finished.subscribe(ss.Delegate.create(this, function(sender, args) {
+            var sphereHandle = new GLSharp.Content.Handle();
+            sphereHandle.collection = 'core';
+            sphereHandle.id = 'point_light_sphere-lib';
+            that._lightSphereVolume = (this.get_library().getResource(sphereHandle));
+        }), true);
+        GLSharp.Core.SystemCore.logger.log(this._context.getExtension('OES_texture_float').toString());
+        this._setupFrameBuffers();
+        this._opaqueMeshQueue = [];
+        this._transparentMeshQueue = [];
+        this._lightQueue = {};
+        this._camera = new GLSharp.Universe.Node();
+        this._camera.addComponent(new GLSharp.Universe.CameraComponent());
+        this._scaleMatrix = new GLSharp.Util.Matrix4X4(null);
+        this._mvMatrix = new GLSharp.Util.Matrix4X4(null);
+        this._vMatrix = new GLSharp.Util.Matrix4X4(null);
+        this._nMatrix = new GLSharp.Util.Matrix4X4(null);
+        this._pMatrix = GLSharp.Util.Matrix4X4.makePerspective(fov, 800 / 600, zNear, zFar);
+        this._context.viewport(0, 0, this._renderTextureDim, this._renderTextureDim);
+        this._context.enableVertexAttribArray(0);
+        this._context.enableVertexAttribArray(1);
+        this._context.enableVertexAttribArray(2);
+        this._context.enable(2929);
+        this._context.enable(2884);
+        this._context.blendFunc(770, 1);
+        this._cullInfo = new GLSharp.Graphics.CullInfo();
+        this._effects = [];
+        this._activeTextureTarget = [];
+        this._activeTextureTarget[0] = 33984;
+        this._activeTextureTarget[1] = 33985;
+        this._activeTextureTarget[2] = 33986;
     },
     
-    _createRenderTexture: function GLSharp_Graphics_WebGLGraphics$_createRenderTexture() {
-        /// <returns type="GLSharp.Graphics.Texture"></returns>
+    _setupFrameBuffers: function GLSharp_Graphics_WebGLGraphics$_setupFrameBuffers() {
+        this._depthbuffer = this._context.createRenderbuffer();
+        this._context.bindRenderbuffer(36161, this._depthbuffer);
+        this._context.renderbufferStorage(36161, 33189, this._renderTextureDim, this._renderTextureDim);
+        this._diffuseGroup = this.createRenderGroup(true);
+        this._normalGroup = this.createRenderGroup(true);
+        this._positionGroup = this.createRenderGroup(true);
+        this._accumulationGroup = this.createRenderGroup(true);
+        this._postGroup = this.createRenderGroup(true);
+    },
+    
+    _displayDebugInformation: function GLSharp_Graphics_WebGLGraphics$_displayDebugInformation() {
+        GLSharp.Core.SystemCore.logger.log('Supported extensions : ' + this.get_context().getSupportedExtensions());
+    },
+    
+    _debugLog: function GLSharp_Graphics_WebGLGraphics$_debugLog(message) {
+        /// <param name="message" type="String">
+        /// </param>
+        GLSharp.Core.SystemCore.logger.log(message);
+    },
+    
+    allocateTexture: function GLSharp_Graphics_WebGLGraphics$allocateTexture(texture) {
+        /// <param name="texture" type="GLSharp.Content.TextureItem">
+        /// </param>
+        /// <returns type="Boolean"></returns>
+        if (texture.image == null) {
+            return false;
+        }
+        texture.texture = this.createTexture(texture.image);
+        return true;
+    },
+    
+    freeTexture: function GLSharp_Graphics_WebGLGraphics$freeTexture(texture) {
+        /// <param name="texture" type="GLSharp.Content.TextureItem">
+        /// </param>
+        /// <returns type="Boolean"></returns>
+        if (texture.texture == null) {
+            return false;
+        }
+        this._context.deleteTexture(texture.texture);
+        return true;
+    },
+    
+    allocateMesh: function GLSharp_Graphics_WebGLGraphics$allocateMesh(mesh) {
+        /// <param name="mesh" type="GLSharp.Content.MeshItem">
+        /// </param>
+        /// <returns type="Boolean"></returns>
+        var meshBuffer = this._context.createBuffer();
+        this._context.bindBuffer(34962, meshBuffer);
+        this._context.bufferData(34962, mesh.mesh, 35044);
+        var indexBuffer = this._context.createBuffer();
+        this._context.bindBuffer(34963, indexBuffer);
+        this._context.bufferData(34963, mesh.indexes, 35044);
+        mesh.indexBuffer = indexBuffer;
+        mesh.meshBuffer = meshBuffer;
+        return true;
+    },
+    
+    dealocateMesh: function GLSharp_Graphics_WebGLGraphics$dealocateMesh(mesh) {
+        /// <param name="mesh" type="GLSharp.Content.MeshItem">
+        /// </param>
+        /// <returns type="Boolean"></returns>
+        this._context.deleteBuffer(mesh.indexBuffer);
+        this._context.deleteBuffer(mesh.meshBuffer);
+        return true;
+    },
+    
+    _createDepthTexture: function GLSharp_Graphics_WebGLGraphics$_createDepthTexture() {
+        /// <returns type="GLSharp.Graphics.ITexture"></returns>
         var ret = this._context.createTexture();
         this._context.bindTexture(3553, ret);
         this._context.texParameteri(3553, 10241, 9728);
         this._context.texParameteri(3553, 10240, 9728);
-        this._context.texImage2D(3553, 0, 6408, this.get_width(), this.get_height(), 0, 6408, 5126, null);
+        this._context.texParameteri(3553, 10242, 33071);
+        this._context.texParameteri(3553, 10243, 33071);
+        this._context.texImage2D(3553, 0, 33189, this._renderTextureDim, this._renderTextureDim, 0, 6402, 5121, null);
         return ret;
     },
     
-    _displayDebugInformation: function GLSharp_Graphics_WebGLGraphics$_displayDebugInformation() {
-        GLSharp.Core.SystemCore.get_logger().log('Supported extensions : ' + this.get_context().getSupportedExtensions());
+    createRenderTexture: function GLSharp_Graphics_WebGLGraphics$createRenderTexture() {
+        /// <returns type="GLSharp.Graphics.ITexture"></returns>
+        var ret = this._context.createTexture();
+        this._context.bindTexture(3553, ret);
+        this._context.texParameteri(3553, 10241, 9728);
+        this._context.texParameteri(3553, 10240, 9728);
+        this._context.texParameteri(3553, 10242, 33071);
+        this._context.texParameteri(3553, 10243, 33071);
+        this._context.texImage2D(3553, 0, 6408, this._renderTextureDim, this._renderTextureDim, 0, 6408, 5126, null);
+        return ret;
     },
     
-    clear: function GLSharp_Graphics_WebGLGraphics$clear() {
-        this._context.clear(this._clearMode);
+    _smallestPowerOfTwo: function GLSharp_Graphics_WebGLGraphics$_smallestPowerOfTwo(el) {
+        /// <param name="el" type="Number">
+        /// </param>
+        /// <returns type="Number" integer="true"></returns>
+        var ret = 2;
+        while (ret < el) {
+            ret *= 2;
+        }
+        return ret;
     },
     
-    render: function GLSharp_Graphics_WebGLGraphics$render() {
-        this.clear();
-        this._meshQueue.clear();
-        this._geometryPass();
+    _updateCullInfo: function GLSharp_Graphics_WebGLGraphics$_updateCullInfo(mv) {
+        /// <param name="mv" type="GLSharp.Util.Matrix4X4">
+        /// </param>
+        if (this._cullInfo.modelView == null) {
+            this._cullInfo.leftClip[0] = this._pMatrix.elements[0] + this._pMatrix.elements[3];
+            this._cullInfo.leftClip[1] = this._pMatrix.elements[4] + this._pMatrix.elements[7];
+            this._cullInfo.leftClip[2] = this._pMatrix.elements[8] + this._pMatrix.elements[11];
+            this._cullInfo.leftClip[3] = this._pMatrix.elements[12] + this._pMatrix.elements[15];
+            this._cullInfo.rightClip[0] = -this._pMatrix.elements[0] + this._pMatrix.elements[3];
+            this._cullInfo.rightClip[1] = -this._pMatrix.elements[4] + this._pMatrix.elements[7];
+            this._cullInfo.rightClip[2] = -this._pMatrix.elements[8] + this._pMatrix.elements[11];
+            this._cullInfo.rightClip[3] = -this._pMatrix.elements[12] + this._pMatrix.elements[15];
+            this._cullInfo.botClip[0] = this._pMatrix.elements[1] + this._pMatrix.elements[3];
+            this._cullInfo.botClip[1] = this._pMatrix.elements[5] + this._pMatrix.elements[7];
+            this._cullInfo.botClip[2] = this._pMatrix.elements[9] + this._pMatrix.elements[11];
+            this._cullInfo.botClip[3] = this._pMatrix.elements[13] + this._pMatrix.elements[15];
+            this._cullInfo.topClip[0] = -this._pMatrix.elements[1] + this._pMatrix.elements[3];
+            this._cullInfo.topClip[1] = -this._pMatrix.elements[5] + this._pMatrix.elements[7];
+            this._cullInfo.topClip[2] = -this._pMatrix.elements[9] + this._pMatrix.elements[11];
+            this._cullInfo.topClip[3] = -this._pMatrix.elements[13] + this._pMatrix.elements[15];
+            this._cullInfo.nearClip[0] = this._pMatrix.elements[2] + this._pMatrix.elements[3];
+            this._cullInfo.nearClip[1] = this._pMatrix.elements[6] + this._pMatrix.elements[7];
+            this._cullInfo.nearClip[2] = this._pMatrix.elements[10] + this._pMatrix.elements[11];
+            this._cullInfo.nearClip[3] = this._pMatrix.elements[14] + this._pMatrix.elements[15];
+            this._cullInfo.farClip[0] = -this._pMatrix.elements[2] + this._pMatrix.elements[3];
+            this._cullInfo.farClip[1] = -this._pMatrix.elements[6] + this._pMatrix.elements[7];
+            this._cullInfo.farClip[2] = -this._pMatrix.elements[10] + this._pMatrix.elements[11];
+            this._cullInfo.farClip[3] = -this._pMatrix.elements[14] + this._pMatrix.elements[15];
+        }
+        this._cullInfo.modelView = mv.elements;
     },
     
-    _geometryPass: function GLSharp_Graphics_WebGLGraphics$_geometryPass() {
-        var node = null;
-        while ((node = this._meshQueue.dequeue()) != null) {
-            this._renderMesh(node);
+    createTexture: function GLSharp_Graphics_WebGLGraphics$createTexture(image) {
+        /// <param name="image" type="GLSharp.Data.IImageResource">
+        /// </param>
+        /// <returns type="GLSharp.Graphics.ITexture"></returns>
+        var ret = this._context.createTexture();
+        this._context.bindTexture(3553, ret);
+        this._context.pixelStorei(37440, 1);
+        this._context.texImage2D(3553, 0, 6408, 6408, 5121, image);
+        this._context.texParameteri(3553, 10240, 9728);
+        this._context.texParameteri(3553, 10241, 9728);
+        this._context.bindTexture(3553, null);
+        return ret;
+    },
+    
+    createRenderGroup: function GLSharp_Graphics_WebGLGraphics$createRenderGroup(commonDepth) {
+        /// <param name="commonDepth" type="Boolean">
+        /// </param>
+        /// <returns type="GLSharp.Graphics.Core.RenderGroup"></returns>
+        var ret = new GLSharp.Graphics.Core.RenderGroup();
+        ret.renderTexture = this.createRenderTexture();
+        if (commonDepth) {
+            ret.depthRenderBuffer = this._depthbuffer;
+        }
+        else {
+            ret.depthRenderBuffer = null;
+        }
+        ret.frameBuffer = this._context.createFramebuffer();
+        this._context.bindFramebuffer(36160, ret.frameBuffer);
+        this._context.bindRenderbuffer(36161, ret.depthRenderBuffer);
+        this._context.framebufferRenderbuffer(36160, 36096, 36161, ret.depthRenderBuffer);
+        this._context.framebufferTexture2D(36160, 36064, 3553, ret.renderTexture, 0);
+        return ret;
+    },
+    
+    cleanRenderGroup: function GLSharp_Graphics_WebGLGraphics$cleanRenderGroup(old) {
+        /// <param name="old" type="GLSharp.Graphics.Core.RenderGroup">
+        /// </param>
+        if (old == null) {
+            return;
+        }
+        this._context.deleteFramebuffer(old.frameBuffer);
+        this._context.deleteTexture(old.renderTexture);
+        if (old.depthRenderBuffer !== this._depthbuffer) {
+            this._context.deleteRenderbuffer(old.depthRenderBuffer);
         }
     },
     
-    _renderMesh: function GLSharp_Graphics_WebGLGraphics$_renderMesh(node) {
+    switchRenderGroup: function GLSharp_Graphics_WebGLGraphics$switchRenderGroup(group) {
+        /// <param name="group" type="GLSharp.Graphics.Core.RenderGroup">
+        /// </param>
+        this._context.bindFramebuffer(36160, group.frameBuffer);
+    },
+    
+    addShaderGroup: function GLSharp_Graphics_WebGLGraphics$addShaderGroup(shaderGroup) {
+        /// <param name="shaderGroup" type="GLSharp.Graphics.ShaderGroup">
+        /// </param>
+        this._shaderGroups[shaderGroup.name] = shaderGroup;
+    },
+    
+    queuePostProcess: function GLSharp_Graphics_WebGLGraphics$queuePostProcess(effect) {
+        /// <param name="effect" type="GLSharp.Graphics.Effects.IPostProcessEffect">
+        /// </param>
+        var index = 0;
+        if ((index = this._effects.indexOf(effect)) !== -1) {
+            this._effects.removeAt(index);
+        }
+        this._effects.add(effect);
+        effect.init(this._diffuseGroup.renderTexture, this._normalGroup.renderTexture, this._positionGroup.renderTexture, this._accumulationGroup.renderTexture);
+        effect.reset(this);
+    },
+    
+    renderPostProcess: function GLSharp_Graphics_WebGLGraphics$renderPostProcess() {
+        this._context.drawArrays(5, 0, 4);
+    },
+    
+    render: function GLSharp_Graphics_WebGLGraphics$render() {
+        this._lastGeometryShader = null;
+        this._lastLightShader = null;
+        this._camera.get_world().copy(this._vMatrix);
+        this._vMatrix.inverse();
+        this._context.clearColor(0, 0, 0, 0);
+        this.switchRenderGroup(this._diffuseGroup);
+        this._context.clear(16384);
+        this.switchRenderGroup(this._positionGroup);
+        this._context.clear(16384);
+        this.switchRenderGroup(this._normalGroup);
+        this._context.clear(16384 | 256);
+        this.switchRenderGroup(this._accumulationGroup);
+        this._context.clear(16384);
+        this._context.bindFramebuffer(36160, null);
+        this._context.clear(16384 | 256);
+        this._context.enable(2929);
+        this._context.disable(3042);
+        this._context.cullFace(1029);
+        this._opaqueGeometryPass();
+        this._context.disable(2929);
+        this._context.enable(3042);
+        this.switchRenderGroup(this._accumulationGroup);
+        this._context.cullFace(1028);
+        this._lightPass();
+        this._context.disable(3042);
+        this._context.cullFace(1029);
+        this._context.bindFramebuffer(36160, this._postGroup.frameBuffer);
+        this._prePostPass();
+        this._postProcessingPass();
+        this._context.bindFramebuffer(36160, null);
+        this._finalPass();
+    },
+    
+    clear: function GLSharp_Graphics_WebGLGraphics$clear(color, depth) {
+        /// <param name="color" type="Boolean">
+        /// </param>
+        /// <param name="depth" type="Boolean">
+        /// </param>
+        if (color && depth) {
+            this._context.clear(16384 | 256);
+        }
+        else if (color) {
+            this._context.clear(16384);
+        }
+        else {
+            this._context.clear(256);
+        }
+    },
+    
+    setBlend: function GLSharp_Graphics_WebGLGraphics$setBlend(enable) {
+        /// <param name="enable" type="Boolean">
+        /// </param>
+        if (enable) {
+            this._context.enable(3042);
+        }
+        else {
+            this._context.disable(3042);
+        }
+    },
+    
+    _opaqueGeometryPass: function GLSharp_Graphics_WebGLGraphics$_opaqueGeometryPass() {
+        var that = this;
+        var shaderBinder = that._shaderGroups[that.activeShaderGroup].shaderBinder;
+        if (shaderBinder == null) {
+            return;
+        }
+        shaderBinder.bindGeometryPass(this._pMatrix);
+        this._opaqueMeshQueue.forEach(ss.Delegate.create(this, function(value, index, collection) {
+            var mesh = that.get_library().getResourceById(index);
+            this._meshLoaded = false;
+            value.forEach(ss.Delegate.create(this, function(node) {
+                this._vMatrix.multiplyM2(node.get_world(), this._mvMatrix);
+                this._mvMatrix.inverse2(this._nMatrix);
+                this._nMatrix.transpose();
+                this._updateCullInfo(this._mvMatrix);
+                if (this._occluder != null && !this._occluder.test(this._cullInfo, node, mesh)) {
+                    return;
+                }
+                if (!this._meshLoaded) {
+                    shaderBinder.bindGeometryMesh(mesh);
+                    this._meshLoaded = true;
+                }
+                that._renderOpaqueMesh(node, this._mvMatrix, this._nMatrix, mesh.indexes.length, shaderBinder);
+            }));
+        }));
+    },
+    
+    _renderOpaqueMesh: function GLSharp_Graphics_WebGLGraphics$_renderOpaqueMesh(node, mv, nv, vertexLength, binder) {
         /// <param name="node" type="GLSharp.Universe.Node">
         /// </param>
+        /// <param name="mv" type="GLSharp.Util.Matrix4X4">
+        /// </param>
+        /// <param name="nv" type="GLSharp.Util.Matrix4X4">
+        /// </param>
+        /// <param name="vertexLength" type="Number" integer="true">
+        /// </param>
+        /// <param name="binder" type="GLSharp.Graphics.IShaderBinder">
+        /// </param>
+        var materialComponent = node.get_components()[GLSharp.Universe.Component.materialComponent];
+        if (materialComponent == null) {
+            this._debugLog('Cannot render node [' + node.id + '] : material not found.');
+            return;
+        }
+        var material = this.get_library().getResource(materialComponent.materialHandle);
+        binder.bindGeometryMaterial(material);
+        binder.bindGeometryInstance(mv, nv);
+        this.switchRenderGroup(this._diffuseGroup);
+        this._context.depthFunc(515);
+        binder.bindGeometryPassNum(0);
+        this._context.drawElements(4, vertexLength, 5123, 0);
+        this.switchRenderGroup(this._positionGroup);
+        this._context.depthFunc(514);
+        binder.bindGeometryPassNum(1);
+        this._context.drawElements(4, vertexLength, 5123, 0);
+        this.switchRenderGroup(this._normalGroup);
+        binder.bindGeometryPassNum(2);
+        this._context.drawElements(4, vertexLength, 5123, 0);
+    },
+    
+    _lightPass: function GLSharp_Graphics_WebGLGraphics$_lightPass() {
+        var lightShader = this._shaderGroups[this.activeShaderGroup];
+        if (lightShader == null) {
+            return;
+        }
+        if (this._lastLightShader !== this.activeShaderGroup) {
+            this._lastLightShader = this.activeShaderGroup;
+            lightShader.shaderBinder.bindLightPass(this._diffuseGroup.renderTexture, this._positionGroup.renderTexture, this._normalGroup.renderTexture, this._renderViewport);
+        }
+        var that = this;
+        if (this._lightSphereVolume != null) {
+            lightShader.shaderBinder.bindLightMesh(this._lightSphereVolume);
+            if (this._lightQueue[GLSharp.Universe.LightComponent.typePoint] != null) {
+                this._lightQueue[GLSharp.Universe.LightComponent.typePoint].forEach(ss.Delegate.create(this, function(value) {
+                    that._renderLight(lightShader, value.get_components()[GLSharp.Universe.Component.lightComponent], this._lightSphereVolume);
+                }));
+            }
+        }
+    },
+    
+    _renderLight: function GLSharp_Graphics_WebGLGraphics$_renderLight(lightShader, component, lightVolume) {
+        /// <param name="lightShader" type="GLSharp.Graphics.ShaderGroup">
+        /// </param>
+        /// <param name="component" type="GLSharp.Universe.LightComponent">
+        /// </param>
+        /// <param name="lightVolume" type="GLSharp.Content.MeshItem">
+        /// </param>
+        var light = this._library.getResource(component.lightHandle);
+        if (light == null) {
+            return;
+        }
+        var intensity = light.properties['intensity'];
+        this._scaleMatrix.elements[0] = intensity * 2;
+        this._scaleMatrix.elements[5] = intensity * 2;
+        this._scaleMatrix.elements[10] = intensity * 2;
+        this._scaleMatrix.elements[15] = 1;
+        this._vMatrix.multiplyM2(component.parent.get_world(), this._mvMatrix);
+        this._mvMatrix.multiplyM2(this._scaleMatrix, this._mvMatrix);
+        var pos = this._mvMatrix.transformV(new GLSharp.Util.Vector3([ 0, 0, 0 ]));
+        this._updateCullInfo(this._mvMatrix);
+        if (this._occluder != null && !this._occluder.test(this._cullInfo, null, lightVolume)) {
+            return;
+        }
+        lightShader.shaderBinder.bindLight(pos, light, this._mvMatrix, this._pMatrix);
+        this._context.drawElements(4, this._lightSphereVolume.indexes.length, 5123, 0);
+    },
+    
+    _prePostPass: function GLSharp_Graphics_WebGLGraphics$_prePostPass() {
+        this._context.depthFunc(515);
+        if (this._shaderGroups[this.activeShaderGroup] == null) {
+            return;
+        }
+        this._shaderGroups[this.activeShaderGroup].shaderBinder.bindPrePostPass(this._diffuseGroup.renderTexture, this._positionGroup.renderTexture, this._normalGroup.renderTexture, this._accumulationGroup.renderTexture);
+        this._context.drawArrays(5, 0, 4);
+    },
+    
+    _postProcessingPass: function GLSharp_Graphics_WebGLGraphics$_postProcessingPass() {
+        var that = this;
+        this._lastGroup = this._postGroup;
+        this._effects.forEach(function(value) {
+            that._lastGroup = value.render(that._lastGroup);
+        });
+    },
+    
+    _finalPass: function GLSharp_Graphics_WebGLGraphics$_finalPass() {
+        if (this._shaderGroups[this.activeShaderGroup] == null) {
+            return;
+        }
+        this._shaderGroups[this.activeShaderGroup].shaderBinder.bindFinalPass(this._lastGroup.renderTexture);
+        this._context.drawArrays(5, 0, 4);
+    },
+    
+    bindShader: function GLSharp_Graphics_WebGLGraphics$bindShader(shader) {
+        /// <param name="shader" type="GLSharp.Graphics.CompiledShader">
+        /// </param>
+        this._context.useProgram(shader.shaderProgram);
+    },
+    
+    bindTexture: function GLSharp_Graphics_WebGLGraphics$bindTexture(uniform, texture, index) {
+        /// <param name="uniform" type="GLSharp.Graphics.IUniformLocation">
+        /// </param>
+        /// <param name="texture" type="GLSharp.Graphics.ITexture">
+        /// </param>
+        /// <param name="index" type="Number" integer="true">
+        /// </param>
+        this._context.activeTexture(this._activeTextureTarget[index]);
+        this._context.bindTexture(3553, texture);
+        this._context.uniform1i(uniform, index);
     },
     
     _bindWorld: function GLSharp_Graphics_WebGLGraphics$_bindWorld(world) {
         /// <param name="world" type="GLSharp.Universe.World">
         /// </param>
         this._world = world;
-        world.add_nodeAdded(ss.Delegate.create(this, this._worldNodeAdded));
-        world.add_nodeRemoved(ss.Delegate.create(this, this._worldNodeRemoved));
+        world.nodeAdded.subscribe(ss.Delegate.create(this, this._worldNodeAdded), true);
+        world.nodeRemoved.subscribe(ss.Delegate.create(this, this._worldNodeRemoved), true);
     },
     
     _worldNodeRemoved: function GLSharp_Graphics_WebGLGraphics$_worldNodeRemoved(sender, args) {
-        /// <param name="sender" type="GLSharp.Universe.World">
+        /// <param name="sender" type="Object">
         /// </param>
         /// <param name="args" type="Object">
         /// </param>
         var node = Type.safeCast(args, GLSharp.Universe.Node);
-        node.remove_componentAdded(ss.Delegate.create(this, this._nodeComponentAdded));
-        node.remove_componentRemoved(ss.Delegate.create(this, this._nodeComponentRemoved));
+        node.componentAdded.subscribe(ss.Delegate.create(this, this._nodeComponentAdded), true);
+        node.componentRemoved.subscribe(ss.Delegate.create(this, this._nodeComponentRemoved), true);
         var $dict1 = node.get_components();
         for (var $key2 in $dict1) {
             var component = { key: $key2, value: $dict1[$key2] };
             this._nodeComponentRemoved(node, component.value);
         }
+        var $dict3 = node.children;
+        for (var $key4 in $dict3) {
+            var child = { key: $key4, value: $dict3[$key4] };
+            this._worldNodeRemoved(sender, child.value);
+        }
     },
     
     _worldNodeAdded: function GLSharp_Graphics_WebGLGraphics$_worldNodeAdded(sender, args) {
-        /// <param name="sender" type="GLSharp.Universe.World">
+        /// <param name="sender" type="Object">
         /// </param>
         /// <param name="args" type="Object">
         /// </param>
         var node = args;
-        node.add_componentAdded(ss.Delegate.create(this, this._nodeComponentAdded));
-        node.add_componentRemoved(ss.Delegate.create(this, this._nodeComponentRemoved));
+        node.componentAdded.subscribe(ss.Delegate.create(this, this._nodeComponentAdded), true);
+        node.componentRemoved.subscribe(ss.Delegate.create(this, this._nodeComponentRemoved), true);
         var $dict1 = node.get_components();
         for (var $key2 in $dict1) {
             var comp = { key: $key2, value: $dict1[$key2] };
             this._nodeComponentAdded(node, comp.value);
         }
+        var $dict3 = node.children;
+        for (var $key4 in $dict3) {
+            var child = { key: $key4, value: $dict3[$key4] };
+            this._worldNodeAdded(sender, child.value);
+        }
     },
     
     _nodeComponentRemoved: function GLSharp_Graphics_WebGLGraphics$_nodeComponentRemoved(sender, args) {
-        /// <param name="sender" type="GLSharp.Universe.Node">
+        /// <param name="sender" type="Object">
         /// </param>
         /// <param name="args" type="Object">
         /// </param>
@@ -1192,7 +2021,7 @@ GLSharp.Graphics.WebGLGraphics.prototype = {
     },
     
     _nodeComponentAdded: function GLSharp_Graphics_WebGLGraphics$_nodeComponentAdded(sender, args) {
-        /// <param name="sender" type="GLSharp.Universe.Node">
+        /// <param name="sender" type="Object">
         /// </param>
         /// <param name="args" type="Object">
         /// </param>
@@ -1202,13 +2031,87 @@ GLSharp.Graphics.WebGLGraphics.prototype = {
     _pushComponent: function GLSharp_Graphics_WebGLGraphics$_pushComponent(component) {
         /// <param name="component" type="GLSharp.Universe.Component">
         /// </param>
-        this._renderableComponent.addComponent(component);
+        if (component.type === GLSharp.Universe.Component.meshComponent) {
+            this._pushMeshComponent(component);
+        }
+        else if ((component.type === GLSharp.Universe.Component.lightComponent)) {
+            this._pushLightComponent(component);
+        }
+    },
+    
+    _pushLightComponent: function GLSharp_Graphics_WebGLGraphics$_pushLightComponent(component) {
+        /// <param name="component" type="GLSharp.Universe.LightComponent">
+        /// </param>
+        var light = this._library.getResource(component.lightHandle);
+        if (light == null) {
+            if (this._lightQueue[GLSharp.Universe.LightComponent.typePoint] == null) {
+                this._lightQueue[GLSharp.Universe.LightComponent.typePoint] = [];
+            }
+            this._lightQueue[GLSharp.Universe.LightComponent.typePoint].add(component.parent);
+        }
+        else {
+            if (this._lightQueue[light.lightType] == null) {
+                this._lightQueue[light.lightType] = [];
+            }
+            this._lightQueue[light.lightType].add(component.parent);
+        }
+    },
+    
+    _pushMeshComponent: function GLSharp_Graphics_WebGLGraphics$_pushMeshComponent(component) {
+        /// <param name="component" type="GLSharp.Universe.MeshComponent">
+        /// </param>
+        var mesh = this._library.getResource(component.meshHandle);
+        if (mesh == null) {
+            GLSharp.Core.SystemCore.log('Mesh does not exists : ' + component.id);
+            return;
+        }
+        if (this._opaqueMeshQueue[mesh.itemId] == null) {
+            this._opaqueMeshQueue[mesh.itemId] = [];
+        }
+        this._opaqueMeshQueue[mesh.itemId].add(component.parent);
     },
     
     _popComponent: function GLSharp_Graphics_WebGLGraphics$_popComponent(component) {
         /// <param name="component" type="GLSharp.Universe.Component">
         /// </param>
-        this._renderableComponent.removeComponent(component);
+        if (component.type === GLSharp.Universe.Component.meshComponent) {
+            this._popMeshComponent(component);
+        }
+        else if (component.type === GLSharp.Universe.Component.lightComponent) {
+            this._popLightComponent(component);
+        }
+    },
+    
+    _popMeshComponent: function GLSharp_Graphics_WebGLGraphics$_popMeshComponent(component) {
+        /// <param name="component" type="GLSharp.Universe.MeshComponent">
+        /// </param>
+        var mesh = this._library.getResource(component.meshHandle);
+        if (mesh == null) {
+            GLSharp.Core.SystemCore.log('Mesh does not exists : ' + component.id);
+            return;
+        }
+        this._opaqueMeshQueue[mesh.itemId].remove(component.parent);
+        if (!this._opaqueMeshQueue[mesh.itemId].length) {
+            this._opaqueMeshQueue.removeAt(mesh.itemId);
+        }
+    },
+    
+    _popLightComponent: function GLSharp_Graphics_WebGLGraphics$_popLightComponent(component) {
+        /// <param name="component" type="GLSharp.Universe.LightComponent">
+        /// </param>
+        var light = this._library.getResource(component.lightHandle);
+        if (light == null) {
+            if (this._lightQueue[GLSharp.Universe.LightComponent.typePoint] == null) {
+                return;
+            }
+            this._lightQueue[GLSharp.Universe.LightComponent.typePoint].remove(component.parent);
+        }
+        else {
+            if (this._lightQueue[light.lightType] == null) {
+                return;
+            }
+            this._lightQueue[light.lightType].remove(component.parent);
+        }
     }
 }
 
@@ -1221,22 +2124,12 @@ Type.registerNamespace('App');
 App.App = function App_App() {
     /// <field name="_engine" type="GLSharp.Engine">
     /// </field>
-    /// <field name="___tmp" type="GLSharp.Core.Function">
+    /// <field name="_graphics" type="GLSharp.Graphics.WebGLGraphics">
     /// </field>
 }
 App.App.prototype = {
     _engine: null,
-    
-    add__tmp: function App_App$add__tmp(value) {
-        /// <param name="value" type="Function" />
-        this.___tmp = ss.Delegate.combine(this.___tmp, value);
-    },
-    remove__tmp: function App_App$remove__tmp(value) {
-        /// <param name="value" type="Function" />
-        this.___tmp = ss.Delegate.remove(this.___tmp, value);
-    },
-    
-    ___tmp: null,
+    _graphics: null,
     
     init: function App_App$init() {
         var canvasElem = document.getElementById('mainCanvas');
@@ -1244,52 +2137,51 @@ App.App.prototype = {
             throw new Error('No canvas element found!');
         }
         this._engine = new GLSharp.Engine();
-        this._engine.set_graphics(new GLSharp.Graphics.WebGLGraphics(canvasElem));
-        this._engine.set_activeGame(new GLSharp.DemoGame());
+        this._graphics = new GLSharp.Graphics.WebGLGraphics(canvasElem);
+        this._engine.set_graphics(this._graphics);
+        this._engine.set_activeGame(new GLSharp.Demo());
         this._engine.set_library(new GLSharp.Content.Library());
+        this._graphics.set_library(this._engine.get_library());
+        this._engine.set_world(new GLSharp.Universe.World());
+        this._graphics.set_world(this._engine.get_world());
         this._engine.get_library().addConverter(new GLSharp.Content.LightConverter());
-        this._engine.get_library().addConverter(new GLSharp.Content.MeshConverter());
+        this._engine.get_library().addConverter(new GLSharp.Content.MeshConverter(this._graphics));
         this._engine.get_library().addConverter(new GLSharp.Content.NodeConverter());
-        this._initEnvironment();
+        this._engine.get_library().addConverter(new GLSharp.Content.MaterialConverter());
+        this._engine.get_library().addConverter(new GLSharp.Content.TextureConverter(this._graphics));
+        this._initEnvironment(canvasElem);
         this._engine.run();
-        var test = new GLSharp.Core.Event();
-        test.subscribe(ss.Delegate.create(this, this._handler), true);
+        var c = new GLSharp.Universe.CollisionComponent();
     },
     
-    _handler: function App_App$_handler(sender, args) {
-        /// <param name="sender" type="Object">
+    _initEnvironment: function App_App$_initEnvironment(canvas) {
+        /// <param name="canvas" type="Object" domElement="true">
         /// </param>
-        /// <param name="args" type="Object">
-        /// </param>
-    },
-    
-    _initEnvironment: function App_App$_initEnvironment() {
-        GLSharp.Core.SystemCore.set_environment(new Environment());
+        GLSharp.Core.SystemCore.environment = new Environment();
         var resourceManager = new GLSharp.Data.ResourceManager();
         resourceManager.addLoader(new GLSharp.Data.ImageLoader());
         resourceManager.addLoader(new GLSharp.Data.JsonLoader());
+        resourceManager.addLoader(new GLSharp.Data.AudioLoader());
         resourceManager.addLoader(new GLSharp.Data.ShaderLoader((this._engine.get_graphics()).get_context()));
-        GLSharp.Core.SystemCore.set_resourceManager(resourceManager);
-        GLSharp.Core.SystemCore.set_logger(new JSLoggingProvider());
-        GLSharp.Core.SystemCore.set_timer(new GLSharp.Core.Timer());
+        GLSharp.Core.SystemCore.resourceManager = resourceManager;
+        GLSharp.Core.SystemCore.logger = new JsLoggingProvider();
+        GLSharp.Core.SystemCore.timer = new GLSharp.Core.Timer();
+        GLSharp.Core.SystemCore.input = new GLSharp.Core.JsInputProvider();
+        (GLSharp.Core.SystemCore.input).initialize(canvas, 800, 600);
     }
 }
 
 
+GLSharp.Core.JsInputProvider.registerClass('GLSharp.Core.JsInputProvider', null, GLSharp.Core.IInputProvider);
 GLSharp.Core.Timer.registerClass('GLSharp.Core.Timer', null, GLSharp.Core.ITimer);
+GLSharp.Data.AudioLoader.registerClass('GLSharp.Data.AudioLoader', null, GLSharp.Data.IResourceLoader);
 GLSharp.Data.ImageLoader.registerClass('GLSharp.Data.ImageLoader', null, GLSharp.Data.IResourceLoader);
 GLSharp.Data.JsonLoader.registerClass('GLSharp.Data.JsonLoader', null, GLSharp.Data.IResourceLoader);
 GLSharp.Data.ShaderLoader.registerClass('GLSharp.Data.ShaderLoader', null, GLSharp.Data.IResourceLoader);
 GLSharp.Data.ResourceManager.registerClass('GLSharp.Data.ResourceManager', null, GLSharp.Data.IResourceManager);
-GLSharp.Graphics.Buffer.registerClass('GLSharp.Graphics.Buffer');
-GLSharp.Graphics.CompiledShader.registerClass('GLSharp.Graphics.CompiledShader', null, GLSharp.Graphics.ICompiledShader);
-GLSharp.Graphics.FrameBuffer.registerClass('GLSharp.Graphics.FrameBuffer');
-GLSharp.Graphics.RenderBuffer.registerClass('GLSharp.Graphics.RenderBuffer');
-GLSharp.Graphics.Shader.registerClass('GLSharp.Graphics.Shader', null, GLSharp.Graphics.IShader);
-GLSharp.Graphics.ShaderProgram.registerClass('GLSharp.Graphics.ShaderProgram', null, GLSharp.Graphics.IShaderProgram);
-GLSharp.Graphics.Texture.registerClass('GLSharp.Graphics.Texture');
-GLSharp.Graphics.UniformLocation.registerClass('GLSharp.Graphics.UniformLocation', null, GLSharp.Graphics.IUniformLocation);
+GLSharp.Graphics.WebGLContextAttributes.registerClass('GLSharp.Graphics.WebGLContextAttributes');
 GLSharp.Graphics.WebGLE.registerClass('GLSharp.Graphics.WebGLE');
+GLSharp.Graphics._phongBinder.registerClass('GLSharp.Graphics._phongBinder', null, GLSharp.Graphics.IShaderBinder);
 GLSharp.Graphics.WebGLGraphics.registerClass('GLSharp.Graphics.WebGLGraphics', null, GLSharp.Graphics.IGraphics);
 App.App.registerClass('App.App');
 GLSharp.Graphics.WebGLE.depthBufferBit = 256;

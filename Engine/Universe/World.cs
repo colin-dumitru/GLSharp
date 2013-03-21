@@ -3,27 +3,31 @@
 
 using System;
 using System.Collections.Generic;
+using GLSharp.Core;
 
 namespace GLSharp.Universe {
     public delegate void WorldHandler(World sender, Object args);
 
     public class World {
+        private List<Node> _rootNodes = new List<Node>();
 
+        public List<Node> RootNodes {
+            get { return _rootNodes; }
+        }
+        
 
         /// <summary>
-        /// Called when a node gets added.
+        /// Called when a node gets added. The sender pbject is of type World.
         /// </summary>
-        public event WorldHandler NodeAdded;
+        public Event NodeAdded = new Event();
         /// <summary>
         /// Called when a node gets removed.
         /// </summary>
-        public event WorldHandler NodeRemoved;
+        public Event NodeRemoved = new Event();
 
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
-        public World(int cellsX, int cellsY, float cellWidth, float cellHeight) {
-
-
+        public World() {
             this.Reset();
         }
         //------------------------------------------------------------------------------------------
@@ -32,22 +36,21 @@ namespace GLSharp.Universe {
         }
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
-        public void AddNode(Node node) {
-            
-            if (this.NodeAdded != null)
-                this.NodeAdded(this, node);
-        }
-        //------------------------------------------------------------------------------------------
-        //------------------------------------------------------------------------------------------
-        public void AddDynamicNode(Node node) {
-            
+        public void AddRootNode(Node node) {
+            if(node == null)
+                throw new Exception("Node cannot be null.");
+
+            this._rootNodes.Add(node);
+            this.NodeAdded.Fire(this, node);
         }
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
         public void RemoveNode(Node node) {
-            
-            if (this.NodeRemoved != null)
-                this.NodeRemoved(this, node);
+            if(node == null)
+                return;
+
+            this._rootNodes.Remove(node);
+            this.NodeRemoved.Fire(this, node);
         }
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------

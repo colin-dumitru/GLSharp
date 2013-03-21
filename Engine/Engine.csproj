@@ -46,8 +46,32 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Content\LightConverter.cs" />
+    <Compile Include="Content\MaterialConverter.cs" />
+    <Compile Include="Content\TextureConverter.cs" />
+    <Compile Include="Graphics\Core\IShaderBinder.cs" />
+    <Compile Include="Graphics\Core\IViewOccluder.cs" />
+    <Compile Include="Graphics\Core\RegionOccluder.cs" />
+    <Compile Include="Graphics\Core\RenderGroup.cs" />
+    <Compile Include="Graphics\Core\ViewFrustrumOccluder.cs" />
+    <Compile Include="Graphics\Core\ShaderGroup.cs" />
+    <Compile Include="Graphics\Core\IRenderBuffer.cs" />
+    <Compile Include="Graphics\Core\IActiveInfo.cs" />
+    <Compile Include="Graphics\Core\IBuffer.cs" />
+    <Compile Include="Graphics\Core\IFrameBuffer.cs" />
+    <Compile Include="Graphics\Core\ITexture.cs" />
+    <Compile Include="Graphics\Effects\BloomEffect.cs" />
+    <Compile Include="Graphics\Effects\DepthEffect.cs" />
+    <Compile Include="Graphics\Effects\MotionBlurEffect.cs" />
+    <Compile Include="Graphics\Effects\IPostProcessEffect.cs" />
+    <Compile Include="Graphics\Effects\SsaoEffect.cs" />
+    <Compile Include="Universe\CameraComponent.cs" />
+    <Compile Include="Universe\CollisionComponent.cs" />
+    <Compile Include="Universe\ControllerBase.cs" />
+    <Compile Include="Universe\LightComponent.cs" />
     <Compile Include="Universe\MaterialComponent.cs" />
-    <Compile Include="Util\Matrix4x4.cs" />
+    <Compile Include="Util\Matrix4X4.cs" />
+    <Compile Include="Util\Quaternion4x4.cs" />
+    <Compile Include="Util\VertexBoundingVolume.cs" />
     <Compile Include="Util\Vector3.cs" />
     <Content Include="Properties\Graphics.ruleset" />
     <Content Include="Properties\Graphics.script" />
@@ -55,15 +79,13 @@
     <Compile Include="Content\NodeConverter.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Game\GameBase.cs" />
-    <Compile Include="Graphics\ICompiledShader.cs" />
-    <Compile Include="Graphics\IUniform.cs" />
-    <Compile Include="Graphics\Color.cs" />
-    <Compile Include="Graphics\IGraphics.cs" />
-    <Compile Include="Graphics\IShader.cs" />
-    <Compile Include="Graphics\IShaderProgram.cs" />
-    <Compile Include="Graphics\IUniformLocation.cs" />
-    <Compile Include="Graphics\Material.cs" />
-    <Compile Include="Graphics\Mesh.cs" />
+    <Compile Include="Graphics\Core\CompiledShader.cs" />
+    <Compile Include="Graphics\Core\IUniform.cs" />
+    <Compile Include="Graphics\Util\Color.cs" />
+    <Compile Include="Graphics\Core\IGraphics.cs" />
+    <Compile Include="Graphics\Core\IShader.cs" />
+    <Compile Include="Graphics\Core\IShaderProgram.cs" />
+    <Compile Include="Graphics\Core\IUniformLocation.cs" />
     <Compile Include="Content\Library.cs" />
     <Compile Include="Universe\Component.cs" />
     <Compile Include="Universe\MeshComponent.cs" />
@@ -72,6 +94,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Box2d\Box2D.csproj">
+      <Project>{5AE597E8-1EC3-40AA-A416-7DD6147003CF}</Project>
+      <Name>Box2D</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{F47D3BEA-870F-4CB0-AD52-19909B2B9E8B}</Project>
       <Name>Core</Name>

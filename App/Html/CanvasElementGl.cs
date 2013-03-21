@@ -25,7 +25,7 @@ namespace GLSharp.Html {
             set {}
         }
 
-        public WebGL GetContext(string contextID) {
+        public WebGL GetContext(string contextID, WebGLContextAttributes attributes) {
             return null;
         }
 
@@ -40,5 +40,6 @@ namespace GLSharp.Html {
         public string ToDataURL(string type, params object[] typeArguments) {
             return null;
         }
+
     }
 }

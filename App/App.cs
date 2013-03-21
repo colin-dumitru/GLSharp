@@ -8,12 +8,14 @@ using GLSharp.Html;
 using GLSharp.Core;
 using GLSharp.Data;
 using GLSharp.Game;
+using GLSharp.Universe;
+using GLSharp.Util;
 using EventHandler = GLSharp.Core.EventHandler;
 
 namespace App {
     public class App {
         private Engine _engine = null;
-        private event EventHandler _tmp;
+        private WebGLGraphics _graphics = null;
 
         public void Init()  {
             /*initialize canvas element*/
@@ -23,30 +25,34 @@ namespace App {
 
             /*create and initialize the engine*/
             this._engine = new Engine();
+            this._graphics = new WebGLGraphics(canvasElem);
 
-            this._engine.Graphics = new WebGLGraphics(canvasElem);
-            this._engine.ActiveGame = new DemoGame();
+            this._engine.Graphics = this._graphics;
+            this._engine.ActiveGame = new Demo();
             this._engine.Library = new Library();
+            this._graphics.Library = this._engine.Library;
+
+            /*create empty world*/
+            this._engine.World = new World();
+            this._graphics.World = this._engine.World;
 
             this._engine.Library.AddConverter(new LightConverter());
-            this._engine.Library.AddConverter(new MeshConverter());
+            this._engine.Library.AddConverter(new MeshConverter(this._graphics));
             this._engine.Library.AddConverter(new NodeConverter());
+            this._engine.Library.AddConverter(new MaterialConverter());
+            this._engine.Library.AddConverter(new TextureConverter(this._graphics));
 
             /*Initialize the environment*/
-            this.InitEnvironment();
+            this.InitEnvironment((CanvasElement)(Object)canvasElem);
 
             /*startup engine*/
             this._engine.Run();
-            
-            /*bye bye*/
-            Event test = new Event();
-            test.Subscribe(Handler, true);
-        }
 
-        private void Handler(object sender, object args) {}
+            CollisionComponent c = new CollisionComponent();
+        }
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
-        private void InitEnvironment() {
+        private void InitEnvironment(CanvasElement canvas) {
             /*initialize the core*/
             SystemCore.Environment = new Environment();
             
@@ -55,11 +61,15 @@ namespace App {
 
             resourceManager.AddLoader(new ImageLoader());
             resourceManager.AddLoader(new JsonLoader());
+            resourceManager.AddLoader(new AudioLoader());
             resourceManager.AddLoader(new ShaderLoader(((WebGLGraphics)this._engine.Graphics).Context));
 
             SystemCore.ResourceManager = resourceManager;
-            SystemCore.Logger = new JSLoggingProvider();
+            SystemCore.Logger = new JsLoggingProvider();
             SystemCore.Timer = new Timer();
+            SystemCore.Input = new JsInputProvider();
+
+            ((JsInputProvider)SystemCore.Input).Initialize(canvas, 800, 600);
         }
     }
 }

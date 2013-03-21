@@ -7,16 +7,11 @@ using GLSharp.Content;
 
 namespace GLSharp.Universe {
     public class MaterialComponent : Component {
-        private Handle _materialHandle;
-
-        public Handle MaterialHandle {
-            get { return this._materialHandle; }
-            set { this._materialHandle = value; }
-        }
+        public Handle MaterialHandle;
 
         public MaterialComponent() {
             /*set the type*/
-            this._type = Component.MaterialComponent;
+            this.Type = Component.MaterialComponent;
         }
     }
 }

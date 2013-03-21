@@ -45,23 +45,16 @@
     <Reference Include="Script.Web" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\JSLoggingProvider.cs" />
+    <Compile Include="Core\JsInputProvider.cs" />
+    <Compile Include="Core\JsLoggingProvider.cs" />
     <Compile Include="Core\Timer.cs" />
+    <Compile Include="Data\Audio.cs" />
     <Compile Include="Util\Xml\XmlHelper.cs" />
     <Content Include="Properties\App.ruleset" />
     <Content Include="Properties\App.script" />
     <Compile Include="Core\Environment.cs" />
     <Compile Include="Data\Image.cs" />
     <Compile Include="Data\ResourceManager.cs" />
-    <Compile Include="Graphics\ActiveInfo.cs" />
-    <Compile Include="Graphics\Buffer.cs" />
-    <Compile Include="Graphics\CompiledShader.cs" />
-    <Compile Include="Graphics\FrameBuffer.cs" />
-    <Compile Include="Graphics\RenderBuffer.cs" />
-    <Compile Include="Graphics\Shader.cs" />
-    <Compile Include="Graphics\ShaderProgram.cs" />
-    <Compile Include="Graphics\Texture.cs" />
-    <Compile Include="Graphics\UniformLocation.cs" />
     <Compile Include="Graphics\WebGL.cs" />
     <Compile Include="Graphics\WebGLGraphics.cs" />
     <Compile Include="Html\CanvasElementGl.cs" />
@@ -69,6 +62,10 @@
     <Compile Include="App.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Box2d\Box2D.csproj">
+      <Project>{5AE597E8-1EC3-40AA-A416-7DD6147003CF}</Project>
+      <Name>Box2D</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{F47D3BEA-870F-4CB0-AD52-19909B2B9E8B}</Project>
       <Name>Core</Name>
